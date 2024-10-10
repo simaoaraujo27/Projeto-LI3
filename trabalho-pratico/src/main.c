@@ -20,11 +20,11 @@ int main(int argc, char **argv) {
   }
 
   char *line = NULL;
-  size_t len;
+  size_t len = 0;
+  while (getline(&line, &len, fp) != -1) {
+    printf("%s", line);
+  }
 
-  getline(&line, &len, fp);
-
-  printf("%s\n", line);
-
+  free(line);
   return 0;
 }
