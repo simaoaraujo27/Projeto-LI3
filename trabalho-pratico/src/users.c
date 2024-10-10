@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct users {
   char *username;          // identificador único do utilizador
@@ -22,7 +23,7 @@ Users *newUser(char *username, char *email, char *first_name, char *last_name,
   Users *user = malloc(sizeof(struct users));
   if (!user) {
     fprintf(stderr, "Malloc failed!");
-    return -1;
+    return NULL;
   }
   user->username = strdup(username);
   user->email = strdup(email);

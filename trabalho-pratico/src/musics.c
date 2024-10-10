@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct musics {
   int id;         // identificador único da música
@@ -18,7 +19,7 @@ Musics *newMusic(int id, char *title, int *artist_id, int duration, char *genre,
   Musics *musica = malloc(sizeof(struct musics));
   if (!musica) {
     fprintf(stderr, "Malloc failed!");
-    return -1;
+    return NULL;
   }
   musica->id = id;
   musica->title = strdup(title);
