@@ -1,9 +1,10 @@
 #ifndef _COMMAND_PARSER_H
 #define _COMMAND_PARSER_H
 
-#include "artists.c"
-#include "musics.c"
-#include "users.c"
+#include "users.h"
+#include "artists.h"
+#include "musics.h"
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>

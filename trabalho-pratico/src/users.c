@@ -1,5 +1,9 @@
 #include "users.h"
-
+#include <ctype.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 struct users {
   char *username;          // identificador único do utilizador
   char *email;             // email de registo do utilizador
@@ -9,13 +13,13 @@ struct users {
   char *country;           // país onde a conta do utilizador foi registada
   char *subscription_type; // tipo de subscrição, i.e., normal ou premium (FAZER
                            // UM ENUM)
-  char **liked_musics_id; // lista de indentificadores únicos das músicas
+  int *liked_musics_id; // lista de indentificadores únicos das músicas
                           // gostadas pelo utilizador
 };
 
 Users *newUser(char *username, char *email, char *first_name, char *last_name,
                char *birth_date, char *country, char *subscription_type,
-               char **liked_musics_id) {
+               int *liked_musics_id) {
   Users *user = malloc(sizeof(struct users));
   if (!user) {
     fprintf(stderr, "Malloc failed!");

@@ -1,6 +1,11 @@
 #include "validation.h"
+#include "artists.c"
+#include "musics.c"
+#include "users.c"
 #include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // Validação de data (formato: aaaa/mm/dd)
@@ -94,24 +99,15 @@ bool validate_subscription_type(char *type) {
   return (strcmp(type, "normal") == 0 || strcmp(type, "premium") == 0);
 }
 
-bool validate_year(char *year) {
-  if (strlen(year) != 4)
-    return false;
-  int yearDig = atoi(year);
-  if (yearDig > 2024)
-    return false;
-  return true;
-}
-
 bool validate_Music(Musics *musica) {
-  if (validate_duration(musica->duration) && validate_year(musica->year))
-    return true;
-  else
-    return false;
+  return (musica->duration != -1 && musica->year <= 2024);
 }
 
 bool validate_User(Users *user) {
-  if (validate_email(user->email) &&
-      validate_subscription_type(user->subscription_type))
-    return true;
+  return (validate_email(user->email) &&
+          validate_subscription_type(user->subscription_type));
+}
+
+bool validate_Artist(Artists *artista) {
+  return (artista->artista_solo && strlen(artista->listaIdArtistas) == 0);
 }

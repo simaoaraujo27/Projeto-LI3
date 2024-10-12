@@ -1,5 +1,11 @@
 {
     "files.associations": {
-        "users.c": "cpp"
+        "users.c": "cpp",
+        "stdio.h": "c",
+        "string.h": "c",
+        "musics.h": "c",
+        "stdbool.h": "c",
+        "command_parser.h": "c",
+        "ctype.h": "c"
     }
 }

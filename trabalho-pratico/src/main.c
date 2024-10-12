@@ -1,4 +1,5 @@
-#include "validation.c"
+#include "command_parser.c"
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,17 +28,16 @@ int main(int argc, char **argv) {
                // estamos a ler, depois tirar os erros desse ficheiro, depois
                // guardar os dados corretos em uma struct, e essa struct em uma
                // hashtable;
-    printf("%s\n", line);
-    if (strcmp(argv[1], "artists.csv")) {
+    if (strcmp(argv[1], "artists.csv") == 0) {
       Artists *artista;
       artista = separateArtists(line);
-      if (!validate_Artist(artista)) { // funcao nao feita ainda, so declarada
+      if (!validate_Artist(artista)) { 
         // coloca-la num ficheiro aparte(fazer depois)
         continue; // para ja da continue ate fazer a linha anterior
       } else {
         // guardar o artista na hashtable
       }
-    } else if (strcmp(argv[1], "musics.csv")) {
+    } else if (strcmp(argv[1], "musics.csv") == 0) {
       Musics *musica;
       musica = separateMusics(line);
       if (!validate_Music(musica)) {
@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
       } else {
         // guardar a musica na hashtable
       }
-    } else if (strcmp(argv[1], "users.csv")) {
+    } else if (strcmp(argv[1], "users.csv") == 0) {
       Users *user;
       user = separateUsers(line);
       if (!validate_User(user)) {
