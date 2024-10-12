@@ -28,42 +28,30 @@ Artists *separateArtists(char *line) {
 
 Musics *separateMusics(char *line) {
   // separa cada linha pelas suas respetivas variáveis
-  char *id = strtok(line, ";");
-  char *title = strtok(NULL, ";");
-  char *artist_id = strtok(NULL, ";");
-  char *duration_str = strtok(NULL, ";");
-  char *genre = strtok(NULL, ";");
-  char *year_str = strtok(NULL, ";");
-  char *lyrics = strtok(NULL, "\n");
 
-  // muda o tipo das variáveis para poderem entrar na função newMusic
-  int IdMusica = atoi(id);
-
-  int IdArtistas[strlen(artist_id)];
-
-  for (int i = 0; i < strlen(artist_id); i++) {
-    IdArtistas[i] = atoi(strtok(artist_id, ","));
+  Musics *musica = malloc(sizeof(struct musics));
+  if (!artista) {
+    fprintf(stderr, "Malloc failed!");
+    return NULL;
   }
 
-  int duration;
+  musica->id = atoi(strsep(&line, ";"));
+  musica->title = strdup(strsep(&line, ";"));
+  musica->artist_id = strdup(strsep(&line, ";"));
+  char *duration_str = strdup(strsep(&line, ";"));
+  muisca->genre = strdup(strsep(&line, ";"));
+  musica->year = atoi(strsep(&line, ";"));
+  musica->lyrics = strdup(strsep(&line, ";"));
+
 
   if (validate_duration(duration_str))
-    duration = atoi(duration_str) /* horas */ * 3600 +
+    musica->duration = atoi(duration_str) /* horas */ * 3600 +
                atoi(duration_str + 3) /* minutos */ * 60 +
                atoi(duration_str + 6) /* segundos */;
   else
-    duration = -1;
-
-  int year;
-
-  if (strlen(year_str) == 4)
-    year = atoi(year_str);
-  else
-    year = 3000;
-
-  // cria uma musica com a informação dada na linha do ficheiro
-  Musics *musica =
-      newMusic(IdMusica, title, IdArtistas, duration, genre, year, lyrics);
+    musica->duration = -1;
+  // a duração fica em segundos
+  
   // retorna a musica criada
   return musica;
 }
@@ -71,24 +59,16 @@ Musics *separateMusics(char *line) {
 
 Users *separateUsers(char *line) {
   // separa cada linha pelas suas respetivas variáveis
-  char *username = strtok(line, ";");
-  char *email = strtok(NULL, ";");
-  char *first_name = strtok(NULL, ";");
-  char *last_name = strtok(NULL, ";");
-  char *birth_date = strtok(NULL, ";");
-  char *country = strtok(NULL, ";");
-  char *subscription_type = strtok(NULL, ";");
-  char *liked_musics_Ids = strtok(NULL, "\n");
+  users->username = strdup(strsep(&line, ";"));
+  users->email = strdup(strsep(&line, ";"));
+  users->first_name = strdup(strsep(&line, ";"));
+  users->last_name = strdup(strsep(&line, ";"));
+  users->birth_date = strdup(strsep(&line, ";"));
+  users->country = strdup(strsep(&line, ";"));
+  users->subscription_type = strdup(strsep(&line, ";"));
+  users->liked_musics_id = strdup(strsep(&line, ";"));
 
-  int liked_musics_Id[strlen(liked_musics_Ids)];
-
-  for (int i = 0; i < strlen(liked_musics_Ids); i++) {
-    liked_musics_Id[i] = atoi(strtok(liked_musics_Ids, ","));
-  }
-
-  // cria um utilizador com as informações do ficheiro
-  Users *user = newUser(username, email, first_name, last_name, birth_date,
-                        country, subscription_type, liked_musics_Id);
+  
   // retorna o utilizador criado
   return user;
 }
