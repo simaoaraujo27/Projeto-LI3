@@ -17,7 +17,7 @@ struct users {
                           // gostadas pelo utilizador
 };
 
-Users *newUser(char *username, char *email, char *first_name, char *last_name,
+/* Users *newUser(char *username, char *email, char *first_name, char *last_name,
                char *birth_date, char *country, char *subscription_type,
                int *liked_musics_id) {
   Users *user = malloc(sizeof(struct users));
@@ -34,4 +34,4 @@ Users *newUser(char *username, char *email, char *first_name, char *last_name,
   user->subscription_type = strdup(subscription_type);
   user->liked_musics_id = liked_musics_id;
   return user;
-}
+} */

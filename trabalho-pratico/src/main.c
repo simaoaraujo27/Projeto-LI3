@@ -26,36 +26,41 @@ int main(int argc, char **argv) {
   while (getline(&line, &len, fp) !=
          -1) { // Nesta funçao, primeiro temos que saber qual o ficheiro que
                // estamos a ler, depois tirar os erros desse ficheiro, depois
-               // guardar os dados corretos em uma struct, e essa struct em uma
-               // hashtable;
-    if (strcmp(argv[1], "artists.csv") == 0) {
-      Artists *artista;
-      artista = separateArtists(line);
-      if (!validate_Artist(artista)) { 
-        // coloca-la num ficheiro aparte(fazer depois)
-        continue; // para ja da continue ate fazer a linha anterior
-      } else {
-        // guardar o artista na hashtable
-      }
-    } else if (strcmp(argv[1], "musics.csv") == 0) {
-      Musics *musica;
-      musica = separateMusics(line);
-      if (!validate_Music(musica)) {
-        // coloca-la num ficheiro aparte(fazer depois)
-        continue; // para ja da continue ate fazer a linha anterior
-      } else {
-        // guardar a musica na hashtable
-      }
-    } else if (strcmp(argv[1], "users.csv") == 0) {
-      Users *user;
-      user = separateUsers(line);
-      if (!validate_User(user)) {
-        // coloca-la num ficheiro aparte(fazer depois)
-        continue; // para ja da continue ate fazer a linha anterior
-      } else {
-        // guardar o user na hashtable
-      }
-    }
+               // guardar os dados corretos em uma struct, e essa struct em
+               // uma
+    // hashtable;
+    /*     if (strcmp(argv[1], "artists.csv") == 0) {
+          Artists *artista;
+          artista = separateArtists(line);
+          if (!validate_Artist(artista)) {
+            // coloca-la num ficheiro aparte(fazer depois)
+            continue; // para ja da continue ate fazer a linha anterior
+          } else {
+            // guardar o artista na hashtable
+          }
+        } else if (strcmp(argv[1], "musics.csv") == 0) {
+          Musics *musica;
+          musica = separateMusics(line);
+          if (!validate_Music(musica)) {
+            // coloca-la num ficheiro aparte(fazer depois)
+            continue; // para ja da continue ate fazer a linha anterior
+          } else {
+            // guardar a musica na hashtable
+          }
+        } else if (strcmp(argv[1], "users.csv") == 0) {
+          Users *user;
+          user = separateUsers(line);
+          if (!validate_User(user)) {
+            // coloca-la num ficheiro aparte(fazer depois)
+            continue; // para ja da continue ate fazer a linha anterior
+          } else {
+            // guardar o user na hashtable
+          }
+        } */
+
+    Artists *artista = separateArtists(line);
+    printf("%s\n", artista->nome);
+    printf("%s\n", artista->descricao);
   }
 
   free(line);

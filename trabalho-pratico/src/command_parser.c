@@ -6,19 +6,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-Artists *separateArtists(char *line) { 
-// separa a linha e guarda os respetivos dados na struct artistas 
+Artists *separateArtists(char *line) {
+  // Separa a linha e guarda os respetivos dados na struct artistas
 
   Artists *artista = malloc(sizeof(struct artists));
   if (!artista) {
     fprintf(stderr, "Malloc failed!");
     return NULL;
   }
+  
   artista->id = atoi(strsep(&line, ";"));
   artista->nome = strdup(strsep(&line, ";"));
   artista->descricao = strdup(strsep(&line, ";"));
   artista->dinheiro_por_musica = atoi(strsep(&line, ";"));
-  artista->listaIdArtistas = strsep(&line, ";");
+  artista->listaIdArtistas = strdup(strsep(&line, ";"));
   artista->nacionalidade = strdup(strsep(&line, ";"));
   artista->artista_solo = strcmp(strsep(&line, "\n"), "individual") == 0;
 
@@ -66,6 +67,7 @@ Musics *separateMusics(char *line) {
   // retorna a musica criada
   return musica;
 }
+
 
 Users *separateUsers(char *line) {
   // separa cada linha pelas suas respetivas variáveis

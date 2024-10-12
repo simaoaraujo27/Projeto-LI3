@@ -14,7 +14,7 @@ struct musics {
   char *lyrics;   // letra da música
 };
 
-Musics *newMusic(int id, char *title, int *artist_id, int duration, char *genre,
+/* Musics *newMusic(int id, char *title, int *artist_id, int duration, char *genre,
                  int year, char *lyrics) {
   Musics *musica = malloc(sizeof(struct musics));
   if (!musica) {
@@ -29,4 +29,4 @@ Musics *newMusic(int id, char *title, int *artist_id, int duration, char *genre,
   musica->year = year;
   musica->lyrics = strdup(lyrics);
   return musica;
-}
+} */
