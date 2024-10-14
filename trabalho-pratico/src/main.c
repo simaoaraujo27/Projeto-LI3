@@ -58,9 +58,9 @@ int main(int argc, char **argv) {
           }
         } */
 
-    Artists *artista = separateArtists(line);
-    printf("%s\n", artista->nome);
-    printf("%s\n", artista->descricao);
+    Artists *artist = separateArtists(line);
+    printf("%s\n", artist->name);
+    printf("%s\n", artist->description);
   }
 
   free(line);

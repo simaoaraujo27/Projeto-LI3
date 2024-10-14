@@ -11,12 +11,12 @@
 #include <string.h>
 
 // Funções para validar os campos
-bool validate_date(char *date);
-bool validate_duration(char *duration);
-bool validate_email(char *email);
-bool validate_subscription_type(char *type);
-bool validate_Artist(Artists *artista);
-bool validate_Music(Musics *musica);
-bool validate_User(Users *user);
+bool validateDate(char *date);
+bool validateDuration(char *duration);
+bool validateEmail(char *email);
+bool validateSubscriptionType(char *type);
+bool validateArtist(Artists *artist);
+bool validateMusic(Musics *music);
+bool validateUser(Users *user);
 
 #endif

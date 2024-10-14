@@ -9,66 +9,66 @@
 Artists *separateArtists(char *line) {
   // Separa a linha e guarda os respetivos dados na struct artistas
 
-  Artists *artista = malloc(sizeof(struct artists));
-  if (!artista) {
+  Artists *artist = malloc(sizeof(struct artists));
+  if (!artist) {
     fprintf(stderr, "Malloc failed!");
     return NULL;
   }
-  
-  artista->id = atoi(strsep(&line, ";"));
-  artista->nome = strdup(strsep(&line, ";"));
-  artista->descricao = strdup(strsep(&line, ";"));
-  artista->dinheiro_por_musica = atoi(strsep(&line, ";"));
-  artista->listaIdArtistas = strdup(strsep(&line, ";"));
-  artista->nacionalidade = strdup(strsep(&line, ";"));
-  artista->artista_solo = strcmp(strsep(&line, "\n"), "individual") == 0;
 
-  return artista;
+  artist->id = atoi(strsep(&line, ";"));
+  artist->name = strdup(strsep(&line, ";"));
+  artist->description = strdup(strsep(&line, ";"));
+  artist->recipe_per_stream = atoi(strsep(&line, ";"));
+  artist->id_constituent = strdup(strsep(&line, ";"));
+  artist->country = strdup(strsep(&line, ";"));
+  artist->type = strcmp(strsep(&line, "\n"), "individual") == 0;
+
+  return artist;
 }
 
 Musics *separateMusics(char *line) {
-  // separa cada linha pelas suas respetivas variáveis
+  // Separa cada linha pelas suas respetivas variáveis
 
-  Musics *musica = malloc(sizeof(struct musics));
-  if (!artista) {
+  Musics *music = malloc(sizeof(struct musics));
+  if (!music) {
     fprintf(stderr, "Malloc failed!");
     return NULL;
   }
 
-  musica->id = atoi(strsep(&line, ";"));
-  musica->title = strdup(strsep(&line, ";"));
-  musica->artist_id = strdup(strsep(&line, ";"));
+  music->id = atoi(strsep(&line, ";"));
+  music->title = strdup(strsep(&line, ";"));
+  music->artist_id = strdup(strsep(&line, ";"));
   char *duration_str = strdup(strsep(&line, ";"));
-  muisca->genre = strdup(strsep(&line, ";"));
-  musica->year = atoi(strsep(&line, ";"));
-  musica->lyrics = strdup(strsep(&line, ";"));
+  music->genre = strdup(strsep(&line, ";"));
+  music->year = atoi(strsep(&line, ";"));
+  music->lyrics = strdup(strsep(&line, ";"));
 
-
-  if (validate_duration(duration_str))
-    musica->duration = atoi(duration_str) /* horas */ * 3600 +
-               atoi(duration_str + 3) /* minutos */ * 60 +
-               atoi(duration_str + 6) /* segundos */;
+  if (validateDuration(duration_str))
+    music->durationSeconds = atoi(duration_str) /* horas */ * 3600 +
+                             atoi(duration_str + 3) /* minutos */ * 60 +
+                             atoi(duration_str + 6) /* segundos */;
   else
-    musica->duration = -1;
-  // a duração fica em segundos
-  
-  // retorna a musica criada
-  return musica;
-}
+    music->durationSeconds = -1;
 
+  return music;
+}
 
 Users *separateUsers(char *line) {
   // separa cada linha pelas suas respetivas variáveis
-  users->username = strdup(strsep(&line, ";"));
-  users->email = strdup(strsep(&line, ";"));
-  users->first_name = strdup(strsep(&line, ";"));
-  users->last_name = strdup(strsep(&line, ";"));
-  users->birth_date = strdup(strsep(&line, ";"));
-  users->country = strdup(strsep(&line, ";"));
-  users->subscription_type = strdup(strsep(&line, ";"));
-  users->liked_musics_id = strdup(strsep(&line, ";"));
+  Users *user = malloc(sizeof(struct users));
+  if (!user) {
+    fprintf(stderr, "Malloc failed!");
+    return NULL;
+  }
 
-  
-  // retorna o utilizador criado
+  user->username = strdup(strsep(&line, ";"));
+  user->email = strdup(strsep(&line, ";"));
+  user->first_name = strdup(strsep(&line, ";"));
+  user->last_name = strdup(strsep(&line, ";"));
+  user->birth_date = strdup(strsep(&line, ";"));
+  user->country = strdup(strsep(&line, ";"));
+  user->subscription_type = strdup(strsep(&line, ";"));
+  user->liked_musics_id = strdup(strsep(&line, ";"));
+
   return user;
 }

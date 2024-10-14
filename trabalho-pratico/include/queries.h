@@ -7,33 +7,12 @@
 #include <string.h>
 
 /* Listar o resumo de um utilizador, consoante o identificador recebido por argumento. */
-void querie1();
+void query1();
 
 /* top N artistas com maior discografia */
-void queire2();
+void query2();
 
 /* géneros de música mais populares numa determinada faixa etária */
-void queire3();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void query3();
 
 #endif

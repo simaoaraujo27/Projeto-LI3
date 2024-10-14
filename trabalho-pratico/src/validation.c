@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Validação de data (formato: aaaa/mm/dd)
-bool validate_date(char *date) {
+// (formato: aaaa/mm/dd)
+bool validateDate(char *date) {
   if (strlen(date) != 10)
     return false;
 
@@ -41,8 +41,8 @@ bool validate_date(char *date) {
   return true;
 }
 
-// Validação de duração (formato: hh:mm:ss)
-bool validate_duration(char *duration) {
+// (formato: hh:mm:ss)
+bool validateDuration(char *duration) {
   if (strlen(duration) != 8)
     return false;
   if (duration[2] != ':' || duration[5] != ':')
@@ -66,8 +66,8 @@ bool validate_duration(char *duration) {
   return true;
 }
 
-// Validação de email (formato: username@domain.com)
-bool validate_email(char *email) {
+// (formato: username@domain.com)
+bool validateEmail(char *email) {
   char *at = strchr(email, '@');
   if (!at)
     return false;
@@ -82,32 +82,31 @@ bool validate_email(char *email) {
   }
 
   for (char *p = at + 1; p < dot; p++) {
-    if (!isalnum(*p))
+    if (!isalpha(*p))
       return false;
   }
 
   for (char *p = dot + 1; *p; p++) {
-    if (!islower(*p))
+    if (!islower(*p) && !isalpha(*p))
       return false;
   }
 
   return true;
 }
 
-// Validação do tipo de subscrição (normal ou premium)
-bool validate_subscription_type(char *type) {
+bool validateSubscriptionType(char *type) {
   return (strcmp(type, "normal") == 0 || strcmp(type, "premium") == 0);
 }
 
-bool validate_Music(Musics *musica) {
-  return (musica->duration != -1 && musica->year <= 2024);
+bool validateMusic(Musics *music) {
+  return (music->durationSeconds != -1 && music->year <= 2024);
 }
 
-bool validate_User(Users *user) {
-  return (validate_email(user->email) &&
-          validate_subscription_type(user->subscription_type));
+bool validateUser(Users *user) {
+  return (validateEmail(user->email) &&
+          validateSubscriptionType(user->subscription_type));
 }
 
-bool validate_Artist(Artists *artista) {
-  return (artista->artista_solo && strlen(artista->listaIdArtistas) == 0);
+bool validateArtist(Artists *artist) {
+  return (artist->type && strlen(artist->id_constituent) == 0);
 }
