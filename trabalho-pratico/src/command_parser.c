@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib.h>
 
 Artists *separateArtists(char *line) {
   // Separa a linha e guarda os respetivos dados na struct artistas
