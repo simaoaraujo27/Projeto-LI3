@@ -104,9 +104,11 @@ bool validateMusic(Musics *music) {
 
 bool validateUser(Users *user) {
   return (validateEmail(user->email) &&
-          validateSubscriptionType(user->subscription_type));
+          validateSubscriptionType(user->subscription_type) &&
+          validateDate(user->birth_date));
 }
 
 bool validateArtist(Artists *artist) {
-  return (artist->type && strlen(artist->id_constituent) == 0);
+  return ((artist->tipo == Individual && strlen(artist->id_constituent) == 0) ||
+          (artist->tipo == Grupo && strlen(artist->id_constituent) != 0));
 }

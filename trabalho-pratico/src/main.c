@@ -1,7 +1,7 @@
 #include "command_parser.c"
-#include "gestor_users.c"
 #include "gestor_artists.c"
 #include "gestor_musics.c"
+#include "gestor_users.c"
 #include "validation.h"
 #include <ctype.h>
 #include <dirent.h>
@@ -32,9 +32,10 @@ int main(int argc, char **argv) {
       if (strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0) {
         char destStr[50];
         strcpy(destStr, dataset);
-        strcat(destStr,
-               ent->d_name); // SÓ FUNCIONA SE METER A BARRA DEPOIS DA PASTA
+        strcat(destStr, ent->d_name);
+        // SÓ FUNCIONA SE METER A BARRA DEPOIS DA PASTA
         // ALTERNATIVA: char destStr[50] = "dataset/";
+        printf("%s\n", destStr);
         fp = fopen(destStr, "r");
         if (!fp) {
           perror("Error");
@@ -50,7 +51,7 @@ int main(int argc, char **argv) {
           GHashTable *htArtistsInvalid = g_hash_table_new_full(
               g_str_hash, g_str_equal, free, (GDestroyNotify)destroyArtist);
           if (validateArtist(artista)) {
-            // guardar na valid
+            // guardar na valida
           } else {
             // guardar na invalida
           }
@@ -61,7 +62,7 @@ int main(int argc, char **argv) {
           GHashTable *htMusicsInvalid = g_hash_table_new_full(
               g_str_hash, g_str_equal, free, (GDestroyNotify)destroyMusic);
           if (validateMusic(musica)) {
-            // guardar na valid
+            // guardar na valida
           } else {
             // guardar na invalida
           }
@@ -73,7 +74,8 @@ int main(int argc, char **argv) {
           GHashTable *htUsersInvalid = g_hash_table_new_full(
               g_str_hash, g_str_equal, free, (GDestroyNotify)destroyUser);
           if (validateUser(user)) {
-            // guardar na valid
+            // guardar na valida
+
           } else {
             // guardar na invalida
           }
@@ -82,51 +84,9 @@ int main(int argc, char **argv) {
     }
     closedir(dir);
   } else {
-    perror("Não foi possível abrir o diretório");
+    perror("Não foi possível abrir o diretório"); 
     return EXIT_FAILURE;
   }
-
-  /* char *line = NULL;
-  size_t len = 0;
-
-  while (getline(&line, &len, fp) != -1) {
-    if (strcmp(argv[1], "artists.csv") == 0) {
-      Artists *artista;
-      artista = separateArtists(line);
-      if (!validateArtist(artista)) {
-
-        continue;
-      } else {
-        continue;
-      }
-    } else if (strcmp(argv[1], "musics.csv") == 0) {
-      Musics *musica;
-      musica = separateMusics(line);
-      if (!validateMusic(musica)) {
-
-        continue;
-      } else {
-        continue;
-      }
-    } else if (strcmp(argv[1], "users.csv") == 0) {
-      Users *user;
-      user = separateUsers(line);
-      GHashTable *hashTable = g_hash_table_new_full(
-          g_str_hash, g_str_equal, free, (GDestroyNotify)destroyUser);
-      g_hash_table_insert(hashTable, user->username, user);
-      Users *userTable = g_hash_table_lookup(hashTable, user->username);
-      printf("%s", userTable->username);
-
-      if (!validateUser(user)) {
-        continue;
-      } else {
-        continue;
-      }
-
-      g_hash_table_destroy(hashTable);
-    }
-  }
-*/
   free(line);
   return 0;
 }

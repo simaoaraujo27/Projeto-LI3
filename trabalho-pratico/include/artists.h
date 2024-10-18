@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+enum tipoArtista;
+
 typedef struct artists Artists;
 
 #endif

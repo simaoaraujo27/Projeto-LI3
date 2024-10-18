@@ -1,11 +1,11 @@
 #include "command_parser.h"
 #include "validation.c"
 #include <ctype.h>
+#include <glib.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <glib.h>
 
 Artists *separateArtists(char *line) {
   // Separa a linha e guarda os respetivos dados na struct artistas
@@ -22,7 +22,10 @@ Artists *separateArtists(char *line) {
   artist->recipe_per_stream = atoi(strsep(&line, ";"));
   artist->id_constituent = strdup(strsep(&line, ";"));
   artist->country = strdup(strsep(&line, ";"));
-  artist->type = strcmp(strsep(&line, "\n"), "individual") == 0;
+  if (!strcmp(strsep(&line, "\n"), "individual"))
+    artist->tipo = Individual;
+  else
+    artist->tipo = Grupo;
 
   return artist;
 }

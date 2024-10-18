@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+enum tipoArtista {Individual, Grupo};
+
 struct artists {
   int id;                // identificador único do artista
   char *name;            // nome do artista
@@ -15,6 +17,6 @@ struct artists {
                          // constituintes, no caso de se tratar de um artista
                          // coletivo. Este campo pode ser uma lista vazia.
   char *country;         // nacionalidade do artista.
-  bool type; // tipo de artista, i.e., individual ou grupo musical, caso
-             // individual = True, grupo = False
+  enum tipoArtista tipo; // tipo de artista, i.e., individual ou grupo musical,
+                         // caso individual = True, grupo = False
 };
