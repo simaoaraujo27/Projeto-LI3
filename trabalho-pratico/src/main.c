@@ -41,21 +41,25 @@ int main(int argc, char **argv) {
   }
   fclose(fp);
 
+  GHashTable *musicsTable =
+      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyMusic);
   fp = fopen(musicsPath, "r");
   if (!fp) {
     perror("Error");
     return EXIT_FAILURE;
   } else {
-    parseMusics(fp);
+    parseMusics(fp, musicsTable);
   }
   fclose(fp);
 
+  GHashTable *usersTable =
+      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyUser);
   fp = fopen(usersPath, "r");
   if (!fp) {
     perror("Error");
     return EXIT_FAILURE;
   } else {
-    parseUsers(fp);
+    parseUsers(fp, usersTable);
   }
   fclose(fp);
 

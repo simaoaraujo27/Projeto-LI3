@@ -11,7 +11,7 @@
 typedef struct users Users;
 
 Users *separateUsers(char *line);
-void parseUsers(FILE *fp);
-void destroyUsers(gpointer user);
+void parseUsers(FILE *fp, GHashTable *usersTable);
+void destroyUser(gpointer user);
 
 #endif

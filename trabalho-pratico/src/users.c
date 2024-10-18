@@ -43,14 +43,16 @@ bool validateUser(Users *user) {
           validateDate(user->birth_date));
 }
 
-void parseUsers(FILE *fp) {
+void parseUsers(FILE *fp, GHashTable *usersTable) {
   char *line = NULL;
   size_t len = 0;
   while (getline(&line, &len, fp) != -1) {
     Users *user = separateUsers(line);
+    // Insere na HashTable usando o user->username como key
+    g_hash_table_insert(usersTable, user->username, user);
   }
 
   free(line);
 }
 
-void destroyUsers(gpointer user) { return; }
+void destroyUser(gpointer user) { return; }

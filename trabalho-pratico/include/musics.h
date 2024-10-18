@@ -10,7 +10,7 @@
 typedef struct musics Musics;
 
 Musics *separateMusics(char *line);
-void parseMusics(FILE *fp);
-void destroyMusics(gpointer music);
+void parseMusics(FILE *fp, GHashTable *musicsTable);
+void destroyMusic(gpointer music);
 
 #endif

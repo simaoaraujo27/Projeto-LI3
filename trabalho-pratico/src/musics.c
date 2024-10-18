@@ -47,16 +47,16 @@ bool validateMusic(Musics *music) {
   return (music->durationSeconds != -1 && music->year <= 2024);
 }
 
-void parseMusics(FILE *fp) {
+void parseMusics(FILE *fp, GHashTable *musicsTable) {
   char *line = NULL;
   size_t len = 0;
   while (getline(&line, &len, fp) != -1) {
     Musics *music = separateMusics(line);
+    // Insere na HashTable usando o music->artist_id como key
+    g_hash_table_insert(musicsTable, music->artist_id, music);
   }
 
   free(line);
 }
 
-void destroyMusic(gpointer user) {
-    return;
-}
+void destroyMusic(gpointer user) { return; }
