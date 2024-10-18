@@ -16,3 +16,41 @@ struct users {
   char *liked_musics_id;   // lista de indentificadores únicos das
                            // músicas gostadas pelo utilizador
 };
+
+Users *separateUsers(char *line) {
+  // separa cada linha pelas suas respetivas variáveis
+  Users *user = malloc(sizeof(struct users));
+  if (!user) {
+    fprintf(stderr, "Malloc failed!");
+    return NULL;
+  }
+
+  user->username = strdup(strsep(&line, ";"));
+  user->email = strdup(strsep(&line, ";"));
+  user->first_name = strdup(strsep(&line, ";"));
+  user->last_name = strdup(strsep(&line, ";"));
+  user->birth_date = strdup(strsep(&line, ";"));
+  user->country = strdup(strsep(&line, ";"));
+  user->subscription_type = strdup(strsep(&line, ";"));
+  user->liked_musics_id = strdup(strsep(&line, ";"));
+
+  return user;
+}
+
+bool validateUser(Users *user) {
+  return (validateEmail(user->email) &&
+          validateSubscriptionType(user->subscription_type) &&
+          validateDate(user->birth_date));
+}
+
+void parseUsers(FILE *fp) {
+  char *line = NULL;
+  size_t len = 0;
+  while (getline(&line, &len, fp) != -1) {
+    Users *user = separateUsers(line);
+  }
+
+  free(line);
+}
+
+void destroyUsers(gpointer user) { return; }

@@ -15,8 +15,5 @@ bool validateDate(char *date);
 bool validateDuration(char *duration);
 bool validateEmail(char *email);
 bool validateSubscriptionType(char *type);
-bool validateArtist(Artists *artist);
-bool validateMusic(Musics *music);
-bool validateUser(Users *user);
 
 #endif

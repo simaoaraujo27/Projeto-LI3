@@ -1,7 +1,7 @@
 #include "validation.h"
-#include "artists.c"
-#include "musics.c"
-#include "users.c"
+#include "artists.h"
+#include "musics.h"
+#include "users.h"
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -98,17 +98,3 @@ bool validateSubscriptionType(char *type) {
   return (strcmp(type, "normal") == 0 || strcmp(type, "premium") == 0);
 }
 
-bool validateMusic(Musics *music) {
-  return (music->durationSeconds != -1 && music->year <= 2024);
-}
-
-bool validateUser(Users *user) {
-  return (validateEmail(user->email) &&
-          validateSubscriptionType(user->subscription_type) &&
-          validateDate(user->birth_date));
-}
-
-bool validateArtist(Artists *artist) {
-  return ((artist->tipo == Individual && strlen(artist->id_constituent) == 0) ||
-          (artist->tipo == Grupo && strlen(artist->id_constituent) != 0));
-}

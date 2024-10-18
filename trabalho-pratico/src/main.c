@@ -1,92 +1,64 @@
-#include "command_parser.c"
-#include "gestor_artists.c"
-#include "gestor_musics.c"
-#include "gestor_users.c"
+#include "artists.h"
+#include "musics.h"
+#include "users.h"
 #include "validation.h"
-#include <ctype.h>
-#include <dirent.h>
+#include <artists.h>
 #include <glib.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_PATH_SIZE 1024
+
 int main(int argc, char **argv) {
   FILE *fp = NULL;
 
   if (argc < 2) {
     fp = stdin;
-    fprintf(stderr, "Missing filename.\n");
-    return 1;
-  }
-  char *dataset = argv[1];
-  DIR *dir;
-  struct dirent *ent;
-  char *line = NULL;
-
-  // Abre o diretório
-  if ((dir = opendir(dataset)) != NULL) {
-    // Percorre todos os arquivos no diretório
-    while ((ent = readdir(dir)) != NULL) {
-      // Ignora "." e ".."
-      if (strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0) {
-        char destStr[50];
-        strcpy(destStr, dataset);
-        strcat(destStr, ent->d_name);
-        // SÓ FUNCIONA SE METER A BARRA DEPOIS DA PASTA
-        // ALTERNATIVA: char destStr[50] = "dataset/";
-        printf("%s\n", destStr);
-        fp = fopen(destStr, "r");
-        if (!fp) {
-          perror("Error");
-          return EXIT_FAILURE;
-        }
-
-        size_t len = 0;
-
-        if (!strcmp(ent->d_name, "artists.csv")) {
-          Artists *artista = separateArtists(line);
-          GHashTable *htArtistsValid = g_hash_table_new_full(
-              g_str_hash, g_str_equal, free, (GDestroyNotify)destroyArtist);
-          GHashTable *htArtistsInvalid = g_hash_table_new_full(
-              g_str_hash, g_str_equal, free, (GDestroyNotify)destroyArtist);
-          if (validateArtist(artista)) {
-            // guardar na valida
-          } else {
-            // guardar na invalida
-          }
-        } else if (!strcmp(ent->d_name, "musics.csv")) {
-          Musics *musica = separateMusics(line);
-          GHashTable *htMusicsValid = g_hash_table_new_full(
-              g_str_hash, g_str_equal, free, (GDestroyNotify)destroyMusic);
-          GHashTable *htMusicsInvalid = g_hash_table_new_full(
-              g_str_hash, g_str_equal, free, (GDestroyNotify)destroyMusic);
-          if (validateMusic(musica)) {
-            // guardar na valida
-          } else {
-            // guardar na invalida
-          }
-
-        } else if (!strcmp(ent->d_name, "users.csv")) {
-          Users *user = separateUsers(line);
-          GHashTable *htUsersValid = g_hash_table_new_full(
-              g_str_hash, g_str_equal, free, (GDestroyNotify)destroyUser);
-          GHashTable *htUsersInvalid = g_hash_table_new_full(
-              g_str_hash, g_str_equal, free, (GDestroyNotify)destroyUser);
-          if (validateUser(user)) {
-            // guardar na valida
-
-          } else {
-            // guardar na invalida
-          }
-        }
-      }
-    }
-    closedir(dir);
-  } else {
-    perror("Não foi possível abrir o diretório"); 
+    fprintf(stderr, "Error: Missing filename\n");
     return EXIT_FAILURE;
   }
-  free(line);
+
+  char *path = argv[1];
+
+  char *artistsPath = malloc(MAX_PATH_SIZE * sizeof(char));
+  char *musicsPath = malloc(MAX_PATH_SIZE * sizeof(char));
+  char *usersPath = malloc(MAX_PATH_SIZE * sizeof(char));
+
+  snprintf(artistsPath, MAX_PATH_SIZE, "%s/%s", path, "artists.csv");
+  snprintf(musicsPath, MAX_PATH_SIZE, "%s/%s", path, "musics.csv");
+  snprintf(usersPath, MAX_PATH_SIZE, "%s/%s", path, "users.csv");
+
+  GHashTable *artistsTable =
+      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyArtist);
+  fp = fopen(artistsPath, "r");
+  if (!fp) {
+    perror("Error");
+    return EXIT_FAILURE;
+  } else {
+    parseArtists(fp, artistsTable);
+  }
+  fclose(fp);
+
+  fp = fopen(musicsPath, "r");
+  if (!fp) {
+    perror("Error");
+    return EXIT_FAILURE;
+  } else {
+    parseMusics(fp);
+  }
+  fclose(fp);
+
+  fp = fopen(usersPath, "r");
+  if (!fp) {
+    perror("Error");
+    return EXIT_FAILURE;
+  } else {
+    parseUsers(fp);
+  }
+  fclose(fp);
+
+  g_hash_table_destroy(artistsTable);
   return 0;
 }
