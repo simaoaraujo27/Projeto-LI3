@@ -56,22 +56,21 @@ void parseArtists(FILE *fp, GHashTable *artistsTable) {
   while (getline(&line, &len, fp) != -1) {
     Artists *artist = separateArtists(line);
     // Insere na HashTable usando o artist->name como key
-    g_hash_table_insert(artistsTable, artist->name, artist);
+    g_hash_table_insert(artistsTable, g_strdup(artist->name), artist);
   }
 
   free(line);
 }
 
 void destroyArtist(gpointer artist) {
-  return;
-  /*   struct artists *a = (struct artists *)artist;
+  Artists *a = (Artists *)artist;
 
-          free(a->name);
-          free(a->description);
-          free(a->id_constituent);
-          free(a->country);
+  g_free(a->name);
+  g_free(a->description);
+  g_free(a->id_constituent);
+  g_free(a->country);
 
-      free(a); */
+  g_free(a);
 }
 
 int getArtistId(gpointer artist) {

@@ -83,9 +83,8 @@ int main(int argc, char **argv) {
       // query3();
     }
   }
-
-  free(line);
   fclose(fp);
+  free(line);
 
   g_hash_table_destroy(artistsTable);
   g_hash_table_destroy(musicsTable);

@@ -70,26 +70,24 @@ void parseUsers(FILE *fp, GHashTable *usersTable) {
   while (getline(&line, &len, fp) != -1) {
     Users *user = separateUsers(line);
     // Insere na HashTable usando o user->username como key
-    g_hash_table_insert(usersTable, user->username, user);
+    g_hash_table_insert(usersTable, g_strdup(user->username), user);
   }
   free(line);
 }
 
 void destroyUser(gpointer user) {
-  return;
-  // ESTÁ A DAR ESTE ERRO: double free or corruption (fasttop)
-  /*   struct users *u = (struct users *)user;
+  Users *u = (Users *)user;
 
-    free(u->username);
-    free(u->email);
-    free(u->first_name);
-    free(u->last_name);
-    free(u->birth_date);
-    free(u->country);
-    free(u->subscription_type);
-    free(u->liked_musics_id);
+  free(u->username);
+  free(u->email);
+  free(u->first_name);
+  free(u->last_name);
+  free(u->birth_date);
+  free(u->country);
+  free(u->subscription_type);
+  free(u->liked_musics_id);
 
-    free(u); */
+  free(u);
 }
 
 char *getUserUsername(gpointer user) {

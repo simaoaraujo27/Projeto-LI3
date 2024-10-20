@@ -53,26 +53,24 @@ void parseMusics(FILE *fp, GHashTable *musicsTable) {
   while (getline(&line, &len, fp) != -1) {
     Musics *music = separateMusics(line);
     // Insere na HashTable usando o music->artist_id como key
-    g_hash_table_insert(musicsTable, music->artist_id, music);
+    g_hash_table_insert(musicsTable, g_strdup(music->artist_id), music);
   }
 
   free(line);
 }
 
 void destroyMusic(gpointer music) {
-  return;
-/*     struct musics *m = (struct musics *)music;
+  Musics *m = (Musics *)music;
 
-        free(m->title);
-        free(m->artist_id);
-        free(m->genre);
-        free(m->lyrics);
+  free(m->title);
+  free(m->artist_id);
+  free(m->genre);
+  free(m->lyrics);
 
-    free(m); */
+  free(m);
 }
 
-
-int getMusicId(gpointer music) { 
+int getMusicId(gpointer music) {
   struct musics *m = (struct musics *)music;
   return (m->id);
 }
@@ -87,7 +85,7 @@ char *getMusicArtistId(gpointer music) {
   return strdup(m->artist_id);
 }
 
-int getMusicDuration(gpointer music) { 
+int getMusicDuration(gpointer music) {
   struct musics *m = (struct musics *)music;
   return (m->durationSeconds);
 }
@@ -97,7 +95,7 @@ char *getMusicGenre(gpointer music) {
   return strdup(m->genre);
 }
 
-int getMusicYear(gpointer music) { 
+int getMusicYear(gpointer music) {
   struct musics *m = (struct musics *)music;
   return (m->year);
 }
