@@ -17,6 +17,19 @@ struct users {
                            // músicas gostadas pelo utilizador
 };
 
+void remove_quotes(char *str) {
+  int len = strlen(str);
+
+  // Verifica se a string começa e termina com aspas duplas
+  if (len > 1 && str[0] == '"' && str[len - 1] == '"') {
+    // Move a string para "remover" as aspas duplas
+    for (int i = 0; i < len - 1; i++) {
+      str[i] = str[i + 1]; // Desloca os caracteres para a esquerda
+    }
+    str[len - 2] = '\0'; // Coloca o terminador nulo na nova posição
+  }
+}
+
 Users *separateUsers(char *line) {
   // separa cada linha pelas suas respetivas variáveis
   Users *user = malloc(sizeof(struct users));
@@ -26,13 +39,21 @@ Users *separateUsers(char *line) {
   }
 
   user->username = strdup(strsep(&line, ";"));
+  remove_quotes(user->username);
   user->email = strdup(strsep(&line, ";"));
+  remove_quotes(user->email);
   user->first_name = strdup(strsep(&line, ";"));
+  remove_quotes(user->first_name);
   user->last_name = strdup(strsep(&line, ";"));
+  remove_quotes(user->last_name);
   user->birth_date = strdup(strsep(&line, ";"));
+  remove_quotes(user->birth_date);
   user->country = strdup(strsep(&line, ";"));
+  remove_quotes(user->country);
   user->subscription_type = strdup(strsep(&line, ";"));
+  remove_quotes(user->subscription_type);
   user->liked_musics_id = strdup(strsep(&line, ";"));
+  remove_quotes(user->liked_musics_id);
 
   return user;
 }
@@ -51,25 +72,25 @@ void parseUsers(FILE *fp, GHashTable *usersTable) {
     // Insere na HashTable usando o user->username como key
     g_hash_table_insert(usersTable, user->username, user);
   }
-
   free(line);
 }
 
 void destroyUser(gpointer user) {
-  struct users *u = (struct users *)user;
+  return;
+  // ESTÁ A DAR ESTE ERRO: double free or corruption (fasttop)
+  /*   struct users *u = (struct users *)user;
 
-        free(u->username);
-        free(u->email);
-        free(u->first_name);
-        free(u->last_name);
-        free(u->birth_date);
-        free(u->country);
-        free(u->subscription_type);
-        free(u->liked_musics_id);
+    free(u->username);
+    free(u->email);
+    free(u->first_name);
+    free(u->last_name);
+    free(u->birth_date);
+    free(u->country);
+    free(u->subscription_type);
+    free(u->liked_musics_id);
 
-
-    free(u);
- }
+    free(u); */
+}
 
 char *getUserUsername(gpointer user) {
   struct users *u = (struct users *)user;
@@ -110,7 +131,3 @@ char *getUserLikedMusicsId(gpointer user) {
   struct users *u = (struct users *)user;
   return strdup(u->liked_musics_id);
 }
-
-
-
-

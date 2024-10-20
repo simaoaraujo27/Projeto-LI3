@@ -63,17 +63,18 @@ void parseArtists(FILE *fp, GHashTable *artistsTable) {
 }
 
 void destroyArtist(gpointer artist) {
-  struct artists *a = (struct artists *)artist;
+  return;
+  /*   struct artists *a = (struct artists *)artist;
 
-        free(a->name);
-        free(a->description);
-        free(a->id_constituent);
-        free(a->country);
+          free(a->name);
+          free(a->description);
+          free(a->id_constituent);
+          free(a->country);
 
-    free(a);
+      free(a); */
 }
 
-int getArtistId(gpointer artist) { 
+int getArtistId(gpointer artist) {
   struct artists *a = (struct artists *)artist;
   return (a->id);
 }
@@ -88,7 +89,7 @@ char *getArtistDescription(gpointer artist) {
   return strdup(a->description);
 }
 
-int getArtistRecipePerStream(gpointer artist) { 
+int getArtistRecipePerStream(gpointer artist) {
   struct artists *a = (struct artists *)artist;
   return (a->recipe_per_stream);
 }
@@ -103,7 +104,7 @@ char *getArtistCountry(gpointer artist) {
   return strdup(a->country);
 }
 
-enum tipoArtista getArtistType(gpointer artist) { 
+enum tipoArtista getArtistType(gpointer artist) {
   struct artists *a = (struct artists *)artist;
   return (a->tipo);
 }

@@ -1,8 +1,8 @@
 #include "artists.h"
 #include "musics.h"
+#include "queries.h"
 #include "users.h"
 #include "validation.h"
-#include "queries.h"
 #include <artists.h>
 #include <glib.h>
 #include <stdbool.h>
@@ -15,7 +15,7 @@
 int main(int argc, char **argv) {
   FILE *fp = NULL;
 
-  if (argc < 2) {
+  if (argc < 3) {
     fp = stdin;
     fprintf(stderr, "Error: Missing filename\n");
     return EXIT_FAILURE;
@@ -73,13 +73,14 @@ int main(int argc, char **argv) {
   char *line = NULL;
   size_t len = 0;
   while (getline(&line, &len, fp) != -1) {
-    if (line[0] == '1'){
-      //query1();
-    }else if (line[0] == '2'){
-      //query2();
-    }else if (line[0] == '3'){
-      //query3();
-    }
+    query1(usersTable, line);
+    /*     if (line[0] == '1') {
+          // query1();
+        } else if (line[0] == '2') {
+          // query2();
+        } else if (line[0] == '3') {
+          // query3();
+        } */
   }
 
   free(line);

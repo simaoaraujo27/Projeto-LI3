@@ -5,9 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib.h>
 
 /* Listar o resumo de um utilizador, consoante o identificador recebido por argumento. */
-void query1();
+void query1(GHashTable *usersTable, char *line);
 
 /* top N artistas com maior discografia */
 void query2();

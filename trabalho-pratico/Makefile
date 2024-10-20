@@ -4,7 +4,7 @@ LDFLAGS = $(shell pkg-config --libs glib-2.0)
 
 all: programa-principal
 
-programa-principal: src/main.o src/musics.o src/users.o src/artists.o src/validation.o
+programa-principal: src/main.o src/musics.o src/users.o src/artists.o src/validation.o src/queries.o
 	$(CC) $^ $(LDFLAGS) -o $@
 
 src/main.o: src/main.c
@@ -22,5 +22,8 @@ src/artists.o: src/artists.c
 src/validation.o: src/validation.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+src/queries.o: src/queries.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
-	rm -f *.o  programa-principal src/artists.o src/main.o src/musics.o src/users.o src/validation.o
+	rm -f *.o  programa-principal src/artists.o src/main.o src/musics.o src/users.o src/validation.o src/queries.o

@@ -60,14 +60,15 @@ void parseMusics(FILE *fp, GHashTable *musicsTable) {
 }
 
 void destroyMusic(gpointer music) {
-    struct musics *m = (struct musics *)music;
+  return;
+/*     struct musics *m = (struct musics *)music;
 
         free(m->title);
         free(m->artist_id);
         free(m->genre);
         free(m->lyrics);
 
-    free(m);
+    free(m); */
 }
 
 
