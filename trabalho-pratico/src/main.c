@@ -72,15 +72,16 @@ int main(int argc, char **argv) {
   }
   char *line = NULL;
   size_t len = 0;
+  int i = 1;
   while (getline(&line, &len, fp) != -1) {
-    query1(usersTable, line);
-    /*     if (line[0] == '1') {
-          // query1();
-        } else if (line[0] == '2') {
-          // query2();
-        } else if (line[0] == '3') {
-          // query3();
-        } */
+    if (line[0] == '1') {
+      query1(usersTable, line, i);
+      i++;
+    } else if (line[0] == '2') {
+      // query2();
+    } else if (line[0] == '3') {
+      // query3();
+    }
   }
 
   free(line);

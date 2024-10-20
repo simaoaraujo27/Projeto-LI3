@@ -26,4 +26,4 @@ src/queries.o: src/queries.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o  programa-principal src/artists.o src/main.o src/musics.o src/users.o src/validation.o src/queries.o
+	rm -f *.o  programa-principal src/artists.o src/main.o src/musics.o src/users.o src/validation.o src/queries.o resultados/*.txt

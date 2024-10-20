@@ -7,8 +7,10 @@
 #include <string.h>
 #include <glib.h>
 
+char *calculate_age(char *birth_date);
+
 /* Listar o resumo de um utilizador, consoante o identificador recebido por argumento. */
-void query1(GHashTable *usersTable, char *line);
+void query1(GHashTable *usersTable, char *line, int i);
 
 /* top N artistas com maior discografia */
 void query2();
