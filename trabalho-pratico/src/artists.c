@@ -19,7 +19,6 @@ struct artists {
                          // coletivo. Este campo pode ser uma lista vazia.
   char *country;         // nacionalidade do artista.
   enum tipoArtista tipo; // tipo de artista, i.e., individual ou grupo musical,
-                         // caso individual = True, grupo = False
 };
 
 Artists *separateArtists(char *line) {
@@ -63,6 +62,48 @@ void parseArtists(FILE *fp, GHashTable *artistsTable) {
   free(line);
 }
 
-void destroyArtist(gpointer user) { return; }
+void destroyArtist(gpointer artist) {
+  struct artists *a = (struct artists *)artist;
 
-char *getArtistName(Artists *artist) { return strdup(artist->name); }
+        free(a->name);
+        free(a->description);
+        free(a->id_constituent);
+        free(a->country);
+
+    free(a);
+}
+
+int getArtistId(gpointer artist) { 
+  struct artists *a = (struct artists *)artist;
+  return (a->id);
+}
+
+char *getArtistName(gpointer artist) {
+  struct artists *a = (struct artists *)artist;
+  return strdup(a->name);
+}
+
+char *getArtistDescription(gpointer artist) {
+  struct artists *a = (struct artists *)artist;
+  return strdup(a->description);
+}
+
+int getArtistRecipePerStream(gpointer artist) { 
+  struct artists *a = (struct artists *)artist;
+  return (a->recipe_per_stream);
+}
+
+char *getArtistIdConstituent(gpointer artist) {
+  struct artists *a = (struct artists *)artist;
+  return strdup(a->id_constituent);
+}
+
+char *getArtistCountry(gpointer artist) {
+  struct artists *a = (struct artists *)artist;
+  return strdup(a->country);
+}
+
+enum tipoArtista getArtistType(gpointer artist) { 
+  struct artists *a = (struct artists *)artist;
+  return (a->tipo);
+}

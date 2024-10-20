@@ -55,4 +55,62 @@ void parseUsers(FILE *fp, GHashTable *usersTable) {
   free(line);
 }
 
-void destroyUser(gpointer user) { return; }
+void destroyUser(gpointer user) {
+  struct users *u = (struct users *)user;
+
+        free(u->username);
+        free(u->email);
+        free(u->first_name);
+        free(u->last_name);
+        free(u->birth_date);
+        free(u->country);
+        free(u->subscription_type);
+        free(u->liked_musics_id);
+
+
+    free(u);
+ }
+
+char *getUserUsername(gpointer user) {
+  struct users *u = (struct users *)user;
+  return strdup(u->username);
+}
+
+char *getUserEmail(gpointer user) {
+  struct users *u = (struct users *)user;
+  return strdup(u->email);
+}
+
+char *getUserFirstName(gpointer user) {
+  struct users *u = (struct users *)user;
+  return strdup(u->first_name);
+}
+
+char *getUserLastName(gpointer user) {
+  struct users *u = (struct users *)user;
+  return strdup(u->last_name);
+}
+
+char *getUserBirthDate(gpointer user) {
+  struct users *u = (struct users *)user;
+  return strdup(u->birth_date);
+}
+
+char *getUserCountry(gpointer user) {
+  struct users *u = (struct users *)user;
+  return strdup(u->country);
+}
+
+char *getUserSubscriptionType(gpointer user) {
+  struct users *u = (struct users *)user;
+  return strdup(u->subscription_type);
+}
+
+char *getUserLikedMusicsId(gpointer user) {
+  struct users *u = (struct users *)user;
+  return strdup(u->liked_musics_id);
+}
+
+
+
+

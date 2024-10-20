@@ -2,6 +2,7 @@
 #include "musics.h"
 #include "users.h"
 #include "validation.h"
+#include "queries.h"
 #include <artists.h>
 #include <glib.h>
 #include <stdbool.h>
@@ -63,6 +64,29 @@ int main(int argc, char **argv) {
   }
   fclose(fp);
 
+  char *txt = argv[2];
+  fp = fopen(txt, "r");
+  if (!fp) {
+    perror("Error");
+    return EXIT_FAILURE;
+  }
+  char *line = NULL;
+  size_t len = 0;
+  while (getline(&line, &len, fp) != -1) {
+    if (line[0] == '1'){
+      //query1();
+    }else if (line[0] == '2'){
+      //query2();
+    }else if (line[0] == '3'){
+      //query3();
+    }
+  }
+
+  free(line);
+  fclose(fp);
+
   g_hash_table_destroy(artistsTable);
+  g_hash_table_destroy(musicsTable);
+  g_hash_table_destroy(usersTable);
   return 0;
 }

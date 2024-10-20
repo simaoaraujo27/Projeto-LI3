@@ -59,4 +59,49 @@ void parseMusics(FILE *fp, GHashTable *musicsTable) {
   free(line);
 }
 
-void destroyMusic(gpointer user) { return; }
+void destroyMusic(gpointer music) {
+    struct musics *m = (struct musics *)music;
+
+        free(m->title);
+        free(m->artist_id);
+        free(m->genre);
+        free(m->lyrics);
+
+    free(m);
+}
+
+
+int getMusicId(gpointer music) { 
+  struct musics *m = (struct musics *)music;
+  return (m->id);
+}
+
+char *getMusicTitle(gpointer music) {
+  struct musics *m = (struct musics *)music;
+  return strdup(m->title);
+}
+
+char *getMusicArtistId(gpointer music) {
+  struct musics *m = (struct musics *)music;
+  return strdup(m->artist_id);
+}
+
+int getMusicDuration(gpointer music) { 
+  struct musics *m = (struct musics *)music;
+  return (m->durationSeconds);
+}
+
+char *getMusicGenre(gpointer music) {
+  struct musics *m = (struct musics *)music;
+  return strdup(m->genre);
+}
+
+int getMusicYear(gpointer music) { 
+  struct musics *m = (struct musics *)music;
+  return (m->year);
+}
+
+char *getMusicLyrics(gpointer music) {
+  struct musics *m = (struct musics *)music;
+  return strdup(m->lyrics);
+}
