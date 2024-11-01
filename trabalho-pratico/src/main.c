@@ -42,14 +42,13 @@ int main(int argc, char **argv) {
   }
   fclose(fp);
 
-  GHashTable *musicsTable =
-      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyMusic);
+  GList *listMusics = NULL;
   fp = fopen(musicsPath, "r");
   if (!fp) {
     perror("Error");
     return EXIT_FAILURE;
   } else {
-    parseMusics(fp, musicsTable);
+    parseMusics(fp, &listMusics);
   }
   fclose(fp);
 
@@ -78,7 +77,11 @@ int main(int argc, char **argv) {
       query1(usersTable, line, i);
       i++;
     } else if (line[0] == '2') {
-      // query2();
+      if (!temAspas(line)) {
+        query2(atoi(line + 3), NULL, artistsTable, listMusics, line);
+      } else {
+        query2(atoi(line + 3), line + 3, artistsTable, listMusics, line);
+      }
     } else if (line[0] == '3') {
       // query3();
     }
@@ -87,7 +90,6 @@ int main(int argc, char **argv) {
   free(line);
 
   g_hash_table_destroy(artistsTable);
-  g_hash_table_destroy(musicsTable);
   g_hash_table_destroy(usersTable);
   return 0;
 }

@@ -2,6 +2,7 @@
 #include "artists.h"
 #include "musics.h"
 #include "users.h"
+#include <assert.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -43,6 +44,7 @@ bool validateDate(char *date) {
 
 // (formato: hh:mm:ss)
 bool validateDuration(char *duration) {
+  remove_quotes(duration);
   if (strlen(duration) != 8)
     return false;
   if (duration[2] != ':' || duration[5] != ':')
@@ -97,4 +99,3 @@ bool validateEmail(char *email) {
 bool validateSubscriptionType(char *type) {
   return (strcmp(type, "normal") == 0 || strcmp(type, "premium") == 0);
 }
-

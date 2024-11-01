@@ -1,4 +1,6 @@
 #include "queries.h"
+#include "artists.h"
+#include "musics.h"
 #include "users.h"
 #include <ctype.h>
 #include <glib.h>
@@ -33,7 +35,7 @@ char *calculate_age(char *birth_date) {
     return NULL; // Se a alocação falhar
   }
 
-  snprintf(age_str, 4, "%d", age);
+  snprintf(age_str, 12, "%d", age);
 
   return age_str;
 }
@@ -79,6 +81,52 @@ void query1(GHashTable *usersTable, char *line, int i) {
   }
 }
 
-void query2() { return; }
+int temAspas(char *line) {
+  for (int i = 0; line[i]; i++) {
+    if (line[i] == '"') {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+void removeFstLast(char *str) {
+  int len = strlen(str);
+  // Verifica se a string começa e termina com aspas duplas
+  // Move a string para "remover" as aspas duplas
+  for (int i = 0; i < len - 1; i++) {
+    str[i] = str[i + 1]; // Desloca os caracteres para a esquerda
+  }
+  str[len - 2] = '\0'; // Coloca o terminador nulo na nova posição
+}
+
+void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
+            GList *listMusics, char *line) {
+  if (country == NULL) {
+    for (GList *l = listMusics; l != NULL; l = l->next) {
+      Musics *p = (Musics *)l->data;
+      char *artistId = getMusicArtistId(p);
+      remove_quotes(artistId);
+      removeFstLast(artistId);
+      int duracao = getMusicDuration(p);
+      char *key;
+      gpointer value;
+      gpointer orig_key;
+
+      for (int i = 0; i < strlen(artistId); i += 12) {
+        key = strdup(strsep(&artistId, ","));
+        removeFstLast(key);
+        printf("%s\n", key);
+        if (g_hash_table_lookup_extended(artistsTable, key, &orig_key,
+                                         &value)) {
+          increment_artist_discografia(value, duracao);
+          g_hash_table_insert(artistsTable, key, value);
+        }
+      }
+    }
+  } else {
+  }
+  return;
+}
 
 void query3() { return; }

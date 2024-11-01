@@ -1,5 +1,6 @@
 #include "musics.h"
 #include "validation.h"
+#include <assert.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -7,7 +8,7 @@
 #include <string.h>
 
 struct musics {
-  int id;              // identificador único da música
+  char *id;            // identificador único da música
   char *title;         // nome da música
   char *artist_id;     // lista de identificadores dos autores da música
   int durationSeconds; // tempo de duração
@@ -25,18 +26,18 @@ Musics *separateMusics(char *line) {
     return NULL;
   }
 
-  music->id = atoi(strsep(&line, ";"));
+  music->id = strdup(strsep(&line, ";"));
   music->title = strdup(strsep(&line, ";"));
   music->artist_id = strdup(strsep(&line, ";"));
   char *duration_str = strdup(strsep(&line, ";"));
   music->genre = strdup(strsep(&line, ";"));
-  music->year = atoi(strsep(&line, ";"));
+  music->year = atoi(strsep(&line, ";") + 1);
   music->lyrics = strdup(strsep(&line, ";"));
 
   if (validateDuration(duration_str))
-    music->durationSeconds = atoi(duration_str) /* horas */ * 3600 +
-                             atoi(duration_str + 3) /* minutos */ * 60 +
-                             atoi(duration_str + 6) /* segundos */;
+    music->durationSeconds = atoi(duration_str + 1) /* horas */ * 3600 +
+                             atoi(duration_str + 4) /* minutos */ * 60 +
+                             atoi(duration_str + 7) /* segundos */;
   else
     music->durationSeconds = -1;
 
@@ -47,14 +48,25 @@ bool validateMusic(Musics *music) {
   return (music->durationSeconds != -1 && music->year <= 2024);
 }
 
-void parseMusics(FILE *fp, GHashTable *musicsTable) {
+void parseMusics(FILE *fp, GList **listMusics) {
   char *line = NULL;
   size_t len = 0;
+
+  getline(&line, &len, fp);
+
   while (getline(&line, &len, fp) != -1) {
     Musics *music = separateMusics(line);
-    // Insere na HashTable usando o music->artist_id como key
-    g_hash_table_insert(musicsTable, g_strdup(music->artist_id), music);
+    if (music == NULL) {
+      printf("Erro: separateMusics retornou NULL\n");
+      break;
+    }
+    *listMusics = g_list_prepend(*listMusics, music);
   }
+
+  /*   for (GList *l = *listMusics; l != NULL; l = l->next) {
+      Musics *p = (Musics *)l->data;
+      printf("Título: %s, ID: %d\n", p->title, p->year);
+    } */
 
   free(line);
 }
@@ -70,9 +82,9 @@ void destroyMusic(gpointer music) {
   free(m);
 }
 
-int getMusicId(gpointer music) {
+char *getMusicId(gpointer music) {
   struct musics *m = (struct musics *)music;
-  return (m->id);
+  return strdup(m->id);
 }
 
 char *getMusicTitle(gpointer music) {

@@ -11,10 +11,10 @@ typedef struct musics Musics;
 
 Musics *separateMusics(char *line);
 bool validateMusic(Musics *music);
-void parseMusics(FILE *fp, GHashTable *musicsTable);
+void parseMusics(FILE *fp, GList **listMusics);
 void destroyMusic(gpointer music);
 
-int getMusicId(gpointer music);
+char *getMusicId(gpointer music);
 char *getMusicTitle(gpointer music);
 char *getMusicArtistId(gpointer music);
 int getMusicDuration(gpointer music);

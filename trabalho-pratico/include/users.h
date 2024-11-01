@@ -14,7 +14,7 @@ Users *separateUsers(char *line);
 void parseUsers(FILE *fp, GHashTable *usersTable);
 bool validateUser(Users *user);
 void destroyUser(gpointer user);
-
+void remove_quotes(char *str);
 char *getUserUsername(gpointer user);
 char *getUserEmail(gpointer user);
 char *getUserFirstName(gpointer user);

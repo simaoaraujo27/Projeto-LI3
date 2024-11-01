@@ -1,4 +1,5 @@
 #include "artists.h"
+#include "users.h"
 #include <ctype.h>
 #include <glib.h>
 #include <stdbool.h>
@@ -9,7 +10,7 @@
 enum tipoArtista { Individual, Grupo };
 
 struct artists {
-  int id;                // identificador único do artista
+  char *id;              // identificador único do artista
   char *name;            // nome do artista
   char *description;     // descrição do artista
   int recipe_per_stream; // dinheiro auferido de cada vez que uma das músicas
@@ -19,6 +20,7 @@ struct artists {
                          // coletivo. Este campo pode ser uma lista vazia.
   char *country;         // nacionalidade do artista.
   enum tipoArtista tipo; // tipo de artista, i.e., individual ou grupo musical,
+  int discografia;       // discografia do artista
 };
 
 Artists *separateArtists(char *line) {
@@ -30,7 +32,7 @@ Artists *separateArtists(char *line) {
     return NULL;
   }
 
-  artist->id = atoi(strsep(&line, ";"));
+  artist->id = strdup(strsep(&line, ";"));
   artist->name = strdup(strsep(&line, ";"));
   artist->description = strdup(strsep(&line, ";"));
   artist->recipe_per_stream = atoi(strsep(&line, ";"));
@@ -40,6 +42,7 @@ Artists *separateArtists(char *line) {
     artist->tipo = Individual;
   else
     artist->tipo = Grupo;
+  artist->discografia = 0;
 
   return artist;
 }
@@ -55,11 +58,17 @@ void parseArtists(FILE *fp, GHashTable *artistsTable) {
 
   while (getline(&line, &len, fp) != -1) {
     Artists *artist = separateArtists(line);
+    remove_quotes(artist->id);
     // Insere na HashTable usando o artist->name como key
-    g_hash_table_insert(artistsTable, g_strdup(artist->name), artist);
+    g_hash_table_insert(artistsTable, g_strdup(artist->id), artist);
   }
 
   free(line);
+}
+
+void increment_artist_discografia(gpointer artist_ptr, int duracao) {
+  Artists *artist = (Artists *)artist_ptr;
+  artist->discografia += duracao;
 }
 
 void destroyArtist(gpointer artist) {
@@ -69,13 +78,13 @@ void destroyArtist(gpointer artist) {
   g_free(a->description);
   g_free(a->id_constituent);
   g_free(a->country);
-
+  g_free(a->id);
   g_free(a);
 }
 
-int getArtistId(gpointer artist) {
+char *getArtistId(gpointer artist) {
   struct artists *a = (struct artists *)artist;
-  return (a->id);
+  return strdup(a->id);
 }
 
 char *getArtistName(gpointer artist) {
@@ -106,4 +115,9 @@ char *getArtistCountry(gpointer artist) {
 enum tipoArtista getArtistType(gpointer artist) {
   struct artists *a = (struct artists *)artist;
   return (a->tipo);
+}
+
+int getArtistDiscografia(gpointer artist) {
+  struct artists *a = (struct artists *)artist;
+  return (a->discografia);
 }
