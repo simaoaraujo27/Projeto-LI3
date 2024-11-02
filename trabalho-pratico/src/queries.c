@@ -113,14 +113,18 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
       gpointer value;
       gpointer orig_key;
 
-      for (int i = 0; i < strlen(artistId); i += 12) {
-        key = strdup(strsep(&artistId, ","));
-        removeFstLast(key);
-        printf("%s\n", key);
+      int l = strlen(artistId);
+      for (int i = 0; i < l; i += 12) {
+        if (i == 0)
+          artistId = artistId + 1;
+        else
+          artistId = artistId + 3;
+        key = strdup(strsep(&artistId, "'"));
+
         if (g_hash_table_lookup_extended(artistsTable, key, &orig_key,
                                          &value)) {
           increment_artist_discografia(value, duracao);
-          g_hash_table_insert(artistsTable, key, value);
+          g_hash_table_insert(artistsTable, key, value); 
         }
       }
     }

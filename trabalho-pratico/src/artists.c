@@ -66,9 +66,10 @@ void parseArtists(FILE *fp, GHashTable *artistsTable) {
   free(line);
 }
 
-void increment_artist_discografia(gpointer artist_ptr, int duracao) {
-  Artists *artist = (Artists *)artist_ptr;
+void increment_artist_discografia(gpointer a, int duracao) {
+  Artists *artist = (Artists *)a;
   artist->discografia += duracao;
+  printf("%d\n", artist->discografia);
 }
 
 void destroyArtist(gpointer artist) {
