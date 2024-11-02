@@ -108,6 +108,7 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
   }
 
   if (country == NULL) {
+    //printf ("a\n");
     for (GList *l = listMusics; l != NULL; l = l->next) {
       Musics *p = (Musics *)l->data;
       char *artistId = getMusicArtistId(p);
@@ -125,7 +126,7 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
         else
           artistId = artistId + 3;
         key = strdup(strsep(&artistId, "'"));
-
+        printf ("%s", key);
         if (g_hash_table_lookup_extended(artistsTable, key, &orig_key,
                                          &value)) {
           increment_artist_discografia(value, duracao, arrayResposta,

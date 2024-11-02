@@ -99,3 +99,49 @@ bool validateEmail(char *email) {
 bool validateSubscriptionType(char *type) {
   return (strcmp(type, "normal") == 0 || strcmp(type, "premium") == 0);
 }
+
+bool validateCSVList(char *list) {
+  int lastIndex = strlen(list) - 1;
+  return (list[0] == '"' && list[1] == '[' && list[lastIndex - 1] == ']' &&
+          list[lastIndex] == '"');
+}
+
+bool validateUsersLine(char *line) {
+  
+  // VALIDAÇÃO SINTÁTICA
+  char *username = strdup(strsep(&line, ";"));
+
+  char *email = strdup(strsep(&line, ";"));
+  remove_quotes(email);
+  if (!validateEmail(email))
+    return false;
+
+  char *first_name = strdup(strsep(&line, ";"));
+  char *last_name = strdup(strsep(&line, ";"));
+  char *birth_date = strdup(strsep(&line, ";"));
+  remove_quotes(birth_date);
+  if (!validateDate(birth_date))
+    return false;
+
+  char *country = strdup(strsep(&line, ";"));
+  char *subscription_type = strdup(strsep(&line, ";"));
+  remove_quotes(subscription_type);
+
+  if (!validateSubscriptionType(subscription_type))
+    return false;
+
+  char *liked_musics_id = strdup(line);
+
+  if (!validateCSVList(liked_musics_id))
+    return false;
+
+  // VALIDAÇÃO LÓGICA
+
+  /*   char *musica = strdup(strsep(&line + 1, ","));
+    while (strcmp(musica, "]") != 0) {
+      musica = strdup(strsep(&line + 1, ","));
+      printf("%s\n", musica);
+    } */
+
+  return true;
+}
