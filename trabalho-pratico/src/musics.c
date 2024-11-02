@@ -34,11 +34,11 @@ Musics *separateMusics(char *line) {
   music->year = atoi(strsep(&line, ";") + 1);
   music->lyrics = strdup(strsep(&line, ";"));
 
-  if (validateDuration(duration_str))
-    music->durationSeconds = atoi(duration_str + 1) /* horas */ * 3600 +
-                             atoi(duration_str + 4) /* minutos */ * 60 +
-                             atoi(duration_str + 7) /* segundos */;
-  else
+  if (validateDuration(duration_str)) {
+    music->durationSeconds = (atoi(duration_str)) /* horas */ * 3600 +
+                             atoi(duration_str + 3) /* minutos */ * 60 +
+                             atoi(duration_str + 6) /* segundos */;
+  } else
     music->durationSeconds = -1;
 
   return music;

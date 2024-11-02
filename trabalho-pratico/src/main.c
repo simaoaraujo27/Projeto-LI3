@@ -5,6 +5,7 @@
 #include "validation.h"
 #include <artists.h>
 #include <glib.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -72,18 +73,24 @@ int main(int argc, char **argv) {
   char *line = NULL;
   size_t len = 0;
   int i = 1;
+  int numeroQuerie = 0;
+  int numeroArtist = 0;
   while (getline(&line, &len, fp) != -1) {
-    if (line[0] == '1') {
+    numeroQuerie = atoi(strsep(&line, " "));
+    if (numeroQuerie == 1) {
       query1(usersTable, line, i);
       i++;
-    } else if (line[0] == '2') {
+    } else if (numeroQuerie == 2) {
       if (!temAspas(line)) {
-        query2(atoi(line + 3), NULL, artistsTable, listMusics, line);
+        //query2(atoi(line), NULL, artistsTable, listMusics, line);
       } else {
-        query2(atoi(line + 3), line + 3, artistsTable, listMusics, line);
+        numeroArtist = atoi(strsep(&line, " "));
+        printf("%d\n", numeroArtist);
+        query2(numeroArtist, line, artistsTable, listMusics, line);
       }
-    } else if (line[0] == '3') {
+    } else if (numeroQuerie == 3) {
       // query3();
+      printf("a");
     }
   }
   fclose(fp);

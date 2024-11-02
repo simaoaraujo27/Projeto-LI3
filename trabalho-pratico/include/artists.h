@@ -16,7 +16,8 @@ Artists *separateArtists(char *line);
 bool validateArtist(Artists *artist);
 void parseArtists(FILE *fp, GHashTable *artistsTable);
 void destroyArtist(gpointer artist);
-void increment_artist_discografia(gpointer artist_ptr, int duracao);
+void increment_artist_discografia(gpointer value, int duracao,
+                                  Artists *arrayResposta[], int numeroArtistas);
 char *getArtistId(gpointer artist);
 char *getArtistName(gpointer artist);
 char *getArtistDescription(gpointer artist);
@@ -25,5 +26,6 @@ char *getArtistIdConstituent(gpointer artist);
 char *getArtistCountry(gpointer artist);
 enum tipoArtista getArtistType(gpointer artist);
 int getArtistDiscografia(gpointer artist);
+void PrintArt(Artists *arrayResposta[], int numeroArtistas);
 
 #endif

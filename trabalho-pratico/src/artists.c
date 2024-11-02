@@ -66,10 +66,56 @@ void parseArtists(FILE *fp, GHashTable *artistsTable) {
   free(line);
 }
 
-void increment_artist_discografia(gpointer a, int duracao) {
-  Artists *artist = (Artists *)a;
+void puxaDireita(Artists *arrayResposta[], int numeroArtistas, int i) {
+  for (int j = numeroArtistas; j < i; j--) {
+    arrayResposta[j] = arrayResposta[j - 1];
+  }
+}
+
+void puxaEsquerda(Artists *arrayResposta[], int numeroArtistas, int i) {
+  for (int j = i; j < numeroArtistas; j++) {
+    arrayResposta[j] = arrayResposta[j + 1];
+  }
+  arrayResposta[numeroArtistas - 1] = NULL;
+}
+
+void insertArtistArray(Artists *arrayResposta[], Artists *artist,
+                       int numeroArtistas) {
+  for (int i = 0; i < numeroArtistas; i++) {
+    if (arrayResposta[i] == NULL) {
+      arrayResposta[i] = artist;
+      break;
+    }
+    if (arrayResposta[i]->discografia < artist->discografia) {
+      puxaDireita(arrayResposta, numeroArtistas, i);
+      arrayResposta[i] = artist;
+      break;
+    }
+  }
+}
+
+void procuraArt(Artists *artista, Artists *arrayResposta[],
+                int numeroArtistas) {
+  for (int i = 0; i < numeroArtistas; i++) {
+    if (artista->id == arrayResposta[i]->id) {
+      puxaEsquerda(arrayResposta, numeroArtistas, i);
+    }
+  }
+}
+
+void PrintArt(Artists *arrayResposta[], int numeroArtistas) {
+  for (int i = 0; i < numeroArtistas; i++) {
+    printf("%d\n", arrayResposta[i]->discografia);
+  }
+}
+
+void increment_artist_discografia(gpointer value, int duracao,
+                                  Artists *arrayResposta[],
+                                  int numeroArtistas) {
+  Artists *artist = (Artists *)value;
   artist->discografia += duracao;
-  printf("%d\n", artist->discografia);
+  procuraArt(artist, arrayResposta, numeroArtistas);
+  insertArtistArray(arrayResposta, artist, numeroArtistas);
 }
 
 void destroyArtist(gpointer artist) {

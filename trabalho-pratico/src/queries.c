@@ -102,6 +102,11 @@ void removeFstLast(char *str) {
 
 void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
             GList *listMusics, char *line) {
+  Artists *arrayResposta[numeroArtistas];
+  for (int i = 0; i < numeroArtistas; i++) {
+    arrayResposta[i] = NULL;
+  }
+
   if (country == NULL) {
     for (GList *l = listMusics; l != NULL; l = l->next) {
       Musics *p = (Musics *)l->data;
@@ -123,11 +128,12 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
 
         if (g_hash_table_lookup_extended(artistsTable, key, &orig_key,
                                          &value)) {
-          increment_artist_discografia(value, duracao);
-          g_hash_table_insert(artistsTable, key, value); 
+          increment_artist_discografia(value, duracao, arrayResposta,
+                                       numeroArtistas);
         }
       }
     }
+    
   } else {
   }
   return;
