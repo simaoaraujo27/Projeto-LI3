@@ -29,5 +29,6 @@ char *getArtistCountry(gpointer artist);
 enum tipoArtista getArtistType(gpointer artist);
 int getArtistDiscografia(gpointer artist);
 void print(GList **listaResposta, int numeroArtistas, FILE *newFile);
+void colocaZero(GHashTable *artistsTable);
 
 #endif
