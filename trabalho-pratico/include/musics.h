@@ -21,6 +21,8 @@ int getMusicDuration(gpointer music);
 char *getMusicGenre(gpointer music);
 int getMusicYear(gpointer music);
 char *getMusicLyrics(gpointer music);
-typedef struct genreLikes GenreLikes;
+//typedef struct genreLikes GenreLikes;
+
+//GenreLikes *createGenre(char *genero);
 
 #endif

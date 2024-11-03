@@ -105,12 +105,26 @@ char *getMusicLyrics(gpointer music) {
   struct musics *m = (struct musics *)music;
   return strdup(m->lyrics);
 }
-
+/*
 struct genreLikes{
   char *genre;
   int likes;
 };
 
+GenreLikes *createGenre(char *genero){
+
+  GenreLikes *g = malloc(sizeof(struct genreLikes));
+  if (!g) {
+    fprintf(stderr, "Malloc failed!");
+    return NULL;
+  }
+
+  g->genre = strdup(genero);
+  g->likes = 1;
+
+  return g;
+}
+*/
 /*
 int contarLikesGenero(char *genero){
   
