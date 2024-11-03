@@ -17,7 +17,7 @@ int temAspas(char *line);
 
 /* top N artistas com maior discografia */
 void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
-            GList *listMusics, char *line);
+            GList *listMusics, char *line, int i);
 
 /* géneros de música mais populares numa determinada faixa etária */
 void query3();

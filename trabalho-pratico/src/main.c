@@ -13,10 +13,11 @@
 
 #define MAX_PATH_SIZE 1024
 
-int primeiraAspa(char *line){
+int primeiraAspa(char *line) {
   int i;
-  for (i=0; line[i]; i++){
-    if (line[i] == '"') return i;
+  for (i = 0; line[i]; i++) {
+    if (line[i] == '"')
+      return i;
   }
   return -1;
 }
@@ -81,22 +82,21 @@ int main(int argc, char **argv) {
   char *line = NULL;
   size_t len = 0;
   int i = 1;
-  //int numeroQuerie = 0;
   int numeroArtist = 0;
   char *country;
   while (getline(&line, &len, fp) != -1) {
-    //numeroQuerie = atoi(strsep(&line, " "));
     if (line[0] == '1') {
       query1(usersTable, line, i);
       i++;
     } else if (line[0] == '2') {
       if (!temAspas(line)) {
-      query2(atoi(line + 2), NULL, artistsTable, listMusics, line);
+        query2(atoi(line + 2), NULL, artistsTable, listMusics, line, i);
+        i++;
       } else {
-        numeroArtist = atoi(line + 2);
         int primAspa = primeiraAspa(line);
-        // o line acaba em \n
-        //query2(numeroArtist, line + primAspa, artistsTable, listMusics, line);
+        query2(atoi(line + 2), line + primAspa, artistsTable, listMusics, line,
+               i);
+        i++;
       }
     } else if (line[0] == '3') {
       // query3();

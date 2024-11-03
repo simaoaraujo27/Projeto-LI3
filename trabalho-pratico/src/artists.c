@@ -79,43 +79,162 @@ void puxaEsquerda(Artists *arrayResposta[], int numeroArtistas, int i) {
   arrayResposta[numeroArtistas - 1] = NULL;
 }
 
-void insertArtistArray(Artists *arrayResposta[], Artists *artist,
+// Função auxiliar para encontrar e remover o artista com o mesmo ID, se existir
+void removeArtistById(GList **listaResposta, Artists *artist) {
+  GList *node = *listaResposta;
+  while (node != NULL) {
+    Artists *currentArtist = (Artists *)node->data;
+    // Verifica se o ID do artista atual é igual ao do novo artista
+    if (strcmp(currentArtist->id, artist->id) == 0) {
+      *listaResposta = g_list_remove(*listaResposta, currentArtist);
+      return;
+    }
+    node = node->next;
+  }
+}
+void insertArtistArray(GList **listaResposta, Artists *artist,
                        int numeroArtistas) {
-  for (int i = 0; i < numeroArtistas; i++) {
-    if (arrayResposta[i] == NULL) {
-      arrayResposta[i] = artist;
-      break;
+  // Remove o artista existente com o mesmo ID, se estiver na lista
+  removeArtistById(listaResposta, artist);
+
+  // Insere o artista na posição correta para manter a lista ordenada
+  GList *node = *listaResposta;
+  while (node != NULL) {
+    Artists *currentArtist = (Artists *)node->data;
+    // Insere antes do primeiro artista com discografia menor
+    if (currentArtist->discografia < artist->discografia) {
+      *listaResposta = g_list_insert_before(*listaResposta, node, artist);
+
+      // Limita o tamanho da lista removendo o último artista se exceder o
+      // limite
+      if (g_list_length(*listaResposta) > numeroArtistas) {
+        *listaResposta =
+            g_list_remove(*listaResposta, g_list_last(*listaResposta)->data);
+      }
+      return;
     }
-    if (arrayResposta[i]->discografia < artist->discografia) {
-      puxaDireita(arrayResposta, numeroArtistas, i);
-      arrayResposta[i] = artist;
-      break;
-    }
+    node = node->next;
+  }
+
+  // Se o artista tiver a menor discografia ou a lista estiver vazia, adiciona
+  // ao final
+  *listaResposta = g_list_append(*listaResposta, artist);
+
+  // Verifica se a lista excede o número máximo de artistas e remove o último,
+  // se necessário
+  if (g_list_length(*listaResposta) > numeroArtistas) {
+    *listaResposta =
+        g_list_remove(*listaResposta, g_list_last(*listaResposta)->data);
   }
 }
 
-void procuraArt(Artists *artista, Artists *arrayResposta[],
-                int numeroArtistas) {
-  for (int i = 0; i < numeroArtistas; i++) {
-    if (artista->id == arrayResposta[i]->id) {
-      puxaEsquerda(arrayResposta, numeroArtistas, i);
+// Função para procurar e substituir um artista por ID na lista de artistas
+void procuraArt(Artists *artist, GList **listaResposta, int numeroArtistas) {
+  GList *current = *listaResposta;
+  while (current != NULL) {
+    Artists *currentArtist = (Artists *)current->data;
+    // Verifica se o ID do artista atual corresponde ao do artista passado
+    if (strcmp(currentArtist->id, artist->id) == 0) {
+      // Substitui o artista encontrado pelo novo artista
+      current->data = artist;
+      return;
     }
+    current = current->next;
   }
+  // Se o artista não for encontrado, não altera a lista
 }
 
-void PrintArt(Artists *arrayResposta[], int numeroArtistas) {
-  for (int i = 0; i < numeroArtistas; i++) {
-    printf("%d\n", arrayResposta[i]->discografia);
+void print(GList **listaResposta, int numeroArtistas, FILE *newFile) {
+  GList *node = *listaResposta;
+  char *name;
+  char *type;
+  char discografia[10];
+  char *country;
+  char *new_str;
+  while (node != NULL) {
+    Artists *currentArtist = (Artists *)node->data;
+    name = currentArtist->name;
+    if (currentArtist->tipo == Grupo)
+      type = "Grupo";
+    else
+      type = "Individual";
+    snprintf(discografia, sizeof(discografia), "%d",
+             currentArtist->discografia);
+    country = currentArtist->country;
+
+    int total_len = strlen(name) + strlen(type) + strlen(discografia) +
+                    strlen(country) + 4;              // 4 para os ';' e o '\0'
+    new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
+    snprintf(new_str, total_len + 1, "%s;%s;%s;%s\n", name, type, discografia,
+             country);
+
+    if (node->next == NULL)
+      fprintf(newFile, "%s", new_str);
+    else
+      fprintf(newFile, "%s", new_str);
+
+    printf("ID: %s, Nome: %s, Discografia: %d, País: %s\n", currentArtist->id,
+           currentArtist->name, currentArtist->discografia,
+           currentArtist->country);
+    node = node->next;
   }
+
+  fclose(newFile);
+
+  printf("\n");
 }
+
+/* void print(GList **listaResposta, int numeroArtistas, FILE *newFile) {
+  GList *node = *listaResposta;
+  char *name;
+  char *type;
+  char *discografia;
+  char *country;
+  while (node != NULL) {
+    Artists *currentArtist = (Artists *)node->data;
+    name = currentArtist->name;
+    if (currentArtist->tipo == Grupo)
+      type = "Grupo";
+    else
+      type = "Individual";
+    sprintf(discografia, "%d", currentArtist->discografia);
+    country = currentArtist->country;
+
+    int total_len = strlen(name) + strlen(type) + strlen(discografia) +
+                    strlen(country) + 4; // 4 para os ';' e o '\0'
+    char *new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
+    snprintf(new_str, total_len + 1, "%s;%s;%s;%s\n", name, type, discografia,
+             country);
+
+    if (node->next == NULL)
+      fprintf(newFile, "%s", new_str);
+    else
+      fprintf(newFile, "%s\n", new_str);
+
+    printf("ID: %s, Nome: %s, Discografia: %d, País: %s\n", currentArtist->id,
+           currentArtist->name, currentArtist->discografia,
+           currentArtist->country);
+    node = node->next;
+  }
+
+  free(discografia);
+  free(name);
+  free(type);
+  free(country);
+  fclose(newFile);
+} */
 
 void increment_artist_discografia(gpointer value, int duracao,
-                                  Artists *arrayResposta[],
-                                  int numeroArtistas) {
+                                  GList **listaResposta, int numeroArtistas,
+                                  char *country) {
   Artists *artist = (Artists *)value;
+  artist->country[strlen(artist->country)] = '\0';
+  // printf("%s\n", artist->country);
+  if (country != NULL && artist->country != country)
+    return;
   artist->discografia += duracao;
-  procuraArt(artist, arrayResposta, numeroArtistas);
-  insertArtistArray(arrayResposta, artist, numeroArtistas);
+  procuraArt(artist, listaResposta, numeroArtistas);
+  insertArtistArray(listaResposta, artist, numeroArtistas);
 }
 
 void destroyArtist(gpointer artist) {

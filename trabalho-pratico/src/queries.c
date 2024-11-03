@@ -101,42 +101,37 @@ void removeFstLast(char *str) {
 }
 
 void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
-            GList *listMusics, char *line) {
-  Artists *arrayResposta[numeroArtistas];
-  for (int i = 0; i < numeroArtistas; i++) {
-    arrayResposta[i] = NULL;
-  }
+            GList *listMusics, char *line, int i) {            
+  FILE *newFile;
+  char *path = "./resultados/commandx-output.txt";
+  char *new = malloc(sizeof(char) * (strlen(path) + 10));
+  snprintf(new, strlen(path) + 10, "./resultados/command%d-output.txt", i);
+  newFile = fopen(new, "w");
+  GList *listaResposta = NULL; // nao mexer daqui para baixo pls
+  for (GList *l = listMusics; l != NULL; l = l->next) {
+    Musics *p = (Musics *)l->data;
+    char *artistId = getMusicArtistId(p);
+    remove_quotes(artistId);
+    removeFstLast(artistId);
+    int duracao = getMusicDuration(p);
+    char *key;
+    gpointer value;
+    gpointer orig_key;
+    int l = strlen(artistId);
+    for (int j = 0; j < l; j += 12) {
+      if (j == 0)
+        artistId = artistId + 1;
+      else
+        artistId = artistId + 3;
+      key = strdup(strsep(&artistId, "'"));
+      if (g_hash_table_lookup_extended(artistsTable, key, &orig_key, &value)) {
 
-  if (country == NULL) {
-    //printf ("a\n");
-    for (GList *l = listMusics; l != NULL; l = l->next) {
-      Musics *p = (Musics *)l->data;
-      char *artistId = getMusicArtistId(p);
-      remove_quotes(artistId);
-      removeFstLast(artistId);
-      int duracao = getMusicDuration(p);
-      char *key;
-      gpointer value;
-      gpointer orig_key;
-
-      int l = strlen(artistId);
-      for (int i = 0; i < l; i += 12) {
-        if (i == 0)
-          artistId = artistId + 1;
-        else
-          artistId = artistId + 3;
-        key = strdup(strsep(&artistId, "'"));
-        printf ("%s", key);
-        if (g_hash_table_lookup_extended(artistsTable, key, &orig_key,
-                                         &value)) {
-          increment_artist_discografia(value, duracao, arrayResposta,
-                                       numeroArtistas);
-        }
+        increment_artist_discografia(value, duracao, &listaResposta,
+                                     numeroArtistas, country);
       }
     }
-    
-  } else {
   }
+  print(&listaResposta, numeroArtistas, newFile);
   return;
 }
 
