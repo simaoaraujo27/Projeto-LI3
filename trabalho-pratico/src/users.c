@@ -129,3 +129,43 @@ char *getUserLikedMusicsId(gpointer user) {
   struct users *u = (struct users *)user;
   return strdup(u->liked_musics_id);
 }
+
+char *calculate_age(char *birth_date) {
+  // Formato esperado da data de nascimento: "YYYY-MM-DD"
+  int birth_year, birth_month, birth_day;
+
+  sscanf(birth_date, "%d/%d/%d", &birth_year, &birth_month, &birth_day);
+
+  // Data fixa: 2024/09/09
+  int current_year = 2024;
+  int current_month = 9;
+  int current_day = 9;
+
+  int age = current_year - birth_year;
+
+  // Ajustar a idade se o aniversário ainda não tiver ocorrido em 2024
+  if (current_month < birth_month ||
+      (current_month == birth_month && current_day < birth_day)) {
+    age--;
+  }
+
+  char *age_str =
+      malloc(4 * sizeof(char)); // Idades razoáveis cabem em 3 dígitos + '\0'
+
+  if (age_str == NULL) {
+    return NULL; // Se a alocação falhar
+  }
+
+  snprintf(age_str, 12, "%d", age);
+
+  return age_str;
+}
+
+void printUser(gpointer key, gpointer value, gpointer user_data) {
+    Users *user = (Users *)value;
+    int age = atoi(calculate_age(user->birth_date));
+    if (1){ // se estiver dentro da faixa etária
+    //printf("Username: %s %d\n", user->username, age);
+    }
+    
+}

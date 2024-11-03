@@ -9,36 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *calculate_age(char *birth_date) {
-  // Formato esperado da data de nascimento: "YYYY-MM-DD"
-  int birth_year, birth_month, birth_day;
 
-  sscanf(birth_date, "%d/%d/%d", &birth_year, &birth_month, &birth_day);
-
-  // Data fixa: 2024/09/09
-  int current_year = 2024;
-  int current_month = 9;
-  int current_day = 9;
-
-  int age = current_year - birth_year;
-
-  // Ajustar a idade se o aniversário ainda não tiver ocorrido em 2024
-  if (current_month < birth_month ||
-      (current_month == birth_month && current_day < birth_day)) {
-    age--;
-  }
-
-  char *age_str =
-      malloc(4 * sizeof(char)); // Idades razoáveis cabem em 3 dígitos + '\0'
-
-  if (age_str == NULL) {
-    return NULL; // Se a alocação falhar
-  }
-
-  snprintf(age_str, 12, "%d", age);
-
-  return age_str;
-}
 
 void query1(GHashTable *usersTable, char *line, int i) {
   line = line + 2;
@@ -136,4 +107,12 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
   return;
 }
 
-void query3() { return; }
+void query3(int minAge, int maxAge, GHashTable *usersTable) {
+  g_hash_table_foreach(usersTable, printUser, NULL);
+  //percorrer todos os users
+  // ver se estao dentro da faixa etaria
+  //por cada user ver liked_musics_id
+  //por cada uma das likedmusics ver o género e contar mais um like
+  // printar por ordem decrescente
+  // guardar 
+}

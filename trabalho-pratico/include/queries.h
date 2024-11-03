@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char *calculate_age(char *birth_date);
+//char *calculate_age(char *birth_date);
 
 /* Listar o resumo de um utilizador, consoante o identificador recebido por
  * argumento. */
@@ -20,6 +20,6 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
             GList *listMusics, char *line, int i);
 
 /* géneros de música mais populares numa determinada faixa etária */
-void query3();
+void query3(int minAge, int maxAge, GHashTable *usersTable);
 
 #endif
