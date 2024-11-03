@@ -7,6 +7,7 @@ void remove_quotes(char *str);
 
 //char *calculate_age(char *birth_date);
 
-
+typedef struct ageRange AgeRange;
+AgeRange createStruct (int minAge, int maxAge);
 
 #endif

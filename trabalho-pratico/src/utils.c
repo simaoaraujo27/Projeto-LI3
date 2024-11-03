@@ -13,3 +13,15 @@ void remove_quotes(char *str) {
     str[len - 2] = '\0'; // Coloca o terminador nulo na nova posição
   }
 }
+
+struct ageRange{
+    int minAge;
+    int maxAge;
+};
+
+AgeRange createStruct(int minAge, int maxAge){
+  AgeRange ages;
+  ages.minAge = minAge;
+  ages.maxAge = maxAge;
+  return ages;
+}

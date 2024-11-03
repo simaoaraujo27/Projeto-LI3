@@ -20,6 +20,6 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
             GList *listMusics, char *line, int i);
 
 /* géneros de música mais populares numa determinada faixa etária */
-void query3(int minAge, int maxAge, GHashTable *usersTable);
+void query3(int minAge, int maxAge, GList *listUsers, GHashTable *musicsTable, int i);
 
 #endif

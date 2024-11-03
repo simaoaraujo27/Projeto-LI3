@@ -27,6 +27,7 @@ Musics *separateMusics(char *line) {
   }
 
   music->id = strdup(strsep(&line, ";"));
+  remove_quotes(music->id);
   music->title = strdup(strsep(&line, ";"));
   music->artist_id = strdup(strsep(&line, ";"));
   char *duration_str = strdup(strsep(&line, ";"));
@@ -48,26 +49,14 @@ bool validateMusic(Musics *music) {
   return (music->durationSeconds != -1 && music->year <= 2024);
 }
 
-void parseMusics(FILE *fp, GList **listMusics) {
+void parseMusics(FILE *fp, GHashTable *musicsTable) {
   char *line = NULL;
   size_t len = 0;
-
-  getline(&line, &len, fp);
-
   while (getline(&line, &len, fp) != -1) {
     Musics *music = separateMusics(line);
-    if (music == NULL) {
-      printf("Erro: separateMusics retornou NULL\n");
-      break;
-    }
-    *listMusics = g_list_prepend(*listMusics, music);
+    // Insere na HashTable usando o music->id como key
+    g_hash_table_insert(musicsTable, g_strdup(music->id), music);
   }
-
-  /*   for (GList *l = *listMusics; l != NULL; l = l->next) {
-      Musics *p = (Musics *)l->data;
-      printf("Título: %s, ID: %d\n", p->title, p->year);
-    } */
-
   free(line);
 }
 
@@ -116,3 +105,15 @@ char *getMusicLyrics(gpointer music) {
   struct musics *m = (struct musics *)music;
   return strdup(m->lyrics);
 }
+
+struct genreLikes{
+  char *genre;
+  int likes;
+};
+
+/*
+int contarLikesGenero(char *genero){
+  
+  
+}
+*/

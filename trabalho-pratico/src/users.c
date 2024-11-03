@@ -1,4 +1,5 @@
 #include "users.h"
+#include "utils.h"
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -159,13 +160,4 @@ char *calculate_age(char *birth_date) {
   snprintf(age_str, 12, "%d", age);
 
   return age_str;
-}
-
-void printUser(gpointer key, gpointer value, gpointer user_data) {
-    Users *user = (Users *)value;
-    int age = atoi(calculate_age(user->birth_date));
-    if (1){ // se estiver dentro da faixa etária
-    //printf("Username: %s %d\n", user->username, age);
-    }
-    
 }

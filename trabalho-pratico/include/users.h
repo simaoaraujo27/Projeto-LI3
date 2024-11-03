@@ -24,6 +24,6 @@ char *getUserCountry(gpointer user);
 char *getUserSubscriptionType(gpointer user);
 char *getUserLikedMusicsId(gpointer user);
 char *calculate_age(char *birth_date);
-void printUser(gpointer key, gpointer value, gpointer user_data);
+
 
 #endif

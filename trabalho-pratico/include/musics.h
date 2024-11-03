@@ -11,7 +11,7 @@ typedef struct musics Musics;
 
 Musics *separateMusics(char *line);
 bool validateMusic(Musics *music);
-void parseMusics(FILE *fp, GList **listMusics);
+void parseMusics(FILE *fp, GHashTable *musicsTable);
 void destroyMusic(gpointer music);
 
 char *getMusicId(gpointer music);
@@ -21,5 +21,6 @@ int getMusicDuration(gpointer music);
 char *getMusicGenre(gpointer music);
 int getMusicYear(gpointer music);
 char *getMusicLyrics(gpointer music);
+typedef struct genreLikes GenreLikes;
 
 #endif

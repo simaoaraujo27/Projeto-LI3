@@ -52,24 +52,29 @@ int main(int argc, char **argv) {
   }
   fclose(fp);
 
+  GHashTable *musicsTable =
+      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyMusic);
   GList *listMusics = NULL;
   fp = fopen(musicsPath, "r");
   if (!fp) {
     perror("Error");
     return EXIT_FAILURE;
   } else {
-    parseMusics(fp, &listMusics);
+    parseMusics(fp, musicsTable);
+    listMusics = g_hash_table_get_values(musicsTable);
   }
   fclose(fp);
 
   GHashTable *usersTable =
       g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyUser);
+  GList *listUsers = NULL;
   fp = fopen(usersPath, "r");
   if (!fp) {
     perror("Error");
     return EXIT_FAILURE;
   } else {
     parseUsers(fp, usersTable);
+    listUsers = g_hash_table_get_values(usersTable);
   }
   fclose(fp);
 
@@ -103,7 +108,9 @@ int main(int argc, char **argv) {
       minAge = atoi(line + 2);
       firstOcorr = primeiraOcorr(line + 2, ' ');
       maxAge = atoi(line + 2 + firstOcorr);
-      query3(minAge, maxAge, usersTable);
+      query3(minAge, maxAge, listUsers, musicsTable, i);
+      i++;
+      //if (i == 55) break;
     }
   }
   fclose(fp);

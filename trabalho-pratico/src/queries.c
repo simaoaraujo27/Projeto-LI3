@@ -2,6 +2,7 @@
 #include "artists.h"
 #include "musics.h"
 #include "users.h"
+#include "utils.h"
 #include <ctype.h>
 #include <glib.h>
 #include <stdbool.h>
@@ -71,6 +72,13 @@ void removeFstLast(char *str) {
   str[len - 2] = '\0'; // Coloca o terminador nulo na nova posição
 }
 
+//util para remover o enter no fim
+void removeLast(char *str) {
+  int len = strlen(str);
+  
+  str[len - 1] = '\0';
+}
+
 void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
             GList *listMusics, char *line, int i) {
   FILE *newFile;
@@ -107,12 +115,44 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
   return;
 }
 
-void query3(int minAge, int maxAge, GHashTable *usersTable) {
-  g_hash_table_foreach(usersTable, printUser, NULL);
+void query3(int minAge, int maxAge, GList *listUsers, GHashTable *musicsTable, int i) {
+  int age = 0;
+  for (GList *l = listUsers; l != NULL; l = l->next) {
+    Users *u = (Users *)l->data;
+    Musics *music;
+    char *username = getUserUsername(u);
+    char *birthdate = getUserBirthDate(u);
+    char *likedMusics;
+    age = atoi(calculate_age(birthdate));
+    char *key;
+    gpointer value;
+    gpointer orig_key;
+    if (age >= minAge && age <= maxAge){
+    likedMusics = getUserLikedMusicsId(u);
+    removeLast(likedMusics);
+    removeFstLast(likedMusics);
+    removeFstLast(likedMusics);
+    int l = strlen(likedMusics);
+    for (int j = 0; j < l; j += 12) {
+      if (j == 0)
+        likedMusics = likedMusics + 1;
+      else
+        likedMusics = likedMusics + 3;
+      key = strdup(strsep(&likedMusics, "'"));
+      if (g_hash_table_lookup_extended(musicsTable, key, &orig_key, &value)) {
+        music = (Musics *)value;
+        char *genero = getMusicGenre(music);
+        //printf("%s\n", genero);
+        //contarLikesGenero(genero);
+    }
+    }
+
+  }
   //percorrer todos os users
   // ver se estao dentro da faixa etaria
   //por cada user ver liked_musics_id
   //por cada uma das likedmusics ver o género e contar mais um like
   // printar por ordem decrescente
   // guardar 
+}
 }
