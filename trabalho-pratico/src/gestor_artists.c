@@ -3,6 +3,7 @@
 
 void parseArtists(FILE *fp, GHashTable *artistsTable) {
   char *line = NULL;
+  
   size_t len = 0;
 
   while (getline(&line, &len, fp) != -1) {

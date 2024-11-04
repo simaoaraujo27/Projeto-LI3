@@ -34,11 +34,14 @@ char *getArtistCountry(gpointer artist);
 enum tipoArtista getArtistType(gpointer artist);
 int getArtistDiscografia(gpointer artist);
 
-void increment_artist_discografia(gpointer value, int duracao, GList **listaResposta, int numeroArtistas, char *country);
+void increment_artist_discografia(gpointer value, int duracao,
+                                  GList **listaResposta, int numeroArtistas,
+                                  char *country);
 void procuraArt(Artists *artist, GList **listaResposta, int numeroArtistas);
-void print(GList **listaResposta, int numeroArtistas, FILE *newFile);
+
 void colocaZero(GHashTable *artistsTable);
 
 void destroyArtist(gpointer artist);
+void print(GList **listaResposta, int numeroArtistas, FILE *newFile);
 
 #endif

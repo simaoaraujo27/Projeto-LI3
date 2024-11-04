@@ -1,5 +1,6 @@
 #include "artists.h"
-
+#include "gestor_prints.h"
+#include "utils.h"
 
 enum tipoArtista { Individual, Grupo };
 
@@ -17,35 +18,27 @@ struct artists {
   int discografia;       // discografia do artista
 };
 
-void setArtistId(Artists *a, char *id){
-  a->id = id;
-}
+void setArtistId(Artists *a, char *id) { a->id = id; }
 
-void setArtistName(Artists *a, char *name){
-  a->name = name;
-}
+void setArtistName(Artists *a, char *name) { a->name = name; }
 
-void setArtistDescription(Artists *a, char *description){
+void setArtistDescription(Artists *a, char *description) {
   a->description = description;
 }
 
-void setArtistRecipePerStream(Artists *a, int recipe_per_stream){
+void setArtistRecipePerStream(Artists *a, int recipe_per_stream) {
   a->recipe_per_stream = recipe_per_stream;
 }
 
-void setArtistIdConstituent(Artists *a, char *id_constituent){
+void setArtistIdConstituent(Artists *a, char *id_constituent) {
   a->id_constituent = id_constituent;
 }
 
-void setArtistCountry(Artists *a, char *country){
-  a->country = country;
-}
+void setArtistCountry(Artists *a, char *country) { a->country = country; }
 
-void setArtistTipo(Artists *a, enum tipoArtista tipo){
-  a->tipo = tipo;
-}
+void setArtistTipo(Artists *a, enum tipoArtista tipo) { a->tipo = tipo; }
 
-void setArtistDiscografia(Artists *a, int discografia){
+void setArtistDiscografia(Artists *a, int discografia) {
   a->discografia = discografia;
 }
 
@@ -125,6 +118,28 @@ void procuraArt(Artists *artist, GList **listaResposta, int numeroArtistas) {
   }
 }
 
+void colocaZero(GHashTable *artistsTable) {
+  GList *listaArtistas = g_hash_table_get_values(artistsTable);
+  GList *node = listaArtistas;
+  while (node != NULL) {
+    Artists *currentArtist = (Artists *)node->data;
+    currentArtist->discografia = 0;
+    node = node->next;
+  }
+  g_list_free(listaArtistas);
+}
+
+void increment_artist_discografia(gpointer value, int duracao,
+                                  GList **listaResposta, int numeroArtistas,
+                                  char *country) {
+  Artists *artist = (Artists *)value;
+  if (!(country != NULL && comparaStrings(artist->country, country))) {
+    artist->discografia += duracao;
+    procuraArt(artist, listaResposta, numeroArtistas);
+    insertArtistArray(listaResposta, artist, numeroArtistas);
+  }
+}
+
 void print(GList **listaResposta, int numeroArtistas, FILE *newFile) {
   GList *node = *listaResposta;
   char *name;
@@ -158,40 +173,6 @@ void print(GList **listaResposta, int numeroArtistas, FILE *newFile) {
   fclose(newFile);
 }
 
-void colocaZero(GHashTable *artistsTable) {
-  GList *listaArtistas = g_hash_table_get_values(artistsTable);
-  GList *node = listaArtistas;
-  while (node != NULL) {
-    Artists *currentArtist = (Artists *)node->data;
-    currentArtist->discografia = 0;
-    node = node->next;
-  }
-  g_list_free(listaArtistas);
-}
-
-int comparaStrings(char *str1, char *str2) {
-  if (strlen(str1) == strlen(str2) - 1) { // -1 por causa do \n fantasma
-    int len = strlen(str1);
-    for (int i = 0; i < len; i++) {
-      if (str1[i] != str2[i]) {
-        return 1;
-      }
-    }
-  } else
-    return 1;
-  return 0;
-}
-
-void increment_artist_discografia(gpointer value, int duracao,
-                                  GList **listaResposta, int numeroArtistas,
-                                  char *country) {
-  Artists *artist = (Artists *)value;
-  if (!(country != NULL && comparaStrings(artist->country, country))) {
-    artist->discografia += duracao;
-    procuraArt(artist, listaResposta, numeroArtistas);
-    insertArtistArray(listaResposta, artist, numeroArtistas);
-  }
-}
 ///////////////
 
 char *getArtistId(gpointer artist) {

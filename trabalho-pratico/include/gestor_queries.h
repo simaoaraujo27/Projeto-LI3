@@ -1,5 +1,5 @@
-#ifndef _QUERIES_H
-#define _QUERIES_H
+#ifndef _GESTOR_QUERIES_H
+#define _GESTOR_QUERIES_H
 
 #include <glib.h>
 #include <stdbool.h>
@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-//char *calculate_age(char *birth_date);
+// char *calculate_age(char *birth_date);
 
 /* Listar o resumo de um utilizador, consoante o identificador recebido por
  * argumento. */
@@ -20,6 +20,7 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
             GList *listMusics, char *line, int i);
 
 /* géneros de música mais populares numa determinada faixa etária */
-void query3(int minAge, int maxAge, GList *listUsers, GHashTable *musicsTable, int i);
+void query3(int minAge, int maxAge, GList *listUsers, GHashTable *musicsTable,
+            int i);
 
 #endif

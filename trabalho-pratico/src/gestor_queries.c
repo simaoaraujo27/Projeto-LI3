@@ -1,5 +1,7 @@
-#include "queries.h"
+#include "gestor_queries.h"
 #include "artists.h"
+#include "gestor_artists.h"
+#include "gestor_prints.h"
 #include "musics.h"
 #include "users.h"
 #include "utils.h"
@@ -9,8 +11,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-
 
 void query1(GHashTable *usersTable, char *line, int i) {
   line = line + 2;
@@ -53,7 +53,6 @@ void query1(GHashTable *usersTable, char *line, int i) {
   }
 }
 
-
 void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
             GList *listMusics, char *line, int i) {
   FILE *newFile;
@@ -90,54 +89,54 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
 }
 
 typedef struct GenreList {
-    char *genre;
-    int likes;
-    struct GenreList *next;
+  char *genre;
+  int likes;
+  struct GenreList *next;
 } GenreList;
 
-GenreList* createNode(char *genre) {
-    GenreList *newNode = (GenreList*)malloc(sizeof(GenreList));
-    if (newNode == NULL) {
-        return NULL;
-    }
-    newNode->genre = (char*)malloc(strlen(genre) + 1);
-    if (newNode->genre == NULL) {
-        return NULL;
-    }
-    strcpy(newNode->genre, genre);
-    newNode->likes = 1;
-    newNode->next = NULL;
-    return newNode;
+GenreList *createNode(char *genre) {
+  GenreList *newNode = (GenreList *)malloc(sizeof(GenreList));
+  if (newNode == NULL) {
+    return NULL;
+  }
+  newNode->genre = (char *)malloc(strlen(genre) + 1);
+  if (newNode->genre == NULL) {
+    return NULL;
+  }
+  strcpy(newNode->genre, genre);
+  newNode->likes = 1;
+  newNode->next = NULL;
+  return newNode;
 }
 
 // inserção à cabeça
 void insertNode(GenreList **head, char *genre) {
-    GenreList *newNode = createNode(genre);
-    newNode->next = *head;
-    *head = newNode;
+  GenreList *newNode = createNode(genre);
+  newNode->next = *head;
+  *head = newNode;
 }
 
 void freeList(GenreList *head) {
-    GenreList *temp;
-    while (head != NULL) {
-        temp = head;
-        head = head->next;
-        free(temp->genre);
-        free(temp);
-    }
+  GenreList *temp;
+  while (head != NULL) {
+    temp = head;
+    head = head->next;
+    free(temp->genre);
+    free(temp);
+  }
 }
 
 void printList(GenreList *head, FILE *newFile) {
   GenreList *temp = head;
   char *new_str;
 
-    while (temp != NULL) {
-        //printf("Gênero: %s, Likes: %d\n", temp->genre, temp->likes);
+  while (temp != NULL) {
+    // printf("Gênero: %s, Likes: %d\n", temp->genre, temp->likes);
 
-  //snprintf(temp->genre, sizeof(temp->genre), "%d",
-  //           temp->likes);
+    // snprintf(temp->genre, sizeof(temp->genre), "%d",
+    //            temp->likes);
 
-    int total_len = strlen(temp->genre) + 4 + 4;              // 4 para os ';' e o '\0'
+    int total_len = strlen(temp->genre) + 4 + 4;      // 4 para os ';' e o '\0'
     new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
     snprintf(new_str, total_len + 1, "%s;%d\n", temp->genre, temp->likes);
 
@@ -146,44 +145,47 @@ void printList(GenreList *head, FILE *newFile) {
     else
       fprintf(newFile, "%s", new_str);
     temp = temp->next;
-
-    }
-    fclose(newFile);
+  }
+  fclose(newFile);
 }
 
-// ordena a lista ligada por ordem decrescente de likes usando uma adaptação do bubbleSort
+// ordena a lista ligada por ordem decrescente de likes usando uma adaptação do
+// bubbleSort
 void sortListByLikes(GenreList **head) {
-    if (*head == NULL) return;
+  if (*head == NULL)
+    return;
 
-    int trocado = 1;
-    GenreList *temp; // percorre a lista
-    GenreList *desordenado = NULL; // ate onde a lista esta desordenada (ja está ordenada deste nodo para a frente)
+  int trocado = 1;
+  GenreList *temp;               // percorre a lista
+  GenreList *desordenado = NULL; // ate onde a lista esta desordenada (ja está
+                                 // ordenada deste nodo para a frente)
 
-    while (trocado) { // enquanto alguma troca for feita continua
-        trocado = 0;
-        temp = *head;
+  while (trocado) { // enquanto alguma troca for feita continua
+    trocado = 0;
+    temp = *head;
 
-        while (temp->next != desordenado) {
-            if (temp->likes < temp->next->likes) {
-                // Troca os dados dos nós
-                int tempLikes = temp->likes;
-                char *tempGenre = temp->genre;
+    while (temp->next != desordenado) {
+      if (temp->likes < temp->next->likes) {
+        // Troca os dados dos nós
+        int tempLikes = temp->likes;
+        char *tempGenre = temp->genre;
 
-                temp->likes = temp->next->likes;
-                temp->genre = temp->next->genre;
+        temp->likes = temp->next->likes;
+        temp->genre = temp->next->genre;
 
-                temp->next->likes = tempLikes;
-                temp->next->genre = tempGenre;
+        temp->next->likes = tempLikes;
+        temp->next->genre = tempGenre;
 
-                trocado = 1;
-            }
-            temp = temp->next;
-        }
-        desordenado = temp;
+        trocado = 1;
+      }
+      temp = temp->next;
     }
+    desordenado = temp;
+  }
 }
 
-void query3(int minAge, int maxAge, GList *listUsers, GHashTable *musicsTable, int i) {
+void query3(int minAge, int maxAge, GList *listUsers, GHashTable *musicsTable,
+            int i) {
 
   FILE *newFile;
   char *path = "./resultados/commandx-output.txt";
@@ -204,46 +206,46 @@ void query3(int minAge, int maxAge, GList *listUsers, GHashTable *musicsTable, i
     gpointer value;
     gpointer orig_key;
     int continua = 1;
-    if (age >= minAge && age <= maxAge){
-    likedMusics = getUserLikedMusicsId(u);
-    removeLast(likedMusics);
-    removeFstLast(likedMusics);
-    removeFstLast(likedMusics);
-    int l = strlen(likedMusics);
-    for (int j = 0; j < l; j += 12) {
-      if (j == 0)
-        likedMusics = likedMusics + 1;
-      else
-        likedMusics = likedMusics + 3;
-      key = strdup(strsep(&likedMusics, "'"));
-      if (g_hash_table_lookup_extended(musicsTable, key, &orig_key, &value)) {
-        music = (Musics *)value;
-        char *genero = getMusicGenre(music);
-        remove_quotes(genero);
-        for (GenreList *temp = lista; temp != NULL && continua; temp = temp->next){
-          if (!strcmp(genero, temp->genre)){
-            temp->likes++;
-            continua = 0;
+    if (age >= minAge && age <= maxAge) {
+      likedMusics = getUserLikedMusicsId(u);
+      removeLast(likedMusics);
+      removeFstLast(likedMusics);
+      removeFstLast(likedMusics);
+      int l = strlen(likedMusics);
+      for (int j = 0; j < l; j += 12) {
+        if (j == 0)
+          likedMusics = likedMusics + 1;
+        else
+          likedMusics = likedMusics + 3;
+        key = strdup(strsep(&likedMusics, "'"));
+        if (g_hash_table_lookup_extended(musicsTable, key, &orig_key, &value)) {
+          music = (Musics *)value;
+          char *genero = getMusicGenre(music);
+          remove_quotes(genero);
+          for (GenreList *temp = lista; temp != NULL && continua;
+               temp = temp->next) {
+            if (!strcmp(genero, temp->genre)) {
+              temp->likes++;
+              continua = 0;
+            }
           }
+          if (continua) {
+            insertNode(&lista, genero);
+          }
+          // printf("%s\n", genero);
+          // contarLikesGenero(genero);
         }
-          if (continua){
-        insertNode(&lista, genero);
-          }
-        //printf("%s\n", genero);
-        //contarLikesGenero(genero);
+      }
     }
-    }
-
+    // percorrer todos os users
+    //  ver se estao dentro da faixa etaria
+    // por cada user ver liked_musics_id
+    // por cada uma das likedmusics ver o género e contar mais um like
+    //  printar por ordem decrescente
+    //  guardar
   }
-  //percorrer todos os users
-  // ver se estao dentro da faixa etaria
-  //por cada user ver liked_musics_id
-  //por cada uma das likedmusics ver o género e contar mais um like
-  // printar por ordem decrescente
-  // guardar 
-} 
   sortListByLikes(&lista);
-  
+
   printList(lista, newFile);
   freeList(lista);
 }

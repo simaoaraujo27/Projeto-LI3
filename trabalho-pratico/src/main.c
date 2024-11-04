@@ -2,7 +2,7 @@
 #include "musics.h"
 #include "users.h"
 #include "gestor_artists.h"
-#include "queries.h"
+#include "gestor_queries.h"
 #include "validation.h"
 #include "utils.h"
 #include <glib.h>

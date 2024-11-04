@@ -1,7 +1,9 @@
 #include "utils.h"
-#include <string.h>
+#include "artists.h"
+#include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void remove_quotes(char *str) {
   int len = strlen(str);
@@ -41,10 +43,10 @@ void removeFstLast(char *str) {
   str[len - 2] = '\0';
 }
 
-//util para remover o enter no fim
+// util para remover o enter no fim
 void removeLast(char *str) {
   int len = strlen(str);
-  
+
   str[len - 1] = '\0';
 }
 
@@ -77,4 +79,19 @@ char *calculate_age(char *birth_date) {
   snprintf(age_str, 12, "%d", age);
 
   return age_str;
+}
+
+
+
+int comparaStrings(char *str1, char *str2) {
+  if (strlen(str1) == strlen(str2) - 1) { // -1 por causa do \n fantasma
+    int len = strlen(str1);
+    for (int i = 0; i < len; i++) {
+      if (str1[i] != str2[i]) {
+        return 1;
+      }
+    }
+  } else
+    return 1;
+  return 0;
 }
