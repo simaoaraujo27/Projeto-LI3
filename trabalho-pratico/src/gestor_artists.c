@@ -5,14 +5,15 @@ void parseArtists(FILE *fp, GHashTable *artistsTable) {
   char *line = NULL;
   
   size_t len = 0;
-
+  char *id;
   while (getline(&line, &len, fp) != -1) {
     Artists *artist = separateArtists(line);
-    char *id = getArtistId(artist);
+    id = getArtistId(artist);
     remove_quotes(id);
     // Insere na HashTable usando o artist->name como key
-    g_hash_table_insert(artistsTable, g_strdup(id), artist);
+    g_hash_table_insert(artistsTable, id, artist);
   }
 
   free(line);
+  free(id);
 }

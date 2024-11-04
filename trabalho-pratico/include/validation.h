@@ -1,8 +1,9 @@
 #ifndef _VALIDATION_H
 #define _VALIDATION_H
 
-#include "artists.h"
-#include "musics.h"
+#include "gestor_artists.h"
+#include "gestor_musics.h"
+#include "gestor_users.h"
 #include "users.h"
 #include <ctype.h>
 #include <stdbool.h>
@@ -17,5 +18,6 @@ bool validateEmail(char *email);
 bool validateSubscriptionType(char *type);
 bool validateCSVList(char *list);
 bool validateUsersLine(char *line);
+
 
 #endif

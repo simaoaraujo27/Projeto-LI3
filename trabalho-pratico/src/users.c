@@ -19,6 +19,46 @@ struct users {
 };
 
 
+void setUserUsername(Users *u, char *username){
+  remove_quotes(username);
+  u->username = username;
+}
+
+void setUserEmail(Users *u, char *email){
+  remove_quotes(email);
+  u->email = email;
+}
+
+void setUserFirstName(Users *u, char *first_name){
+  remove_quotes(first_name);
+  u->first_name = first_name;
+}
+
+void setUserLastName(Users *u, char *last_name){
+  remove_quotes(last_name);
+  u->last_name = last_name;
+}
+
+void setUserBirthDate(Users *u, char *birth_date){
+  remove_quotes(birth_date);
+  u->birth_date = birth_date;
+}
+
+void setUserCountry(Users *u, char *country){
+  remove_quotes(country);
+  u->country = country;
+}
+
+void setUserSubscriptionType(Users *u, char *subscription_type){
+  remove_quotes(subscription_type);
+  u->subscription_type = subscription_type;
+}
+
+void setUserLikedMusicsId(Users *u, char *liked_musics_id){
+  remove_quotes(liked_musics_id);
+  u->liked_musics_id = liked_musics_id;
+}
+
 Users *separateUsers(char *line) {
   // separa cada linha pelas suas respetivas variáveis
   Users *user = malloc(sizeof(struct users));
@@ -27,56 +67,31 @@ Users *separateUsers(char *line) {
     return NULL;
   }
 
-  user->username = strdup(strsep(&line, ";"));
-  remove_quotes(user->username);
-  user->email = strdup(strsep(&line, ";"));
-  remove_quotes(user->email);
-  user->first_name = strdup(strsep(&line, ";"));
-  remove_quotes(user->first_name);
-  user->last_name = strdup(strsep(&line, ";"));
-  remove_quotes(user->last_name);
-  user->birth_date = strdup(strsep(&line, ";"));
-  remove_quotes(user->birth_date);
-  user->country = strdup(strsep(&line, ";"));
-  remove_quotes(user->country);
-  user->subscription_type = strdup(strsep(&line, ";"));
-  remove_quotes(user->subscription_type);
-  user->liked_musics_id = strdup(strsep(&line, ";"));
-  remove_quotes(user->liked_musics_id);
+  setUserUsername(user, strdup(strsep(&line, ";")));
+  setUserEmail(user, strdup(strsep(&line, ";")));
+  setUserFirstName(user, strdup(strsep(&line, ";")));
+  setUserLastName(user, strdup(strsep(&line, ";")));
+  setUserBirthDate(user, strdup(strsep(&line, ";")));
+  setUserCountry(user, strdup(strsep(&line, ";")));
+  setUserSubscriptionType(user, strdup(strsep(&line, ";")));
+  setUserLikedMusicsId(user, strdup(strsep(&line, ";")));
+  
 
   return user;
 }
 
 bool validateUser(Users *user) {
-  return (validateEmail(user->email) &&
-          validateSubscriptionType(user->subscription_type) &&
-          validateDate(user->birth_date));
-}
-
-void parseUsers(FILE *fp, GHashTable *usersTable) {
-  char *line = NULL;
-  size_t len = 0;
-  while (getline(&line, &len, fp) != -1) {
-    Users *user = separateUsers(line);
-    // Insere na HashTable usando o user->username como key
-    g_hash_table_insert(usersTable, g_strdup(user->username), user);
-  }
-  free(line);
-}
-
-void destroyUser(gpointer user) {
-  Users *u = (Users *)user;
-
-  free(u->username);
-  free(u->email);
-  free(u->first_name);
-  free(u->last_name);
-  free(u->birth_date);
-  free(u->country);
-  free(u->subscription_type);
-  free(u->liked_musics_id);
-
-  free(u);
+  char *email = getUserEmail(user);
+  char *subscriptionType = getUserSubscriptionType(user);
+  char *birthDate = getUserBirthDate(user);
+  bool valor;
+  valor = (validateEmail(email) &&
+          validateSubscriptionType(subscriptionType) &&
+          validateDate(birthDate));
+  free(email);
+  free(subscriptionType);
+  free(birthDate);
+  return valor;
 }
 
 char *getUserUsername(gpointer user) {
@@ -119,3 +134,17 @@ char *getUserLikedMusicsId(gpointer user) {
   return strdup(u->liked_musics_id);
 }
 
+void destroyUser(gpointer user) {
+  Users *u = (Users *)user;
+
+  free(u->username);
+  free(u->email);
+  free(u->first_name);
+  free(u->last_name);
+  free(u->birth_date);
+  free(u->country);
+  free(u->subscription_type);
+  free(u->liked_musics_id);
+
+  free(u);
+}

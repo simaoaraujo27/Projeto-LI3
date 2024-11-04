@@ -1,13 +1,25 @@
 #ifndef _MUSICS_H_
 #define _MUSICS_H_
 
+#include "utils.h"
+#include "validation.h"
 #include <glib.h>
+#include <assert.h>
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 typedef struct musics Musics;
+
+void setMusicId (Musics *m, char *id);
+void setMusicTitle (Musics *m, char *title);
+void setMusicArtistId (Musics *m, char *artist_id);
+void setMusicDurationSeconds (Musics *m, int durationSeconds);
+void setMusicGenre (Musics *m, char *genre);
+void setMusicYear (Musics *m, int year);
+void setMusicLyrics (Musics *m, char *lyrics);
 
 Musics *separateMusics(char *line);
 bool validateMusic(Musics *music);

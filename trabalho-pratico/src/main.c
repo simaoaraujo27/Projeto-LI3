@@ -1,10 +1,8 @@
-#include "artists.h"
-#include "musics.h"
-#include "users.h"
 #include "gestor_artists.h"
+#include "gestor_musics.h"
+#include "gestor_users.h"
 #include "gestor_queries.h"
 #include "validation.h"
-#include "utils.h"
 #include <glib.h>
 #include <stdbool.h>
 #include <stdio.h>
