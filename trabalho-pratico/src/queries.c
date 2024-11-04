@@ -120,7 +120,7 @@ typedef struct GenreList {
     struct GenreList *next;
 } GenreList;
 
-GenreList* createNode(char *genre, int likes) {
+GenreList* createNode(char *genre) {
     GenreList *newNode = (GenreList*)malloc(sizeof(GenreList));
     if (newNode == NULL) {
         return NULL;
@@ -130,14 +130,14 @@ GenreList* createNode(char *genre, int likes) {
         return NULL;
     }
     strcpy(newNode->genre, genre);
-    newNode->likes = likes;
+    newNode->likes = 1;
     newNode->next = NULL;
     return newNode;
 }
 
 // inserção à cabeça
-void insertNode(GenreList **head, char *genre, int likes) {
-    GenreList *newNode = createNode(genre, likes);
+void insertNode(GenreList **head, char *genre) {
+    GenreList *newNode = createNode(genre);
     newNode->next = *head;
     *head = newNode;
 }
@@ -152,12 +152,28 @@ void freeList(GenreList *head) {
     }
 }
 
-void printList(GenreList *head) {
-    GenreList *temp = head;
+void printList(GenreList *head, FILE *newFile) {
+  GenreList *temp = head;
+  char *new_str;
+
     while (temp != NULL) {
-        printf("Gênero: %s, Likes: %d\n", temp->genre, temp->likes);
-        temp = temp->next;
+        //printf("Gênero: %s, Likes: %d\n", temp->genre, temp->likes);
+
+  //snprintf(temp->genre, sizeof(temp->genre), "%d",
+  //           temp->likes);
+
+    int total_len = strlen(temp->genre) + 4 + 4;              // 4 para os ';' e o '\0'
+    new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
+    snprintf(new_str, total_len + 1, "%s;%d\n", temp->genre, temp->likes);
+
+    if (temp->next == NULL)
+      fprintf(newFile, "%s", new_str);
+    else
+      fprintf(newFile, "%s", new_str);
+    temp = temp->next;
+
     }
+    fclose(newFile);
 }
 
 // ordena a lista ligada por ordem decrescente de likes usando uma adaptação do bubbleSort
@@ -193,6 +209,13 @@ void sortListByLikes(GenreList **head) {
 }
 
 void query3(int minAge, int maxAge, GList *listUsers, GHashTable *musicsTable, int i) {
+
+  FILE *newFile;
+  char *path = "./resultados/commandx-output.txt";
+  char *new = malloc(sizeof(char) * (strlen(path) + 10));
+  snprintf(new, strlen(path) + 10, "./resultados/command%d-output.txt", i);
+  newFile = fopen(new, "w");
+
   GenreList *lista = NULL;
   int age = 0;
   for (GList *l = listUsers; l != NULL; l = l->next) {
@@ -229,7 +252,7 @@ void query3(int minAge, int maxAge, GList *listUsers, GHashTable *musicsTable, i
           }
         }
           if (continua){
-        insertNode(&lista, genero, 1);
+        insertNode(&lista, genero);
           }
         //printf("%s\n", genero);
         //contarLikesGenero(genero);
@@ -246,6 +269,6 @@ void query3(int minAge, int maxAge, GList *listUsers, GHashTable *musicsTable, i
 } 
   sortListByLikes(&lista);
   
-  //printList(lista);
+  printList(lista, newFile);
   freeList(lista);
 }
