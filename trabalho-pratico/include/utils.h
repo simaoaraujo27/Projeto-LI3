@@ -1,13 +1,17 @@
-#ifndef _USERS_H_
-#define _USERS_H_
+#ifndef _UTILS_H_
+#define _UTILS_H_
 
 void remove_quotes(char *str);
 
-//int primeiraOcorr(char *line, char carac);
+int primeiraOcorr(char *line, char carac);
 
-//char *calculate_age(char *birth_date);
+int temAspas(char *line);
 
-typedef struct ageRange AgeRange;
-AgeRange createStruct (int minAge, int maxAge);
+void removeFstLast(char *str);
+
+void removeLast(char *str);
+
+char *calculate_age(char *birth_date);
+
 
 #endif

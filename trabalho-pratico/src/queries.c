@@ -53,31 +53,6 @@ void query1(GHashTable *usersTable, char *line, int i) {
   }
 }
 
-int temAspas(char *line) {
-  for (int i = 0; line[i]; i++) {
-    if (line[i] == '"') {
-      return 1;
-    }
-  }
-  return 0;
-}
-
-void removeFstLast(char *str) {
-  int len = strlen(str);
-  // Verifica se a string começa e termina com aspas duplas
-  // Move a string para "remover" as aspas duplas
-  for (int i = 0; i < len - 1; i++) {
-    str[i] = str[i + 1]; // Desloca os caracteres para a esquerda
-  }
-  str[len - 2] = '\0'; // Coloca o terminador nulo na nova posição
-}
-
-//util para remover o enter no fim
-void removeLast(char *str) {
-  int len = strlen(str);
-  
-  str[len - 1] = '\0';
-}
 
 void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
             GList *listMusics, char *line, int i) {

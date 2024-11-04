@@ -1,11 +1,5 @@
 #include "artists.h"
-#include "users.h"
-#include <ctype.h>
-#include <glib.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 
 enum tipoArtista { Individual, Grupo };
 
@@ -23,6 +17,38 @@ struct artists {
   int discografia;       // discografia do artista
 };
 
+void setArtistId(Artists *a, char *id){
+  a->id = id;
+}
+
+void setArtistName(Artists *a, char *name){
+  a->name = name;
+}
+
+void setArtistDescription(Artists *a, char *description){
+  a->description = description;
+}
+
+void setArtistRecipePerStream(Artists *a, int recipe_per_stream){
+  a->recipe_per_stream = recipe_per_stream;
+}
+
+void setArtistIdConstituent(Artists *a, char *id_constituent){
+  a->id_constituent = id_constituent;
+}
+
+void setArtistCountry(Artists *a, char *country){
+  a->country = country;
+}
+
+void setArtistTipo(Artists *a, enum tipoArtista tipo){
+  a->tipo = tipo;
+}
+
+void setArtistDiscografia(Artists *a, int discografia){
+  a->discografia = discografia;
+}
+
 Artists *separateArtists(char *line) {
   // Separa a linha e guarda os respetivos dados na struct artistas
 
@@ -31,52 +57,26 @@ Artists *separateArtists(char *line) {
     fprintf(stderr, "Malloc failed!");
     return NULL;
   }
-
-  artist->id = strdup(strsep(&line, ";"));
-  artist->name = strdup(strsep(&line, ";"));
-  artist->description = strdup(strsep(&line, ";"));
-  artist->recipe_per_stream = atoi(strsep(&line, ";"));
-  artist->id_constituent = strdup(strsep(&line, ";"));
-  artist->country = strdup(strsep(&line, ";"));
+  setArtistId(artist, strdup(strsep(&line, ";")));
+  setArtistName(artist, strdup(strsep(&line, ";")));
+  setArtistDescription(artist, strdup(strsep(&line, ";")));
+  setArtistRecipePerStream(artist, atoi(strdup(strsep(&line, ";"))));
+  setArtistIdConstituent(artist, strdup(strsep(&line, ";")));
+  setArtistCountry(artist, strdup(strsep(&line, ";")));
   if (!strcmp(strsep(&line, "\n"), "individual"))
-    artist->tipo = Individual;
+    setArtistTipo(artist, Individual);
   else
-    artist->tipo = Grupo;
-  artist->discografia = 0;
+    setArtistTipo(artist, Grupo);
+  setArtistDiscografia(artist, 0);
 
   return artist;
 }
 
+///////////////
+
 bool validateArtist(Artists *artist) {
   return ((artist->tipo == Individual && strlen(artist->id_constituent) == 0) ||
           (artist->tipo == Grupo && strlen(artist->id_constituent) != 0));
-}
-
-void parseArtists(FILE *fp, GHashTable *artistsTable) {
-  char *line = NULL;
-  size_t len = 0;
-
-  while (getline(&line, &len, fp) != -1) {
-    Artists *artist = separateArtists(line);
-    remove_quotes(artist->id);
-    // Insere na HashTable usando o artist->name como key
-    g_hash_table_insert(artistsTable, g_strdup(artist->id), artist);
-  }
-
-  free(line);
-}
-
-void puxaDireita(Artists *arrayResposta[], int numeroArtistas, int i) {
-  for (int j = numeroArtistas; j < i; j--) {
-    arrayResposta[j] = arrayResposta[j - 1];
-  }
-}
-
-void puxaEsquerda(Artists *arrayResposta[], int numeroArtistas, int i) {
-  for (int j = i; j < numeroArtistas; j++) {
-    arrayResposta[j] = arrayResposta[j + 1];
-  }
-  arrayResposta[numeroArtistas - 1] = NULL;
 }
 
 void removeArtistId(GList **listaResposta, Artists *artist) {
@@ -192,17 +192,7 @@ void increment_artist_discografia(gpointer value, int duracao,
     insertArtistArray(listaResposta, artist, numeroArtistas);
   }
 }
-
-void destroyArtist(gpointer artist) {
-  Artists *a = (Artists *)artist;
-
-  g_free(a->name);
-  g_free(a->description);
-  g_free(a->id_constituent);
-  g_free(a->country);
-  g_free(a->id);
-  g_free(a);
-}
+///////////////
 
 char *getArtistId(gpointer artist) {
   struct artists *a = (struct artists *)artist;
@@ -242,4 +232,15 @@ enum tipoArtista getArtistType(gpointer artist) {
 int getArtistDiscografia(gpointer artist) {
   struct artists *a = (struct artists *)artist;
   return (a->discografia);
+}
+
+void destroyArtist(gpointer artist) {
+  Artists *a = (Artists *)artist;
+
+  g_free(a->name);
+  g_free(a->description);
+  g_free(a->id_constituent);
+  g_free(a->country);
+  g_free(a->id);
+  g_free(a);
 }

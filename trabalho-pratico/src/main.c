@@ -1,26 +1,17 @@
 #include "artists.h"
 #include "musics.h"
-#include "queries.h"
 #include "users.h"
+#include "gestor_artists.h"
+#include "queries.h"
 #include "validation.h"
-#include <artists.h>
+#include "utils.h"
 #include <glib.h>
-#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #define MAX_PATH_SIZE 1024
-
-int primeiraOcorr(char *line, char carac) {
-  int i;
-  for (i = 0; line[i]; i++) {
-    if (line[i] == carac)
-      return i;
-  }
-  return -1;
-}
 
 int main(int argc, char **argv) {
   FILE *fp = NULL;

@@ -15,5 +15,7 @@ bool validateDate(char *date);
 bool validateDuration(char *duration);
 bool validateEmail(char *email);
 bool validateSubscriptionType(char *type);
+bool validateCSVList(char *list);
+bool validateUsersLine(char *line);
 
 #endif

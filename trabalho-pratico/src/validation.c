@@ -14,11 +14,9 @@ bool validateDate(char *date) {
   if (strlen(date) != 10)
     return false;
 
-  // Verifica se os separadores estão nas posições corretas
   if (date[4] != '/' || date[7] != '/')
     return false;
 
-  // Verifica se os outros caracteres são números
   for (int i = 0; i < 10; i++) {
     if (i == 4 || i == 7)
       continue;
@@ -26,12 +24,10 @@ bool validateDate(char *date) {
       return false;
   }
 
-  // Extração do ano, mês e dia
   int year = atoi(date);
   int month = atoi(date + 5);
   int day = atoi(date + 8);
 
-  // Verifica intervalos de mês e dia
   if (month < 1 || month > 12 || day < 1 || day > 31)
     return false;
 
