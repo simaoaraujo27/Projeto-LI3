@@ -116,6 +116,7 @@ int main(int argc, char **argv) {
   fclose(fp);
   free(line);
 
+  g_hash_table_destroy(musicsTable);
   g_hash_table_destroy(artistsTable);
   g_hash_table_destroy(usersTable);
   return 0;
