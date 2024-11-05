@@ -44,4 +44,20 @@ void colocaZero(GHashTable *artistsTable);
 void destroyArtist(gpointer artist);
 void print(GList **listaResposta, int numeroArtistas, FILE *newFile);
 
+char *pegarArtistId(Artists *artist);
+
+char *pegarArtistName(Artists *artist);
+
+char *pegarArtistDescription(Artists *artist);
+
+int pegarArtistRecipePerStream(Artists *artist);
+
+char *pegarArtistIdConstituent(Artists *artist);
+
+char *pegarArtistCountry(Artists *artist);
+
+char *pegarArtistType(Artists *artist);
+
+int pegarArtistDiscografia(Artists *artist);
+
 #endif

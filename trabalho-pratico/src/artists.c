@@ -1,5 +1,4 @@
 #include "artists.h"
-#include "gestor_prints.h"
 #include "utils.h"
 
 enum tipoArtista { Individual, Grupo };
@@ -56,7 +55,9 @@ Artists *separateArtists(char *line) {
   setArtistRecipePerStream(artist, atoi(strdup(strsep(&line, ";"))));
   setArtistIdConstituent(artist, strdup(strsep(&line, ";")));
   setArtistCountry(artist, strdup(strsep(&line, ";")));
-  if (!strcmp(strsep(&line, "\n"), "individual"))
+  char *linhaTipo = strdup(strsep(&line, "\n"));
+  remove_quotes(linhaTipo);
+  if (!strcmp(linhaTipo, "individual"))
     setArtistTipo(artist, Individual);
   else
     setArtistTipo(artist, Grupo);
@@ -140,40 +141,37 @@ void increment_artist_discografia(gpointer value, int duracao,
   }
 }
 
-void print(GList **listaResposta, int numeroArtistas, FILE *newFile) {
-  GList *node = *listaResposta;
-  char *name;
-  char *type;
-  char discografia[10];
-  char *country;
-  char *new_str;
-  while (node != NULL) {
-    Artists *currentArtist = (Artists *)node->data;
-    name = currentArtist->name;
-    if (currentArtist->tipo == Grupo)
-      type = "Grupo";
-    else
-      type = "Individual";
-    snprintf(discografia, sizeof(discografia), "%d",
-             currentArtist->discografia);
-    country = currentArtist->country;
+///////////////
 
-    int total_len = strlen(name) + strlen(type) + strlen(discografia) +
-                    strlen(country) + 4;              // 4 para os ';' e o '\0'
-    new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
-    snprintf(new_str, total_len + 1, "%s;%s;%s;%s\n", name, type, discografia,
-             country);
+char *pegarArtistId(Artists *artist) { return strdup(artist->id); }
 
-    if (node->next == NULL)
-      fprintf(newFile, "%s", new_str);
-    else
-      fprintf(newFile, "%s", new_str);
-    node = node->next;
-  }
-  fclose(newFile);
+char *pegarArtistName(Artists *artist) { return strdup(artist->name); }
+
+char *pegarArtistDescription(Artists *artist) {
+
+  return strdup(artist->description);
 }
 
-///////////////
+int pegarArtistRecipePerStream(Artists *artist) {
+
+  return (artist->recipe_per_stream);
+}
+
+char *pegarArtistIdConstituent(Artists *artist) {
+
+  return strdup(artist->id_constituent);
+}
+
+char *pegarArtistCountry(Artists *artist) { return strdup(artist->country); }
+
+char *pegarArtistType(Artists *artist) {
+  if (artist->tipo == Grupo) {
+    return "Grupo";
+  } else
+    return "Individual";
+}
+
+int pegarArtistDiscografia(Artists *artist) { return (artist->discografia); }
 
 char *getArtistId(gpointer artist) {
   struct artists *a = (struct artists *)artist;

@@ -4,7 +4,7 @@ LDFLAGS = $(shell pkg-config --libs glib-2.0)
 
 all: programa-principal
 
-programa-principal: src/main.o src/musics.o src/users.o src/artists.o src/validation.o src/gestor_queries.o src/utils.o src/gestor_artists.o src/gestor_musics.o src/gestor_users.o
+programa-principal: src/main.o src/gestor_prints.o src/querie1.o src/querie2.o src/querie3.o src/musics.o src/users.o src/artists.o src/validation.o src/gestor_queries.o src/utils.o src/gestor_artists.o src/gestor_musics.o src/gestor_users.o
 	$(CC) $^ $(LDFLAGS) -o $@
 
 src/main.o: src/main.c
@@ -37,5 +37,17 @@ src/gestor_musics.o: src/gestor_musics.c
 src/gestor_users.o: src/gestor_users.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+src/querie1.o: src/querie1.c
+	$(CC) $(CFLAGS) -c $< -o $@	
+
+src/querie2.o: src/querie2.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+src/querie3.o: src/querie3.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+src/gestor_prints.o: src/gestor_prints.c
+	$(CC) $(CFLAGS) -c $< -o $@	
+
 clean:
-	rm -f *.o  programa-principal src/artists.o src/main.o src/musics.o src/users.o src/validation.o src/gestor_queries.o src/utils.o src/gestor_artists.o src/gestor_musics.o src/gestor_users.o resultados/*.txt
+	rm -f *.o  programa-principal src/gestor_prints.o src/querie1.o src/querie2.o src/querie3.o src/artists.o src/main.o src/musics.o src/users.o src/validation.o src/gestor_queries.o src/utils.o src/gestor_artists.o src/gestor_musics.o src/gestor_users.o resultados/*.txt
