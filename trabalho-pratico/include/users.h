@@ -1,9 +1,10 @@
 #ifndef _USERS_H_
 #define _USERS_H_
 
-#include "validation.h"
+//#include "validation.h"
 #include "utils.h"
 #include <glib.h>
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,7 +22,15 @@ void setUserSubscriptionType(Users *u, char *subscription_type);
 void setUserLikedMusicsId(Users *u, char *liked_musics_id);
 
 Users *separateUsers(char *line);
-bool validateUser(Users *user);
+
+char *pegarUserUsername(Users *u);
+char *pegarUserEmail(Users *u);
+char *pegarUserFirstName(Users *u);
+char *pegarUserLastName(Users *u);
+char *pegarUserBirthDate(Users *u);
+char *pegarUserCountry(Users *u);
+char *pegarUserSubscriptionType(Users *u);
+char *pegarUserLikedMusicsId(Users *u);
 
 char *getUserUsername(gpointer user);
 char *getUserEmail(gpointer user);

@@ -24,7 +24,14 @@ void setMusicLyrics (Musics *m, char *lyrics);
 Musics *separateMusics(char *line);
 bool validateMusic(Musics *music);
 void parseMusics(FILE *fp, GHashTable *musicsTable);
-void destroyMusic(gpointer music);
+
+char *pegarMusicId(Musics *m);
+char *pegarMusicTitle(Musics *m);
+char *pegarMusicArtistId(Musics *m);
+int pegarMusicDuration(Musics *m);
+char *pegarMusicGenre(Musics *m);
+int pegarMusicYear(Musics *m);
+char *pegarMusicLyrics(Musics *m);
 
 char *getMusicId(gpointer music);
 char *getMusicTitle(gpointer music);
@@ -33,8 +40,7 @@ int getMusicDuration(gpointer music);
 char *getMusicGenre(gpointer music);
 int getMusicYear(gpointer music);
 char *getMusicLyrics(gpointer music);
-//typedef struct genreLikes GenreLikes;
 
-//GenreLikes *createGenre(char *genero);
+void destroyMusic(gpointer music);
 
 #endif

@@ -19,5 +19,7 @@ bool validateSubscriptionType(char *type);
 bool validateCSVList(char *list);
 bool validateUsersLine(char *line);
 
+bool validateUser(gpointer u);
+
 
 #endif

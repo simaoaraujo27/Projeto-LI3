@@ -71,16 +71,34 @@ bool validateMusic(Musics *music) {
 }
 
 
-void destroyMusic(gpointer music) {
-  Musics *m = (Musics *)music;
-
-  free(m->title);
-  free(m->artist_id);
-  free(m->genre);
-  free(m->lyrics);
-
-  free(m);
+char *pegarMusicId(Musics *m) {
+  return strdup(m->id);
 }
+
+char *pegarMusicTitle(Musics *m) {
+  return strdup(m->title);
+}
+
+char *pegarMusicArtistId(Musics *m) {
+  return strdup(m->artist_id);
+}
+
+int pegarMusicDuration(Musics *m) {
+  return (m->durationSeconds);
+}
+
+char *pegarMusicGenre(Musics *m) {
+  return strdup(m->genre);
+}
+
+int pegarMusicYear(Musics *m) {
+  return (m->year);
+}
+
+char *pegarMusicLyrics(Musics *m) {
+  return strdup(m->lyrics);
+}
+
 
 char *getMusicId(gpointer music) {
   struct musics *m = (struct musics *)music;
@@ -115,4 +133,15 @@ int getMusicYear(gpointer music) {
 char *getMusicLyrics(gpointer music) {
   struct musics *m = (struct musics *)music;
   return strdup(m->lyrics);
+}
+
+void destroyMusic(gpointer music) {
+  Musics *m = (Musics *)music;
+
+  free(m->title);
+  free(m->artist_id);
+  free(m->genre);
+  free(m->lyrics);
+
+  free(m);
 }

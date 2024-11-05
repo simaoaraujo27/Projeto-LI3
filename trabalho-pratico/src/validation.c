@@ -141,3 +141,19 @@ bool validateUsersLine(char *line) {
 
   return true;
 }
+
+
+bool validateUser(gpointer u) {
+  struct users *user = (struct users *)u;
+  char *email = getUserEmail(user);
+  char *subscriptionType = getUserSubscriptionType(user);
+  char *birthDate = getUserBirthDate(user);
+  bool valor;
+  valor = (validateEmail(email) &&
+          validateSubscriptionType(subscriptionType) &&
+          validateDate(birthDate));
+  free(email);
+  free(subscriptionType);
+  free(birthDate);
+  return valor;
+}

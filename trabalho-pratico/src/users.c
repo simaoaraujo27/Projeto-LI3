@@ -1,10 +1,4 @@
 #include "users.h"
-#include "utils.h"
-#include <ctype.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 struct users {
   char *username;          // identificador único do utilizador
@@ -80,19 +74,39 @@ Users *separateUsers(char *line) {
   return user;
 }
 
-bool validateUser(Users *user) {
-  char *email = getUserEmail(user);
-  char *subscriptionType = getUserSubscriptionType(user);
-  char *birthDate = getUserBirthDate(user);
-  bool valor;
-  valor = (validateEmail(email) &&
-          validateSubscriptionType(subscriptionType) &&
-          validateDate(birthDate));
-  free(email);
-  free(subscriptionType);
-  free(birthDate);
-  return valor;
+
+char *pegarUserUsername(Users *u) {
+  return strdup(u->username);
 }
+
+char *pegarUserEmail(Users *u) {
+  return strdup(u->email);
+}
+
+char *pegarUserFirstName(Users *u) {
+  return strdup(u->first_name);
+}
+
+char *pegarUserLastName(Users *u) {
+  return strdup(u->last_name);
+}
+
+char *pegarUserBirthDate(Users *u) {
+  return strdup(u->birth_date);
+}
+
+char *pegarUserCountry(Users *u) {
+  return strdup(u->country);
+}
+
+char *pegarUserSubscriptionType(Users *u) {
+  return strdup(u->subscription_type);
+}
+
+char *pegarUserLikedMusicsId(Users *u) {
+  return strdup(u->liked_musics_id);
+}
+
 
 char *getUserUsername(gpointer user) {
   struct users *u = (struct users *)user;
