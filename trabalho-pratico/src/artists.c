@@ -84,6 +84,7 @@ void removeArtistId(GList **listaResposta, Artists *artist) {
     node = node->next;
   }
 }
+
 void insertArtistArray(GList **listaResposta, Artists *artist,
                        int numeroArtistas) {
   removeArtistId(listaResposta, artist);
