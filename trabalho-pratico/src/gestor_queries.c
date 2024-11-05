@@ -67,16 +67,19 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
   g_hash_table_iter_init(&iter, musicsTable);
   gpointer key1, value1;
   GList *listaResposta = NULL;
+  char *artistId;
+  char *key;
+  int l = 0;
+  int duracao = 0;
   while (g_hash_table_iter_next(&iter, &key1, &value1)) {
     Musics *music = (Musics *)value1;
-    char *artistId = getMusicArtistId(music);
+    artistId = getMusicArtistId(music);
     remove_quotes(artistId);
     removeFstLast(artistId);
-    int duracao = getMusicDuration(music);
-    char *key;
+    duracao = getMusicDuration(music);
     gpointer value;
     gpointer orig_key;
-    int l = strlen(artistId);
+    l = strlen(artistId);
     for (int j = 0; j < l; j += 12) {
       if (j == 0)
         artistId = artistId + 1;
@@ -92,6 +95,7 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
   print(&listaResposta, numeroArtistas, newFile);
   colocaZero(artistsTable);
   g_list_free(listaResposta);
+  free(new);
 }
 
 typedef struct GenreList {
@@ -168,6 +172,7 @@ void query3(int minAge, int maxAge, GHashTable *usersTable,
   int age = 0;
   int continua = 1;
   char *key;
+  char *genero;
   while (g_hash_table_iter_next(&iter, &key1, &value1)) {
     Users *user = (Users *)value1;
     username = getUserUsername(user);
@@ -181,7 +186,6 @@ void query3(int minAge, int maxAge, GHashTable *usersTable,
       removeFstLast(likedMusics);
       removeFstLast(likedMusics);
       int l = strlen(likedMusics);
-      char *genero;
       for (int j = 0; j < l; j += 12) {
         if (j == 0)
           likedMusics = likedMusics + 1;
