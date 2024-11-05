@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
       minAge = atoi(line + 2);
       firstOcorr = primeiraOcorr(line + 2, ' ');
       maxAge = atoi(line + 2 + firstOcorr);
-      //query3(minAge, maxAge, usersTable, musicsTable, i);
+      query3(minAge, maxAge, usersTable, musicsTable, i);
       i++;
     }
   }
@@ -107,10 +107,10 @@ int main(int argc, char **argv) {
   g_hash_table_destroy(musicsTable);
   g_hash_table_destroy(artistsTable);
   g_hash_table_destroy(usersTable);
-/*
+
   struct rusage r_usage;
   getrusage(RUSAGE_SELF, &r_usage);
   printf("Memory usage : %ld KB\n", r_usage.ru_maxrss);
-*/
+
   return 0;
 }
