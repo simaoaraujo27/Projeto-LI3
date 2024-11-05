@@ -25,6 +25,7 @@ void print(GList **listaResposta, int numeroArtistas, FILE *newFile) {
       fprintf(newFile, "%s", new_str);
     else
       fprintf(newFile, "%s\n", new_str);
+    free(new_str);
     node = node->next;
   }
   fclose(newFile);

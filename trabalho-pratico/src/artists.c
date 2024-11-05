@@ -67,6 +67,7 @@ Artists *separateArtists(char *line) {
 
   free(a);
   free(b);
+  free(linhaTipo);
   return artist;
 }
 
@@ -79,8 +80,9 @@ bool validateArtist(Artists *artist) {
 
 void removeArtistId(GList **listaResposta, Artists *artist) {
   GList *node = *listaResposta;
+  Artists *currentArtist;
   while (node != NULL) {
-    Artists *currentArtist = (Artists *)node->data;
+    currentArtist = (Artists *)node->data;
     if (strcmp(currentArtist->id, artist->id) == 0) {
       *listaResposta = g_list_remove(*listaResposta, currentArtist);
       return;
@@ -93,8 +95,9 @@ void insertArtistArray(GList **listaResposta, Artists *artist,
                        int numeroArtistas) {
   removeArtistId(listaResposta, artist);
   GList *node = *listaResposta;
+  Artists *currentArtist;
   while (node != NULL) {
-    Artists *currentArtist = (Artists *)node->data;
+    currentArtist = (Artists *)node->data;
     if (currentArtist->discografia < artist->discografia) {
       *listaResposta = g_list_insert_before(*listaResposta, node, artist);
       if (g_list_length(*listaResposta) > numeroArtistas) {
@@ -114,8 +117,9 @@ void insertArtistArray(GList **listaResposta, Artists *artist,
 
 void procuraArt(Artists *artist, GList **listaResposta, int numeroArtistas) {
   GList *current = *listaResposta;
+  Artists *currentArtist;
   while (current != NULL) {
-    Artists *currentArtist = (Artists *)current->data;
+    currentArtist = (Artists *)current->data;
     if (strcmp(currentArtist->id, artist->id) == 0) {
       current->data = artist;
       return;
@@ -127,8 +131,9 @@ void procuraArt(Artists *artist, GList **listaResposta, int numeroArtistas) {
 void colocaZero(GHashTable *artistsTable) {
   GList *listaArtistas = g_hash_table_get_values(artistsTable);
   GList *node = listaArtistas;
+  Artists *currentArtist;
   while (node != NULL) {
-    Artists *currentArtist = (Artists *)node->data;
+    currentArtist = (Artists *)node->data;
     currentArtist->discografia = 0;
     node = node->next;
   }

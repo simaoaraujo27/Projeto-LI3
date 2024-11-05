@@ -13,7 +13,9 @@ void removeFstLast(char *str);
 
 void removeLast(char *str);
 
-char *calculate_age(char *birth_date);
+char *calculate_age_str(char *birth_date);
+
+int calculateAge(char *birth_date);
 
 void removeForLikedMusics(char *str);
 

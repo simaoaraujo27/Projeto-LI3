@@ -41,6 +41,7 @@ int main(int argc, char **argv) {
     parseArtists(fp, artistsTable);
   }
   fclose(fp);
+  free(artistsPath);
 
   GHashTable *musicsTable =
       g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyMusic);
@@ -52,6 +53,7 @@ int main(int argc, char **argv) {
     parseMusics(fp, musicsTable);
   }
   fclose(fp);
+  free(musicsPath);
 
   GHashTable *usersTable =
       g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyUser);
@@ -63,6 +65,7 @@ int main(int argc, char **argv) {
     parseUsers(fp, usersTable);
   }
   fclose(fp);
+  free(usersPath);
 
   char *txt = argv[2];
   fp = fopen(txt, "r");
@@ -94,7 +97,7 @@ int main(int argc, char **argv) {
       minAge = atoi(line + 2);
       firstOcorr = primeiraOcorr(line + 2, ' ');
       maxAge = atoi(line + 2 + firstOcorr);
-      query3(minAge, maxAge, usersTable, musicsTable, i);
+      //query3(minAge, maxAge, usersTable, musicsTable, i);
       i++;
     }
   }
@@ -104,9 +107,10 @@ int main(int argc, char **argv) {
   g_hash_table_destroy(musicsTable);
   g_hash_table_destroy(artistsTable);
   g_hash_table_destroy(usersTable);
-
+/*
   struct rusage r_usage;
   getrusage(RUSAGE_SELF, &r_usage);
   printf("Memory usage : %ld KB\n", r_usage.ru_maxrss);
+*/
   return 0;
 }

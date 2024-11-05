@@ -7,7 +7,7 @@ void parseArtists(FILE *fp, GHashTable *artistsTable) {
   char *id;
   Artists *artist = NULL;
   while (getline(&line, &len, fp) != -1) {
-    Artists *artist = separateArtists(line);
+    artist = separateArtists(line);
     id = getArtistId(artist);
     remove_quotes(id);
     // Insere na HashTable usando o artist->name como key

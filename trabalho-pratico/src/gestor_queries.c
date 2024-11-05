@@ -32,7 +32,7 @@ void query1(GHashTable *usersTable, char *line, int i) {
     char *email = getUserEmail(orig_key);
     char *firstName = getUserFirstName(orig_key);
     char *lastName = getUserLastName(orig_key);
-    char *age = calculate_age(getUserBirthDate(orig_key));
+    char *age = calculate_age_str(getUserBirthDate(orig_key));
     char *country = getUserCountry(orig_key);
 
     int total_len = strlen(email) + strlen(firstName) + strlen(lastName) +
@@ -135,6 +135,7 @@ void printQuerie3(GList **listaResposta, FILE *newFile) {
       fprintf(newFile, "%s", new_str);
     else
       fprintf(newFile, "%s\n", new_str);
+    free(new_str);
     node = node->next;
   }
 }
@@ -177,7 +178,7 @@ void query3(int minAge, int maxAge, GHashTable *usersTable,
     Users *user = (Users *)value1;
     username = pegarUserUsername(user);
     birthdate = pegarUserBirthDate(user);
-    age = atoi(calculate_age(birthdate));
+    age = calculateAge(birthdate);
     gpointer value;
     gpointer orig_key;
     if (age >= minAge && age <= maxAge) { // se nao entrar nunca gasta menos 3GB
