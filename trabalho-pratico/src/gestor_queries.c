@@ -50,7 +50,9 @@ void query1(GHashTable *usersTable, char *line, int i) {
     free(lastName);
     free(age);
     free(country);
+    free(new_str);
   }
+  free(new);
 }
 
 void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
