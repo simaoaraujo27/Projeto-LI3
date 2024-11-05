@@ -6,9 +6,9 @@ enum tipoArtista { Individual, Grupo };
 struct artists {
   char *id;              // identificador único do artista
   char *name;            // nome do artista
-  char *description;     // descrição do artista
+/*   char *description;     // descrição do artista
   int recipe_per_stream; // dinheiro auferido de cada vez que uma das músicas
-                         // do artista é reproduzida
+                         // do artista é reproduzida */
   char *id_constituent;  // lista de identificadores únicos dos seus
                          // constituintes, no caso de se tratar de um artista
                          // coletivo. Este campo pode ser uma lista vazia.
@@ -21,13 +21,13 @@ void setArtistId(Artists *a, char *id) { a->id = id; }
 
 void setArtistName(Artists *a, char *name) { a->name = name; }
 
-void setArtistDescription(Artists *a, char *description) {
+/* void setArtistDescription(Artists *a, char *description) {
   a->description = description;
 }
 
 void setArtistRecipePerStream(Artists *a, int recipe_per_stream) {
   a->recipe_per_stream = recipe_per_stream;
-}
+} */
 
 void setArtistIdConstituent(Artists *a, char *id_constituent) {
   a->id_constituent = id_constituent;
@@ -51,8 +51,10 @@ Artists *separateArtists(char *line) {
   }
   setArtistId(artist, strdup(strsep(&line, ";")));
   setArtistName(artist, strdup(strsep(&line, ";")));
-  setArtistDescription(artist, strdup(strsep(&line, ";")));
-  setArtistRecipePerStream(artist, atoi(strdup(strsep(&line, ";"))));
+/*   setArtistDescription(artist, strdup(strsep(&line, ";")));
+  setArtistRecipePerStream(artist, atoi(strdup(strsep(&line, ";")))); */
+  char *a = strdup(strsep(&line, ";"));
+  char *b = strdup(strsep(&line, ";"));
   setArtistIdConstituent(artist, strdup(strsep(&line, ";")));
   setArtistCountry(artist, strdup(strsep(&line, ";")));
   char *linhaTipo = strdup(strsep(&line, "\n"));
@@ -63,6 +65,8 @@ Artists *separateArtists(char *line) {
     setArtistTipo(artist, Grupo);
   setArtistDiscografia(artist, 0);
 
+  free(a);
+  free(b);
   return artist;
 }
 
@@ -148,7 +152,7 @@ char *pegarArtistId(Artists *artist) { return strdup(artist->id); }
 
 char *pegarArtistName(Artists *artist) { return strdup(artist->name); }
 
-char *pegarArtistDescription(Artists *artist) {
+/* char *pegarArtistDescription(Artists *artist) {
 
   return strdup(artist->description);
 }
@@ -156,7 +160,7 @@ char *pegarArtistDescription(Artists *artist) {
 int pegarArtistRecipePerStream(Artists *artist) {
 
   return (artist->recipe_per_stream);
-}
+} */
 
 char *pegarArtistIdConstituent(Artists *artist) {
 
@@ -184,7 +188,7 @@ char *getArtistName(gpointer artist) {
   return strdup(a->name);
 }
 
-char *getArtistDescription(gpointer artist) {
+/* char *getArtistDescription(gpointer artist) {
   struct artists *a = (struct artists *)artist;
   return strdup(a->description);
 }
@@ -192,7 +196,7 @@ char *getArtistDescription(gpointer artist) {
 int getArtistRecipePerStream(gpointer artist) {
   struct artists *a = (struct artists *)artist;
   return (a->recipe_per_stream);
-}
+} */
 
 char *getArtistIdConstituent(gpointer artist) {
   struct artists *a = (struct artists *)artist;
@@ -218,7 +222,7 @@ void destroyArtist(gpointer artist) {
   Artists *a = (Artists *)artist;
 
   g_free(a->name);
-  g_free(a->description);
+ /*  g_free(a->description); */
   g_free(a->id_constituent);
   g_free(a->country);
   g_free(a->id);

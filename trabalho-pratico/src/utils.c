@@ -43,6 +43,15 @@ void removeFstLast(char *str) {
   str[len - 2] = '\0';
 }
 
+void removeForLikedMusics(char *str) {
+  int len = strlen(str);
+
+  for (int i = 0; i < len - 1; i++) {
+    str[i] = str[i + 2];
+  }
+  str[len - 5] = '\0';
+}
+
 // util para remover o enter no fim
 void removeLast(char *str) {
   int len = strlen(str);

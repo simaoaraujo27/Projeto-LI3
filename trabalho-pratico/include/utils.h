@@ -15,7 +15,7 @@ void removeLast(char *str);
 
 char *calculate_age(char *birth_date);
 
-
+void removeForLikedMusics(char *str);
 
 int comparaStrings(char *str1, char *str2);
 

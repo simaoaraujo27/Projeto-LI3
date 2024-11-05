@@ -1,13 +1,14 @@
 #include "gestor_artists.h"
 #include "gestor_musics.h"
-#include "gestor_users.h"
 #include "gestor_queries.h"
+#include "gestor_users.h"
 #include "validation.h"
 #include <glib.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/resource.h>
 
 #define MAX_PATH_SIZE 1024
 
@@ -99,9 +100,13 @@ int main(int argc, char **argv) {
   }
   fclose(fp);
   free(line);
-
+  free(country);
   g_hash_table_destroy(musicsTable);
   g_hash_table_destroy(artistsTable);
   g_hash_table_destroy(usersTable);
+
+  struct rusage r_usage;
+  getrusage(RUSAGE_SELF, &r_usage);
+  printf("Memory usage : %ld KB\n", r_usage.ru_maxrss);
   return 0;
 }

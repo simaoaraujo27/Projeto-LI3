@@ -108,11 +108,11 @@ GenreList *createNode(char *genre) {
   if (newNode == NULL) {
     return NULL;
   }
-  newNode->genre = (char *)malloc(strlen(genre) + 1);
+  newNode->genre = strdup(genre); // Allocate and copy genre string
   if (newNode->genre == NULL) {
+    free(newNode); // Free the node itself if genre allocation fails
     return NULL;
   }
-  strcpy(newNode->genre, genre);
   newNode->likes = 1;
   return newNode;
 }
@@ -158,7 +158,7 @@ void query3(int minAge, int maxAge, GHashTable *usersTable,
   FILE *newFile;
   char *path = "./resultados/commandx-output.txt";
   char *new = malloc(sizeof(char) * (strlen(path) + 10));
-  -snprintf(new, strlen(path) + 10, "./resultados/command%d-output.txt", i);
+  snprintf(new, strlen(path) + 10, "./resultados/command%d-output.txt", i);
   newFile = fopen(new, "w");
 
   GHashTableIter iter;
@@ -168,23 +168,24 @@ void query3(int minAge, int maxAge, GHashTable *usersTable,
   Musics *music;
   char *username;
   char *birthdate;
-  char *likedMusics;
+  // char *likedMusics;
   int age = 0;
   int continua = 1;
   char *key;
   char *genero;
   while (g_hash_table_iter_next(&iter, &key1, &value1)) {
     Users *user = (Users *)value1;
-    username = getUserUsername(user);
-    birthdate = getUserBirthDate(user);
+    username = pegarUserUsername(user);
+    birthdate = pegarUserBirthDate(user);
     age = atoi(calculate_age(birthdate));
     gpointer value;
     gpointer orig_key;
-    if (age >= minAge && age <= maxAge) {
-      likedMusics = getUserLikedMusicsId(user);
-      removeLast(likedMusics);
+    if (age >= minAge && age <= maxAge) { // se nao entrar nunca gasta menos 3GB
+      char *likedMusics = pegarUserLikedMusicsId(user);
+      /* removeLast(likedMusics);
       removeFstLast(likedMusics);
-      removeFstLast(likedMusics);
+      removeFstLast(likedMusics); */
+      removeForLikedMusics(likedMusics);
       int l = strlen(likedMusics);
       for (int j = 0; j < l; j += 12) {
         if (j == 0)
@@ -192,16 +193,18 @@ void query3(int minAge, int maxAge, GHashTable *usersTable,
         else
           likedMusics = likedMusics + 3;
         key = strdup(strsep(&likedMusics, "'"));
-        if (g_hash_table_lookup_extended(musicsTable, key, &orig_key, &value)) {
-          music = (Musics *)value;       // pega na musica encontrada
-          genero = getMusicGenre(music); // pega no genero
+        if (key &&
+            g_hash_table_lookup_extended(musicsTable, key, &orig_key, &value)) {
+          music = (Musics *)value;
+          genero = getMusicGenre(music);
           remove_quotes(genero);
-
+          // Process genres in the list
           for (GList *node = listaResposta; node != NULL; node = node->next) {
             GenreList *currentGenre = (GenreList *)node->data;
             if (!strcmp(genero, currentGenre->genre)) {
               currentGenre->likes++;
               continua = 0;
+              break; // exit loop if genre already exists
             }
           }
           if (continua) {
@@ -209,6 +212,7 @@ void query3(int minAge, int maxAge, GHashTable *usersTable,
             listaResposta = g_list_prepend(listaResposta, newNode);
           }
         }
+        free(key); // Free key after usage
       }
     }
   }
