@@ -131,7 +131,6 @@ void printQuerie3(GList **listaResposta, FILE *newFile) {
       fprintf(newFile, "%s\n", new_str);
     node = node->next;
   }
-  fclose(newFile);
 }
 
 int compare_likes(gconstpointer a, gconstpointer b) {
@@ -139,6 +138,12 @@ int compare_likes(gconstpointer a, gconstpointer b) {
   const GenreList *genre2 = b;
 
   return genre2->likes - genre1->likes;
+}
+
+void free_genre_list_node(gpointer data) {
+  GenreList *node = (GenreList *)data;
+  free(node->genre); // Libera a string do gênero
+  free(node);        // Libera o próprio nó
 }
 
 void query3(int minAge, int maxAge, GHashTable *usersTable,
@@ -203,12 +208,9 @@ void query3(int minAge, int maxAge, GHashTable *usersTable,
   }
   listaResposta = g_list_sort(listaResposta, compare_likes);
   printQuerie3(&listaResposta, newFile);
-  g_list_free(listaResposta);
-  free(username);
-  free(birthdate);
-  free(likedMusics);
-  free(key);
-  free(orig_key1);
-  free(value1);
-  destroyMusic(music);
+  /* g_list_free(listaResposta); */
+  g_list_free_full(listaResposta, free_genre_list_node);
+
+  fclose(newFile);
+  free(new);
 }

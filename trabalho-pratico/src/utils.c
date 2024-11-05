@@ -81,8 +81,6 @@ char *calculate_age(char *birth_date) {
   return age_str;
 }
 
-
-
 int comparaStrings(char *str1, char *str2) {
   if (strlen(str1) == strlen(str2) - 1) { // -1 por causa do \n fantasma
     int len = strlen(str1);
