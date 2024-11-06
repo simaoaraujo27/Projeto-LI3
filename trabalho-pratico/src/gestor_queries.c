@@ -39,10 +39,11 @@ void query1(GHashTable *usersTable, char *line, int i) {
                     strlen(age) + strlen(country) + 5; // 5 para os ';' e o '\0'
     char *new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
     // Concatenar as strings, separando-as por ;
-    snprintf(new_str, total_len + 1, "%s;%s;%s;%s;%s", email, firstName,
+    snprintf(new_str, total_len + 1, "%s;%s;%s;%s;%s\n", email, firstName,
              lastName, age, country);
 
     fprintf(newFile, "%s", new_str);
+    fprintf(newFile,"\n");
     fclose(newFile);
 
     free(email);
