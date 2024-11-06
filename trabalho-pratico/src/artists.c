@@ -176,7 +176,7 @@ char *pegarArtistCountry(Artists *artist) { return strdup(artist->country); }
 
 char *pegarArtistType(Artists *artist) {
   if (artist->tipo == Grupo) {
-    return "grupo";
+    return "group";
   } else
     return "individual";
 }

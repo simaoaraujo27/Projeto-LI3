@@ -6,7 +6,7 @@ char *SegundosParaHoras(int segundos) {
   int minutos = (segundos % 3600) / 60;
   int segundosRestantes = segundos % 60;
   char *hora = malloc(10);
-  snprintf(hora, 16, "%d:%02d:%02d", horas, minutos, segundosRestantes);
+  snprintf(hora, 16, "%02d:%02d:%02d", horas, minutos, segundosRestantes);
   return hora;
 }
 
