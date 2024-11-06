@@ -8,10 +8,13 @@ struct users {
   char *birth_date;        // data de nascimento
   char *country;           // país onde a conta do utilizador foi registada
   char *subscription_type; // tipo de subscrição, i.e., normal ou premium
-  char *liked_musics_id;   // lista de indentificadores únicos das
-                           // músicas gostadas pelo utilizador
 };
 
+struct usersQ3{
+  char *age;
+  char *liked_musics_id; // lista de indentificadores únicos das
+                           // músicas gostadas pelo utilizador
+};
 
 void setUserUsername(Users *u, char *username){
   remove_quotes(username);
@@ -48,14 +51,24 @@ void setUserSubscriptionType(Users *u, char *subscription_type){
   u->subscription_type = subscription_type;
 }
 
-void setUserLikedMusicsId(Users *u, char *liked_musics_id){
+void setUserQ3LikedMusicsId(UsersQ3 *u, char *liked_musics_id){
   remove_quotes(liked_musics_id);
   u->liked_musics_id = liked_musics_id;
+}
+
+void setUserQ3Age(UsersQ3 *u, char *birth_date){
+  u->age = calculate_age_str(birth_date); 
 }
 
 Users *separateUsers(char *line) {
   // separa cada linha pelas suas respetivas variáveis
   Users *user = malloc(sizeof(struct users));
+  if (!user) {
+    fprintf(stderr, "Malloc failed!");
+    return NULL;
+  }
+
+  UsersQ3 *u = malloc(sizeof(struct usersQ3));
   if (!user) {
     fprintf(stderr, "Malloc failed!");
     return NULL;
@@ -68,12 +81,27 @@ Users *separateUsers(char *line) {
   setUserBirthDate(user, strdup(strsep(&line, ";")));
   setUserCountry(user, strdup(strsep(&line, ";")));
   setUserSubscriptionType(user, strdup(strsep(&line, ";")));
-  setUserLikedMusicsId(user, strdup(strsep(&line, ";")));
+  setUserQ3LikedMusicsId(u, strdup(strsep(&line, ";")));
+  setUserQ3Age(u, getUserBirthDate(user));
   
 
   return user;
 }
 
+UsersQ3 *separateUsersQ3(char *line, char *birth_date) {
+ 
+  UsersQ3 *u = malloc(sizeof(struct usersQ3));
+  if (!u) {
+    fprintf(stderr, "Malloc failed!");
+    return NULL;
+  }
+
+  setUserQ3LikedMusicsId(u, strdup(strsep(&line, ";")));
+  setUserQ3Age(u, birth_date);
+  
+
+  return u;
+}
 
 char *pegarUserUsername(Users *u) {
   return strdup(u->username);
@@ -103,8 +131,12 @@ char *pegarUserSubscriptionType(Users *u) {
   return strdup(u->subscription_type);
 }
 
-char *pegarUserLikedMusicsId(Users *u) {
+char *pegarUserQ3LikedMusicsId(UsersQ3 *u) {
   return strdup(u->liked_musics_id);
+}
+
+char *pegarUserQ3Age(UsersQ3 *u) {
+  return strdup(u->age);
 }
 
 
@@ -143,9 +175,14 @@ char *getUserSubscriptionType(gpointer user) {
   return strdup(u->subscription_type);
 }
 
-char *getUserLikedMusicsId(gpointer user) {
-  struct users *u = (struct users *)user;
+char *getUserQ3LikedMusicsId(gpointer user) {
+  struct usersQ3 *u = (struct usersQ3 *)user;
   return strdup(u->liked_musics_id);
+}
+
+char *getUserQ3Age(gpointer user) {
+  struct usersQ3 *u = (struct usersQ3 *)user;
+  return strdup(u->age);
 }
 
 void destroyUser(gpointer user) {
@@ -158,6 +195,14 @@ void destroyUser(gpointer user) {
   free(u->birth_date);
   free(u->country);
   free(u->subscription_type);
+  //free(u->liked_musics_id);
+
+  free(u);
+}
+
+void destroyUserQ3(gpointer user) {
+  UsersQ3 *u = (UsersQ3 *)user;
+
   free(u->liked_musics_id);
 
   free(u);

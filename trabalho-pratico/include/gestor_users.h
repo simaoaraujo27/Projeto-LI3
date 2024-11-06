@@ -3,6 +3,7 @@
 
 #include "users.h"
 
-void parseUsers(FILE *fp, GHashTable *usersTable);
+void parseUsers(FILE *fp, GHashTable *usersTable, GHashTable *usersQ3Table);
+
 
 #endif

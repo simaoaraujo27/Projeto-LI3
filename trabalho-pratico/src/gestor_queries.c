@@ -18,9 +18,9 @@ void query1(GHashTable *usersTable, char *line, int i) {
 
   // Cria o ficheiro e guarda-o na pasta resultados
   FILE *newFile;
-  char *path = "./resultados/commandx-output.txt";
+  char *path = "./resultados/commandx_output.txt";
   char *new = malloc(sizeof(char) * (strlen(path) + 10));
-  snprintf(new, strlen(path) + 10, "./resultados/command%d-output.txt", i);
+  snprintf(new, strlen(path) + 10, "./resultados/command%d_output.txt", i);
   newFile = fopen(new, "w");
   gpointer value;
   gpointer orig_key;
@@ -58,9 +58,9 @@ void query1(GHashTable *usersTable, char *line, int i) {
 void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
             GHashTable *musicsTable, char *line, int i) {
   FILE *newFile;
-  char *path = "./resultados/commandx-output.txt";
+  char *path = "./resultados/commandx_output.txt";
   char *new = malloc(sizeof(char) * (strlen(path) + 10));
-  snprintf(new, strlen(path) + 10, "./resultados/command%d-output.txt", i);
+  snprintf(new, strlen(path) + 10, "./resultados/command%d_output.txt", i);
   newFile = fopen(new, "w");
 
   GHashTableIter iter;
@@ -154,12 +154,19 @@ void free_genre_list_node(gpointer data) {
 }
 
 void query3(int minAge, int maxAge, GHashTable *usersTable,
+            GHashTable *musicsTable, int i){
+              int k;
+              k = 0;
+            }
+
+/* 
+void query3(int minAge, int maxAge, GHashTable *usersTable,
             GHashTable *musicsTable, int i) {
 
   FILE *newFile;
-  char *path = "./resultados/commandx-output.txt";
+  char *path = "./resultados/commandx_output.txt";
   char *new = malloc(sizeof(char) * (strlen(path) + 10));
-  snprintf(new, strlen(path) + 10, "./resultados/command%d-output.txt", i);
+  snprintf(new, strlen(path) + 10, "./resultados/command%d_output.txt", i);
   newFile = fopen(new, "w");
 
   GHashTableIter iter;
@@ -185,7 +192,7 @@ void query3(int minAge, int maxAge, GHashTable *usersTable,
       char *likedMusics = pegarUserLikedMusicsId(user);
       /* removeLast(likedMusics);
       removeFstLast(likedMusics);
-      removeFstLast(likedMusics); */
+      removeFstLast(likedMusics);
       removeForLikedMusics(likedMusics);
       int l = strlen(likedMusics);
       for (int j = 0; j < l; j += 12) {
@@ -219,9 +226,11 @@ void query3(int minAge, int maxAge, GHashTable *usersTable,
   }
   listaResposta = g_list_sort(listaResposta, compare_likes);
   printQuerie3(&listaResposta, newFile);
-  /* g_list_free(listaResposta); */
+  /* g_list_free(listaResposta); 
   g_list_free_full(listaResposta, free_genre_list_node);
 
   fclose(newFile);
   free(new);
 }
+
+*/
