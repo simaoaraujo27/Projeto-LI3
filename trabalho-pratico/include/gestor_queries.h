@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+enum codigoMusica;
+
 // char *calculate_age(char *birth_date);
 
 /* Listar o resumo de um utilizador, consoante o identificador recebido por
@@ -19,8 +21,13 @@ int temAspas(char *line);
 void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
             GHashTable *musicsTable, char *line, int i);
 
+
+// Serve para o QuickSort
+int compare(const void *a, const void *b);
+
+void criarArrayQ3(GHashTable *usersTable, int array[121][10]);
+
 /* géneros de música mais populares numa determinada faixa etária */
-void query3(int minAge, int maxAge, GHashTable *usersTable,
-            GHashTable *musicsTable, int i);
+void query3(int minAge, int maxAge, int array[121][10], GHashTable *musicsTable, int i);
 
 #endif

@@ -21,6 +21,8 @@ void setUserLastName(Users *u, char *last_name);
 void setUserBirthDate(Users *u, char *birth_date);
 void setUserCountry(Users *u, char *country);
 void setUserSubscriptionType(Users *u, char *subscription_type);
+void setUserLikedMusicsId(Users *u, char *liked_musics_id);
+void setUserAge(Users *u, char *birth_date);
 void setUserQ3LikedMusicsId(UsersQ3 *u, char *liked_musics_id);
 void setUserQ3Age(UsersQ3 *u, char *birth_date);
 
@@ -37,6 +39,7 @@ char *pegarUserSubscriptionType(Users *u);
 char *pegarUserQ3LikedMusicsId(UsersQ3 *u);
 char * pegarUserQ3Age(UsersQ3 *u);
 
+char *getUserAge(gpointer user);
 char *getUserUsername(gpointer user);
 char *getUserEmail(gpointer user);
 char *getUserFirstName(gpointer user);
@@ -44,6 +47,7 @@ char *getUserLastName(gpointer user);
 char *getUserBirthDate(gpointer user);
 char *getUserCountry(gpointer user);
 char *getUserSubscriptionType(gpointer user);
+char *getUserLikedMusicsId(gpointer user);
 char *getUserQ3LikedMusicsId(gpointer user);
 char *getUserQ3Age(gpointer user);
 

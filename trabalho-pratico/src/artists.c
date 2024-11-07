@@ -6,9 +6,9 @@ enum tipoArtista { Individual, Grupo };
 struct artists {
   char *id;              // identificador único do artista
   char *name;            // nome do artista
-/*   char *description;     // descrição do artista
-  int recipe_per_stream; // dinheiro auferido de cada vez que uma das músicas
-                         // do artista é reproduzida */
+                         /*   char *description;     // descrição do artista
+                           int recipe_per_stream; // dinheiro auferido de cada vez que uma das músicas
+                                                  // do artista é reproduzida */
   char *id_constituent;  // lista de identificadores únicos dos seus
                          // constituintes, no caso de se tratar de um artista
                          // coletivo. Este campo pode ser uma lista vazia.
@@ -51,8 +51,8 @@ Artists *separateArtists(char *line) {
   }
   setArtistId(artist, strdup(strsep(&line, ";")));
   setArtistName(artist, strdup(strsep(&line, ";")));
-/*   setArtistDescription(artist, strdup(strsep(&line, ";")));
-  setArtistRecipePerStream(artist, atoi(strdup(strsep(&line, ";")))); */
+  /*   setArtistDescription(artist, strdup(strsep(&line, ";")));
+    setArtistRecipePerStream(artist, atoi(strdup(strsep(&line, ";")))); */
   char *a = strdup(strsep(&line, ";"));
   char *b = strdup(strsep(&line, ";"));
   setArtistIdConstituent(artist, strdup(strsep(&line, ";")));
@@ -227,7 +227,7 @@ void destroyArtist(gpointer artist) {
   Artists *a = (Artists *)artist;
 
   g_free(a->name);
- /*  g_free(a->description); */
+  /*  g_free(a->description); */
   g_free(a->id_constituent);
   g_free(a->country);
   g_free(a->id);

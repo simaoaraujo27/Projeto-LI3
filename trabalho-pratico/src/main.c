@@ -83,6 +83,31 @@ int main(int argc, char **argv) {
   int numeroArtist = 0;
   char *country;
   int firstOcorr, minAge, maxAge;
+
+  int array[121][10] = {0};
+  GHashTableIter iter;
+  gpointer key, value;
+  g_hash_table_iter_init(&iter, usersTable);
+
+  while (g_hash_table_iter_next(&iter, &key, &value)) {
+    char *age = getUserAge(value);
+    int userAge = atoi(age);
+
+    // printf("%d\n", userAge);
+    if (userAge > 120)
+      continue;
+    char *liked_musics_id = getUserLikedMusicsId(value);
+    array[userAge][0]++; // TESTE
+
+    // fazer um get do genre
+    // arr[age][genre]++;
+
+    // printf("%s\n", age);
+    // printf("%s\n", liked_musics_id);
+  }
+
+  printf("%d\n", array[60][0]);
+
   while (getline(&line, &len, fp) != -1) {
     if (line[0] == '1') {
       query1(usersTable, line, i);
@@ -101,7 +126,7 @@ int main(int argc, char **argv) {
       minAge = atoi(line + 2);
       firstOcorr = primeiraOcorr(line + 2, ' ');
       maxAge = atoi(line + 2 + firstOcorr);
-      query3(minAge, maxAge, usersTable, musicsTable, i);
+      // query3(minAge, maxAge, array, musicsTable, i);
       i++;
     }
   }

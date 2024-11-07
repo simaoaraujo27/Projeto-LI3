@@ -12,6 +12,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+enum codigoMusica {
+  Rock,
+  Metal,
+  Jazz,
+  Reggae,
+  Blues,
+  Classical,
+  HipHop,
+  Pop,
+  Country,
+  Electronic
+};
+
 void query1(GHashTable *usersTable, char *line, int i) {
   line = line + 2;
   line[strlen(line) - 1] = '\0';
@@ -156,8 +169,72 @@ void free_genre_list_node(gpointer data) {
   free(node);        // Libera o próprio nó
 }
 
-void query3(int minAge, int maxAge, GHashTable *usersTable,
-            GHashTable *musicsTable, int i) {
+/*
+Criar uma lista ligada em que cada nodo tem o seguinte:
+1 char* que representa o género da música;
+1 int que representa a contagem do total de likes
+
+Utilizar o g_hash_table_iter para percorrer todas as idade pretendidas dos
+utilizadores; Fazer um lookup na hashtable usando o liked_musics_id de cada
+utilizador; Incrementar a contagem conforme o tipo de música Finalmente, printar
+a lista ligada (por ordem decrescente)
+
+
+---------------------------------------------------------------------------------------------
+
+Fazer um array de arrays de inteiros
+int arr[121][10]
+10 - os 10 tipos de música
+
+Código para cada índice no enum codigoMusica;
+
+Fazer um g_hash_table_iter e para cada utilizador fazer um lookup na hashtable
+das musicas pelo liked_musics_id.
+Ver o tipo da música junto com a idade do
+utilizador e conforme isso, incrementar o array
+
+Assim só se percorre a hashtable dos users uma vez
+
+*/
+
+int compare(const void *a, const void *b) { return (*(int *)a - *(int *)b); }
+
+void criarArrayQ3(GHashTable *usersTable, int array[121][10]) {
+  GHashTableIter iter;
+  gpointer key, value;
+  g_hash_table_iter_init(&iter, usersTable);
+
+  while (g_hash_table_iter_next(&iter, &key, &value)) {
+    char *age = getUserAge(value);
+    int userAge = atoi(age);
+    char *liked_musics_id = getUserLikedMusicsId(value);
+    array[userAge][0] = 1; // TESTE
+
+    // fazer um get do genre
+    // arr[age][genre]++;
+
+    // printf("%s\n", age);
+    // printf("%s\n", liked_musics_id);
+
+    free(liked_musics_id);
+  }
+}
+
+void query3(int minAge, int maxAge, int arr[121][10], GHashTable *musicsTable, int i) {
+  // int arr[121][10];
+  //  Fica com as somas do total de likes por género das idades pretendidas
+  int arrSomas[10] = {0};
+
+  for (int i = minAge; i <= maxAge; i++) {
+    for (int j = 0; j < 10; j++) {
+      arrSomas[j] += arr[i][j];
+    }
+  }
+
+  // Ordena o arrSomas
+  qsort(arrSomas, 10, sizeof(int), compare);
+
+  // SO FALTA PRINTAR
 
   FILE *newFile;
   char *path = "./resultados/commandx_output.txt";
@@ -165,6 +242,7 @@ void query3(int minAge, int maxAge, GHashTable *usersTable,
   snprintf(new, strlen(path) + 10, "./resultados/command%d_output.txt", i);
   newFile = fopen(new, "w");
   fprintf(newFile, "\n");
+
   /*
     GHashTableIter iter;
     g_hash_table_iter_init(&iter, usersTable);
