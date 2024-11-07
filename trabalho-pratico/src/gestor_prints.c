@@ -17,6 +17,7 @@ void print(GList **listaResposta, int numeroArtistas, FILE *newFile) {
   char *discografia;
   char *country;
   char *new_str;
+  int i = 0;
   while (node != NULL) {
     Artists *currentArtist = (Artists *)node->data;
     name = pegarArtistName(currentArtist);
@@ -38,7 +39,12 @@ void print(GList **listaResposta, int numeroArtistas, FILE *newFile) {
       fprintf(newFile, "%s", new_str);
     free(new_str);
     node = node->next;
+
+    i++;
   }
-  fprintf(newFile,"\n");
+
+  // Caso seja um ficheiro vazio, apenas coloca uma '\n'
+  if (i == 0) 
+    fprintf(newFile,"\n");
   fclose(newFile);
 }

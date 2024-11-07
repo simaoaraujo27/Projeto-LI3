@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
       minAge = atoi(line + 2);
       firstOcorr = primeiraOcorr(line + 2, ' ');
       maxAge = atoi(line + 2 + firstOcorr);
-      //query3(minAge, maxAge, usersTable, musicsTable, i);
+      query3(minAge, maxAge, usersTable, musicsTable, i);
       i++;
     }
   }

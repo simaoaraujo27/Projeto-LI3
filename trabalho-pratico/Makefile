@@ -2,52 +2,18 @@ CC = gcc
 CFLAGS = -Iinclude $(shell pkg-config --cflags glib-2.0)
 LDFLAGS = $(shell pkg-config --libs glib-2.0)
 
-all: programa-principal
+OBJ_FILES = src/main.o src/gestor_prints.o src/querie1.o src/querie2.o src/querie3.o src/musics.o src/users.o src/artists.o src/validation.o src/gestor_queries.o src/utils.o src/gestor_artists.o src/gestor_musics.o src/gestor_users.o
 
-programa-principal: src/main.o src/gestor_prints.o src/querie1.o src/querie2.o src/querie3.o src/musics.o src/users.o src/artists.o src/validation.o src/gestor_queries.o src/utils.o src/gestor_artists.o src/gestor_musics.o src/gestor_users.o
+all: programa-principal programa-testes
+
+programa-principal: $(OBJ_FILES)
 	$(CC) $^ $(LDFLAGS) -o $@
 
-src/main.o: src/main.c
+programa-testes: src/programa-testes.o src/compare_files.o
+	$(CC) $^ $(LDFLAGS) -o $@
+
+src/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
-
-src/musics.o: src/musics.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/users.o: src/users.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/artists.o: src/artists.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/validation.o: src/validation.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/gestor_queries.o: src/gestor_queries.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/utils.o: src/utils.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/gestor_artists.o: src/gestor_artists.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/gestor_musics.o: src/gestor_musics.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/gestor_users.o: src/gestor_users.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/querie1.o: src/querie1.c
-	$(CC) $(CFLAGS) -c $< -o $@	
-
-src/querie2.o: src/querie2.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/querie3.o: src/querie3.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-src/gestor_prints.o: src/gestor_prints.c
-	$(CC) $(CFLAGS) -c $< -o $@	
 
 clean:
-	rm -f *.o  programa-principal src/gestor_prints.o src/querie1.o src/querie2.o src/querie3.o src/artists.o src/main.o src/musics.o src/users.o src/validation.o src/gestor_queries.o src/utils.o src/gestor_artists.o src/gestor_musics.o src/gestor_users.o resultados/*.txt
+	rm -f src/*.o programa-principal programa-testes resultados/*.txt
