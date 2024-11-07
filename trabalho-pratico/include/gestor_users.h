@@ -3,7 +3,10 @@
 
 #include "users.h"
 
-void parseUsers(FILE *fp, GHashTable *usersTable, GHashTable *usersQ3Table);
+typedef struct gestorUsers GestorUsers;
+
+void parseUsers(FILE *fp, GHashTable *usersTable);
+
 
 
 #endif

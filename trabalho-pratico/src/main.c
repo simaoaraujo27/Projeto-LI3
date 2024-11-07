@@ -58,15 +58,12 @@ int main(int argc, char **argv) {
   GHashTable *usersTable =
       g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyUser);
 
-  GHashTable *usersQ3Table =
-      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyUserQ3);
-
   fp = fopen(usersPath, "r");
   if (!fp) {
     perror("Error");
     return EXIT_FAILURE;
   } else {
-    parseUsers(fp, usersTable, usersQ3Table);
+    parseUsers(fp, usersTable);
   }
   fclose(fp);
   free(usersPath);
@@ -83,7 +80,7 @@ int main(int argc, char **argv) {
   int numeroArtist = 0;
   char *country;
   int firstOcorr, minAge, maxAge;
-
+/*
   int array[121][10] = {0};
   GHashTableIter iter;
   gpointer key, value;
@@ -105,8 +102,7 @@ int main(int argc, char **argv) {
     // printf("%s\n", age);
     // printf("%s\n", liked_musics_id);
   }
-
-  printf("%d\n", array[60][0]);
+*/
 
   while (getline(&line, &len, fp) != -1) {
     if (line[0] == '1') {
@@ -126,7 +122,7 @@ int main(int argc, char **argv) {
       minAge = atoi(line + 2);
       firstOcorr = primeiraOcorr(line + 2, ' ');
       maxAge = atoi(line + 2 + firstOcorr);
-      // query3(minAge, maxAge, array, musicsTable, i);
+      //query3(minAge, maxAge, array, musicsTable, i);
       i++;
     }
   }
