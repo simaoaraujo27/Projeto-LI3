@@ -39,16 +39,6 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   } else {
     parseArtists(fp, artistsTable);
-    GHashTableIter iter;
-    g_hash_table_iter_init(&iter, artistsTable);
-    gpointer key1, value1;
-    int i = 0;
-    while (g_hash_table_iter_next(&iter, &key1, &value1)) {
-      i++;
-      Artists *artist = (Artists *)value1;
-      // printf("%s\n", pegarUserUsername(user));
-    }
-    printf("Numero de: %d\n", i);
   }
   fclose(fp);
   free(artistsPath);
@@ -61,16 +51,6 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   } else {
     parseMusics(fp, musicsTable, artistsTable);
-    GHashTableIter iter;
-    g_hash_table_iter_init(&iter, musicsTable);
-    gpointer key1, value1;
-    int i = 0;
-    while (g_hash_table_iter_next(&iter, &key1, &value1)) {
-      i++;
-      Musics *music = (Musics *)value1;
-      // printf("%s\n", pegarUserUsername(user));
-    }
-    printf("Numero de: %d\n", i);
   }
   fclose(fp);
   free(musicsPath);
@@ -83,18 +63,7 @@ int main(int argc, char **argv) {
     perror("Error");
     return EXIT_FAILURE;
   } else {
-    parseUsers(fp, usersTable, usersQ3Table, musicsTable);
-    GHashTableIter iter;
-    g_hash_table_iter_init(&iter, usersTable);
-    gpointer key1, value1;
-    int i = 0;
-    while (g_hash_table_iter_next(&iter, &key1, &value1)) {
-      i++;
-      Users *user = (Users *)value1;
-      // printf("%s\n", pegarUserUsername(user));
-    }
-    printf("Numero de: %d\n", i);
-    parseUsers(fp, usersTable);
+    parseUsers(fp, usersTable, musicsTable);
   }
   fclose(fp);
   free(usersPath);
@@ -111,6 +80,7 @@ int main(int argc, char **argv) {
   int numeroArtist = 0;
   char *country;
   int firstOcorr, minAge, maxAge;
+  int array[121][10] = {0};
   /*
     int array[121][10] = {0};
     GHashTableIter iter;
