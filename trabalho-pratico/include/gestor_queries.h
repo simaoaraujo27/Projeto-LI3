@@ -25,9 +25,7 @@ void query2(int numeroArtistas, char *country, GHashTable *artistsTable,
 // Serve para o QuickSort
 int compare(const void *a, const void *b);
 
-void criarArrayQ3(GHashTable *usersTable, int array[121][10]);
-
 /* géneros de música mais populares numa determinada faixa etária */
-void query3(int minAge, int maxAge, int array[121][10], GHashTable *musicsTable, int i);
+// void query3(int minAge, int maxAge, int array[121][10], GHashTable *musicsTable, int i);
 
 #endif

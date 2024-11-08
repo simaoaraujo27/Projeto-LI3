@@ -1,7 +1,6 @@
 #include "users.h"
 
 struct users {
-  char *age;
   char *username;          // identificador único do utilizador
   char *email;             // email de registo do utilizador
   char *first_name;        // primeiro nome do utilizador
@@ -95,12 +94,6 @@ char *pegarUserSubscriptionType(Users *u) {
 
 char *pegarUserLikedMusicsId(Users *u) {
   return strdup(u->liked_musics_id);
-}
-
-
-char *getUserAge(gpointer user) {
-  struct users *u = (struct users *)user;
-  return strdup(u->age);
 }
 
 char *getUserUsername(gpointer user) {

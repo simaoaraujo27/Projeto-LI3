@@ -22,7 +22,7 @@ void parseArtists(FILE *fp, GHashTable *artistsTable) {
   Artists *artist = NULL;
 
   // Abre o ficheiro para escrever os erros
-  FILE *newFile = fopen("./resultados/artists_erros.csv", "w");
+  FILE *newFile = fopen("./resultados/artists_errors.csv", "w");
   if (newFile == NULL) {
     perror("Erro ao abrir o ficheiro de erros");
     return;

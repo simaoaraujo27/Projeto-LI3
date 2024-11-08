@@ -5,7 +5,7 @@ void parseMusics(FILE *fp, GHashTable *musicsTable, GHashTable *artistsTable) {
   size_t len = 0;
   char *id;
   Musics *music = NULL;
-  FILE *newFile = fopen("./resultados/musics_erros.csv", "w");
+  FILE *newFile = fopen("./resultados/musics_errors.csv", "w");
   if (newFile == NULL) {
     perror("Erro ao abrir o ficheiro de erros");
     return;

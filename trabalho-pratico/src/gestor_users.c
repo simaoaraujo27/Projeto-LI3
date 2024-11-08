@@ -7,7 +7,7 @@ void parseUsers(FILE *fp, GHashTable *usersTable, GHashTable *musicsTable) {
   char *username;
   Users *user = NULL;
 
-  FILE *newFile = fopen("./resultados/users_erros.csv", "w");
+  FILE *newFile = fopen("./resultados/users_errors.csv", "w");
   if (newFile == NULL) {
     perror("Erro ao abrir o ficheiro de erros");
     return;
@@ -24,12 +24,9 @@ void parseUsers(FILE *fp, GHashTable *usersTable, GHashTable *musicsTable) {
       g_hash_table_insert(usersTable, username, user);
 
     } else {
-      // Escreve a linha inválida no ficheiro de erros
       fprintf(newFile, "%s", line);
     }
-    // printf("a\n");
   }
-
   fclose(newFile);
   free(line);
 }
