@@ -49,7 +49,9 @@ Artists *separateArtists(char *line) {
     fprintf(stderr, "Malloc failed!");
     return NULL;
   }
+
   setArtistId(artist, strdup(strsep(&line, ";")));
+
   setArtistName(artist, strdup(strsep(&line, ";")));
   /*   setArtistDescription(artist, strdup(strsep(&line, ";")));
     setArtistRecipePerStream(artist, atoi(strdup(strsep(&line, ";")))); */

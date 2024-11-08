@@ -3,6 +3,6 @@
 
 #include "musics.h"
 
-void parseMusics(FILE *fp, GHashTable *musicsTable);
+void parseMusics(FILE *fp, GHashTable *musicsTable, GHashTable *artistsTable);
 
 #endif

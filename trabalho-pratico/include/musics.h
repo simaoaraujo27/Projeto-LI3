@@ -19,11 +19,11 @@ void setMusicArtistId (Musics *m, char *artist_id);
 void setMusicDurationSeconds (Musics *m, int durationSeconds);
 void setMusicGenre (Musics *m, char *genre);
 void setMusicYear (Musics *m, int year);
-void setMusicLyrics (Musics *m, char *lyrics);
+
 
 Musics *separateMusics(char *line);
 bool validateMusic(Musics *music);
-void parseMusics(FILE *fp, GHashTable *musicsTable);
+
 
 char *pegarMusicId(Musics *m);
 char *pegarMusicTitle(Musics *m);

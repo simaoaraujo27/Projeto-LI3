@@ -220,7 +220,8 @@ void criarArrayQ3(GHashTable *usersTable, int array[121][10]) {
   }
 }
 
-void query3(int minAge, int maxAge, int arr[121][10], GHashTable *musicsTable, int i) {
+void query3(int minAge, int maxAge, int arr[121][10], GHashTable *musicsTable,
+            int i) {
   // int arr[121][10];
   //  Fica com as somas do total de likes por género das idades pretendidas
   int arrSomas[10] = {0};

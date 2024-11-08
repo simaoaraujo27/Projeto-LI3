@@ -67,26 +67,30 @@ bool validateDuration(char *duration) {
 // (formato: username@domain.com)
 bool validateEmail(char *email) {
   char *at = strchr(email, '@');
-  if (!at)
+  if (!at) {
     return false;
-
+  }
   char *dot = strrchr(at, '.');
-  if (!dot || dot - at < 2 || strlen(dot + 1) < 2 || strlen(dot + 1) > 3)
-    return false;
+  if (!dot || dot - at < 2 || strlen(dot + 1) < 2 || strlen(dot + 1) > 3) {
 
+    return false;
+  }
   for (char *p = email; p < at; p++) {
-    if (!isalnum(*p))
+    if (!isalnum(*p)) {
       return false;
+    }
   }
 
   for (char *p = at + 1; p < dot; p++) {
-    if (!isalpha(*p))
+    if (!isalpha(*p)) {
       return false;
+    }
   }
 
   for (char *p = dot + 1; *p; p++) {
-    if (!islower(*p) && !isalpha(*p))
+    if (!islower(*p) && !isalpha(*p)) {
       return false;
+    }
   }
 
   return true;
@@ -102,58 +106,177 @@ bool validateCSVList(char *list) {
           list[lastIndex] == '"');
 }
 
-bool validateUsersLine(char *line) {
-  
-  // VALIDAÇÃO SINTÁTICA
-  char *username = strdup(strsep(&line, ";"));
+bool validateMusicsIdUsers(char *musics_id, GHashTable *musicsTable) {
+  remove_quotes(musics_id);
+  removeFstLast(musics_id);
+  int l = strlen(musics_id);
 
+  char *key = NULL;
+  gpointer orig_key;
+  gpointer value;
+
+  while (l > 0) {
+    if (l == strlen(musics_id)) {
+      musics_id = musics_id + 1;
+    } else
+      musics_id = musics_id + 3;
+    key = strdup(strsep(&musics_id, "'"));
+    key[8] = '\0';
+    gboolean found =
+        g_hash_table_lookup_extended(musicsTable, key, &orig_key, &value);
+    if (!found) {
+      free(key);
+      return false;
+    }
+    free(key);
+    l -= 12;
+  }
+
+  return true;
+}
+
+bool validateArtistLine(char *idConstituent, char *type) {
+  removeFstLast(idConstituent);
+  removeFstLast(idConstituent);
+  /* printf("Tipo: %s Tamanho Const: %ld\n", type, strlen(idConstituent)); */
+  return (((strcmp(type, "individual") == 0) && strlen(idConstituent) == 0) ||
+          ((strcmp(type, "group")) == 0 && (strlen(idConstituent) != 0)));
+}
+
+// validar artistas da musica
+bool validateMusicsArtists(char *artists_id, GHashTable *artistsTable) {
+  remove_quotes(artists_id);
+  removeFstLast(artists_id);
+  int l = strlen(artists_id);
+  // printf("Artists ID original : %s\n", artists_id);
+  char *key = NULL;
+  gpointer orig_key;
+  gpointer value;
+
+  while (l > 0) {
+    if (l == strlen(artists_id)) {
+      artists_id = artists_id + 1;
+    } else
+      artists_id = artists_id + 3;
+    // printf("Artists ID dentro do whlie : %s\n", artists_id);
+    key = strdup(strsep(&artists_id, "'"));
+    key[8] = '\0';
+    gboolean found =
+        g_hash_table_lookup_extended(artistsTable, key, &orig_key, &value);
+    // printf("Key : %s\n", key);
+    // printf("Found : %d\n", found);
+    if (!found) {
+      free(key);
+      return false;
+    }
+    free(key);
+    l -= 12;
+  }
+
+  return true;
+}
+
+bool validateMusicsLine(char *line, GHashTable *artistsTable) {
+  char *a = strdup(strsep(&line, ";"));
+  char *b = strdup(strsep(&line, ";"));
+  char *artists_id = strdup(strsep(&line, ";"));
+  char *durationSeconds = strdup(strsep(&line, ";"));
+  char *c = strdup(strsep(&line, ";"));
+  char *year = strdup(strsep(&line, "\n"));
+
+  bool isValid = validateDuration(durationSeconds) && atoi(year) <= 2024 &&
+                 validateCSVList(artists_id) &&
+                 validateMusicsArtists(strdup(artists_id), artistsTable);
+
+  free(a);
+  free(b);
+  free(artists_id);
+  free(durationSeconds);
+  free(c);
+  free(year);
+
+  return isValid;
+}
+
+bool validateUsersLine(char *line, GHashTable *musicsTable) {
+  char *username = strdup(strsep(&line, ";"));
   char *email = strdup(strsep(&line, ";"));
   remove_quotes(email);
-  if (!validateEmail(email))
+
+  if (!validateEmail(email)) {
+    free(username);
+    free(email);
+    //printf("ERRO 0\n");
     return false;
+  }
 
   char *first_name = strdup(strsep(&line, ";"));
   char *last_name = strdup(strsep(&line, ";"));
   char *birth_date = strdup(strsep(&line, ";"));
   remove_quotes(birth_date);
-  if (!validateDate(birth_date))
+
+  if (!validateDate(birth_date)) {
+    free(first_name);
+    free(last_name);
+    free(birth_date);
+    free(username);
+    free(email);
+    //printf("ERRO 1\n");
     return false;
+  }
 
   char *country = strdup(strsep(&line, ";"));
   char *subscription_type = strdup(strsep(&line, ";"));
   remove_quotes(subscription_type);
 
-  if (!validateSubscriptionType(subscription_type))
+  if (!validateSubscriptionType(subscription_type)) {
+    free(first_name);
+    free(country);
+    free(subscription_type);
+    free(last_name);
+    free(birth_date);
+    free(username);
+    free(email);
+    //printf("ERRO 2\n");
     return false;
+  }
 
   char *liked_musics_id = strdup(line);
-
-  if (!validateCSVList(liked_musics_id))
+  removeLast(liked_musics_id);
+  // printf("%s\n", liked_musics_id);
+  if (!validateCSVList(liked_musics_id)) {
+    free(first_name);
+    free(country);
+    free(subscription_type);
+    free(last_name);
+    free(birth_date);
+    free(username);
+    free(email);
+    free(liked_musics_id);
+    //printf("ERRO 3\n");
     return false;
+  }
+  if (!validateMusicsIdUsers(liked_musics_id, musicsTable)) {
+    free(first_name);
+    free(country);
+    free(subscription_type);
+    free(last_name);
+    free(birth_date);
+    free(username);
+    free(email);
+    free(liked_musics_id);
+    //printf("ERRO 4\n");
+    return false;
+  }
 
-  // VALIDAÇÃO LÓGICA
-
-  /*   char *musica = strdup(strsep(&line + 1, ","));
-    while (strcmp(musica, "]") != 0) {
-      musica = strdup(strsep(&line + 1, ","));
-      printf("%s\n", musica);
-    } */
-
-  return true;
-}
-
-
-bool validateUser(gpointer u) {
-  struct users *user = (struct users *)u;
-  char *email = getUserEmail(user);
-  char *subscriptionType = getUserSubscriptionType(user);
-  char *birthDate = getUserBirthDate(user);
-  bool valor;
-  valor = (validateEmail(email) &&
-          validateSubscriptionType(subscriptionType) &&
-          validateDate(birthDate));
+  free(first_name);
+  free(country);
+  free(subscription_type);
+  free(last_name);
+  free(birth_date);
+  free(username);
   free(email);
-  free(subscriptionType);
-  free(birthDate);
-  return valor;
+  free(liked_musics_id);
+ // printf("ERRO 5");
+  return true;
 }

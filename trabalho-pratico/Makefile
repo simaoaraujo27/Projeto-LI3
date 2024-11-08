@@ -16,4 +16,4 @@ src/%.o: src/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f src/*.o programa-principal programa-testes resultados/*.txt
+	rm -f src/*.o programa-principal programa-testes resultados/*.txt resultados/*.csv

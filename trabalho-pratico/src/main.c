@@ -39,6 +39,16 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   } else {
     parseArtists(fp, artistsTable);
+    GHashTableIter iter;
+    g_hash_table_iter_init(&iter, artistsTable);
+    gpointer key1, value1;
+    int i = 0;
+    while (g_hash_table_iter_next(&iter, &key1, &value1)) {
+      i++;
+      Artists *artist = (Artists *)value1;
+      // printf("%s\n", pegarUserUsername(user));
+    }
+    printf("Numero de: %d\n", i);
   }
   fclose(fp);
   free(artistsPath);
@@ -50,7 +60,17 @@ int main(int argc, char **argv) {
     perror("Error");
     return EXIT_FAILURE;
   } else {
-    parseMusics(fp, musicsTable);
+    parseMusics(fp, musicsTable, artistsTable);
+    GHashTableIter iter;
+    g_hash_table_iter_init(&iter, musicsTable);
+    gpointer key1, value1;
+    int i = 0;
+    while (g_hash_table_iter_next(&iter, &key1, &value1)) {
+      i++;
+      Musics *music = (Musics *)value1;
+      // printf("%s\n", pegarUserUsername(user));
+    }
+    printf("Numero de: %d\n", i);
   }
   fclose(fp);
   free(musicsPath);
@@ -63,6 +83,17 @@ int main(int argc, char **argv) {
     perror("Error");
     return EXIT_FAILURE;
   } else {
+    parseUsers(fp, usersTable, usersQ3Table, musicsTable);
+    GHashTableIter iter;
+    g_hash_table_iter_init(&iter, usersTable);
+    gpointer key1, value1;
+    int i = 0;
+    while (g_hash_table_iter_next(&iter, &key1, &value1)) {
+      i++;
+      Users *user = (Users *)value1;
+      // printf("%s\n", pegarUserUsername(user));
+    }
+    printf("Numero de: %d\n", i);
     parseUsers(fp, usersTable);
   }
   fclose(fp);
@@ -80,29 +111,29 @@ int main(int argc, char **argv) {
   int numeroArtist = 0;
   char *country;
   int firstOcorr, minAge, maxAge;
-/*
-  int array[121][10] = {0};
-  GHashTableIter iter;
-  gpointer key, value;
-  g_hash_table_iter_init(&iter, usersTable);
+  /*
+    int array[121][10] = {0};
+    GHashTableIter iter;
+    gpointer key, value;
+    g_hash_table_iter_init(&iter, usersTable);
 
-  while (g_hash_table_iter_next(&iter, &key, &value)) {
-    char *age = getUserAge(value);
-    int userAge = atoi(age);
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+      char *age = getUserAge(value);
+      int userAge = atoi(age);
 
-    // printf("%d\n", userAge);
-    if (userAge > 120)
-      continue;
-    char *liked_musics_id = getUserLikedMusicsId(value);
-    array[userAge][0]++; // TESTE
+      // printf("%d\n", userAge);
+      if (userAge > 120)
+        continue;
+      char *liked_musics_id = getUserLikedMusicsId(value);
+      array[userAge][0]++; // TESTE
 
-    // fazer um get do genre
-    // arr[age][genre]++;
+      // fazer um get do genre
+      // arr[age][genre]++;
 
-    // printf("%s\n", age);
-    // printf("%s\n", liked_musics_id);
-  }
-*/
+      // printf("%s\n", age);
+      // printf("%s\n", liked_musics_id);
+    }
+  */
 
   while (getline(&line, &len, fp) != -1) {
     if (line[0] == '1') {
@@ -122,7 +153,8 @@ int main(int argc, char **argv) {
       minAge = atoi(line + 2);
       firstOcorr = primeiraOcorr(line + 2, ' ');
       maxAge = atoi(line + 2 + firstOcorr);
-      //query3(minAge, maxAge, array, musicsTable, i);
+      query3(minAge, maxAge, array, musicsTable, i);
+      // query3(minAge, maxAge, array, musicsTable, i);
       i++;
     }
   }
