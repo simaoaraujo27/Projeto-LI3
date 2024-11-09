@@ -130,6 +130,9 @@ int main(int argc, char **argv) {
     int userAge = atoi(age);
     char *liked_musics_id = getUserLikedMusicsId(hash_value);
 
+    free(birthDate);
+    free(age);
+
     removeFstLast(liked_musics_id);
     char *music_id = strtok(liked_musics_id, ", ");
     while (music_id != NULL) {
@@ -151,10 +154,12 @@ int main(int argc, char **argv) {
         char *genre = getMusicGenre(orig_music_key);
         // Atualize a lista e a idade máxima se necessário
         lista = adicionar_like(lista, genre, userAge, &idade_max);
+        free(genre);
       }
 
       music_id = strtok(NULL, ", ");
     }
+    free(liked_musics_id);
   }
 
   while (getline(&line, &len, fp) != -1) {
@@ -188,6 +193,7 @@ int main(int argc, char **argv) {
   liberar_lista(lista);
   freeGestorArtists(gestorArtists);
   freeGestorMusics(gestorMusics);
+  freeGestorUsers(gestorUsers);
 
   return 0;
 }
