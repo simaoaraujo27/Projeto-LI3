@@ -51,15 +51,24 @@ int main(int argc, char **argv) {
 
   GHashTable *artistsTable =
       g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyArtist);
+
+  gestorArtists *gestor = initGestorArtists("./resultados/artists_errors.csv", artistsTable);
+    if (!gestor) {
+        fprintf(stderr, "Failed to initialize gestorArtists\n");
+        return EXIT_FAILURE;
+    }
+  
+
   fp = fopen(artistsPath, "r");
-  if (!fp) {
-    perror("Error");
-    return EXIT_FAILURE;
-  } else {
-    parseArtists(fp, artistsTable);
-  }
-  fclose(fp);
-  free(artistsPath);
+  if (fp) {
+        parseArtists(fp, gestor);
+        fclose(fp);
+    } else {
+        perror("Error opening artists file");
+        freeGestorArtists(gestor);
+        return EXIT_FAILURE;
+    }
+    free(artistsPath);
 
   GHashTable *musicsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyMusic);
@@ -171,6 +180,7 @@ int main(int argc, char **argv) {
   g_hash_table_destroy(artistsTable);
   g_hash_table_destroy(usersTable);
   liberar_lista(lista);
+  freeGestorArtists(gestor);
 
   return 0;
 }
