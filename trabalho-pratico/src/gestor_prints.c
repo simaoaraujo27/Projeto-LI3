@@ -1,5 +1,6 @@
 #include "gestor_artists.h"
 #include "musics.h"
+#include "utils.h"
 
 char *SegundosParaHoras(int segundos) {
   int horas = segundos / 3600;

@@ -3,6 +3,7 @@
 #include "gestor_queries.h"
 #include "gestor_users.h"
 #include "validation.h"
+#include "utils.h"
 #include <glib.h>
 #include <stdbool.h>
 #include <stdio.h>

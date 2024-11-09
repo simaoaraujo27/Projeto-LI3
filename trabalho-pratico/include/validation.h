@@ -1,15 +1,8 @@
 #ifndef _VALIDATION_H
 #define _VALIDATION_H
 
-#include "gestor_artists.h"
-#include "gestor_musics.h"
-#include "gestor_users.h"
-#include "users.h"
-#include <ctype.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <glib.h>
 
 // Funções para validar os campos
 bool validateDate(char *date);

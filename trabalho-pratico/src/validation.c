@@ -2,9 +2,10 @@
 #include "artists.h"
 #include "musics.h"
 #include "users.h"
+#include "utils.h"
+
 #include <assert.h>
 #include <ctype.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
