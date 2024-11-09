@@ -2,9 +2,11 @@
 #include "gestor_musics.h"
 #include "gestor_queries.h"
 #include "gestor_users.h"
-#include "validation.h"
-#include "utils.h"
+#include "query1.h"
+#include "query2.h"
 #include "query3.h"
+#include "utils.h"
+#include "validation.h"
 #include <glib.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -12,23 +14,6 @@
 #include <string.h>
 
 #define MAX_PATH_SIZE 1024
-
-
-/*
-IDEIA: TIPO UM HISTOGRAMA
-
-Lista ligada em que cada nodo tem o seguinte:
-Nome do género;
-Array com o número de likes para cada idade (pode ser um array dinâmico)
-
-
-Depois é só percorrer a hashtable dos users, e pegar no liked_musics_id
-Fazer um lookup na hashtable das músicas usando o id
-Pegar no genre dessa música
-Ir ao nodo da lista ligada correspondente a esse genre e incrementar a
-posição da idade
-
-*/
 
 int main(int argc, char **argv) {
   FILE *fp = NULL;
@@ -49,50 +34,70 @@ int main(int argc, char **argv) {
   snprintf(musicsPath, MAX_PATH_SIZE, "%s/%s", path, "musics.csv");
   snprintf(usersPath, MAX_PATH_SIZE, "%s/%s", path, "users.csv");
 
-  GHashTable *artistsTable =
-      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyArtist);
+  // Inicializar gestorArtists and GHashTableArtist
+  GHashTable *artistsTable = g_hash_table_new_full(
+      g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyArtist);
 
-  gestorArtists *gestor = initGestorArtists("./resultados/artists_errors.csv", artistsTable);
-    if (!gestor) {
-        fprintf(stderr, "Failed to initialize gestorArtists\n");
-        return EXIT_FAILURE;
-    }
-  
+  gestorArtists *gestorArtists =
+      initGestorArtists("./resultados/artists_errors.csv", artistsTable);
+  if (!gestorArtists) {
+    fprintf(stderr, "Failed to initialize gestorArtists\n");
+    return EXIT_FAILURE;
+  }
 
   fp = fopen(artistsPath, "r");
   if (fp) {
-        parseArtists(fp, gestor);
-        fclose(fp);
-    } else {
-        perror("Error opening artists file");
-        freeGestorArtists(gestor);
-        return EXIT_FAILURE;
-    }
-    free(artistsPath);
+    parseArtists(fp, gestorArtists);
+    fclose(fp);
+  } else {
+    perror("Error opening artists file");
+    freeGestorArtists(gestorArtists);
+    return EXIT_FAILURE;
+  }
+  free(artistsPath);
 
   GHashTable *musicsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyMusic);
-  fp = fopen(musicsPath, "r");
-  if (!fp) {
-    perror("Error");
+
+  // Inicializar gestorMusics and GHashTableMusic
+  gestorMusics *gestorMusics =
+      initGestorMusics("./resultados/musics_errors.csv", musicsTable);
+  if (!gestorMusics) {
+    fprintf(stderr, "Failed to initialize gestorMusics\n");
     return EXIT_FAILURE;
-  } else {
-    parseMusics(fp, musicsTable, artistsTable);
   }
-  fclose(fp);
+
+  fp = fopen(musicsPath, "r");
+  if (fp) {
+    parseMusics(fp, gestorMusics, gestorArtists);
+    fclose(fp);
+  } else {
+    perror("Error opening musics file");
+    freeGestorMusics(gestorMusics);
+    return EXIT_FAILURE;
+  }
   free(musicsPath);
 
-  GHashTable *usersTable =
-      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyUser);
+  // Inicializar gestorUsers and GHashTableUser
+  GHashTable *usersTable = g_hash_table_new_full(
+      g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyUser);
+
+  gestorUsers *gestorUsers =
+      initGestorUsers("./resultados/musics_errors.csv", usersTable);
+  if (!gestorUsers) {
+    fprintf(stderr, "Failed to initialize gestorUsers\n");
+    return EXIT_FAILURE;
+  }
 
   fp = fopen(usersPath, "r");
-  if (!fp) {
-    perror("Error");
-    return EXIT_FAILURE;
+  if (fp) {
+    parseUsers(fp, gestorUsers, gestorMusics);
+    fclose(fp);
   } else {
-    parseUsers(fp, usersTable, musicsTable);
+    perror("Error opening users file");
+    freeGestorUsers(gestorUsers);
+    return EXIT_FAILURE;
   }
-  fclose(fp);
   free(usersPath);
 
   char *txt = argv[2];
@@ -101,6 +106,7 @@ int main(int argc, char **argv) {
     perror("Error");
     return EXIT_FAILURE;
   }
+
   char *line = NULL;
   size_t len = 0;
   int i = 1;
@@ -153,15 +159,15 @@ int main(int argc, char **argv) {
 
   while (getline(&line, &len, fp) != -1) {
     if (line[0] == '1') {
-      query1(usersTable, line, i);
+      query1(gestorUsers, line, i);
       i++;
     } else if (line[0] == '2') {
       if (!temAspas(line)) {
-        query2(atoi(line + 2), NULL, artistsTable, musicsTable, line, i);
+        query2(atoi(line + 2), NULL, gestorArtists, gestorMusics, line, i);
         i++;
       } else {
         firstOcorr = primeiraOcorr(line, '"');
-        query2(atoi(line + 2), line + firstOcorr, artistsTable, musicsTable,
+        query2(atoi(line + 2), line + firstOcorr, gestorArtists, gestorMusics,
                line, i);
         i++;
       }
@@ -180,7 +186,8 @@ int main(int argc, char **argv) {
   g_hash_table_destroy(artistsTable);
   g_hash_table_destroy(usersTable);
   liberar_lista(lista);
-  freeGestorArtists(gestor);
+  freeGestorArtists(gestorArtists);
+  freeGestorMusics(gestorMusics);
 
   return 0;
 }

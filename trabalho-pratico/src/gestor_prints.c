@@ -11,7 +11,7 @@ char *SegundosParaHoras(int segundos) {
   return hora;
 }
 
-void print(GList **listaResposta, int numeroArtistas, FILE *newFile) {
+void printQuery2(GList **listaResposta, int numeroArtistas, FILE *newFile) {
   GList *node = *listaResposta;
   char *name;
   char *type;
