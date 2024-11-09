@@ -13,7 +13,7 @@
 
 // Definindo a estrutura que representa a lista ligada
 typedef struct nodoMusica {
-  char *genero; 
+  char *genero;
   GArray *likes;
   struct nodoMusica *prox;
 } NodoMusica;
@@ -208,7 +208,7 @@ int main(int argc, char **argv) {
   snprintf(usersPath, MAX_PATH_SIZE, "%s/%s", path, "users.csv");
 
   GHashTable *artistsTable =
-      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyArtist);
+      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyArtist);
   fp = fopen(artistsPath, "r");
   if (!fp) {
     perror("Error");
@@ -219,8 +219,8 @@ int main(int argc, char **argv) {
   fclose(fp);
   free(artistsPath);
 
-  GHashTable *musicsTable =
-      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyMusic);
+  GHashTable *musicsTable = g_hash_table_new_full(
+      g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyMusic);
   fp = fopen(musicsPath, "r");
   if (!fp) {
     perror("Error");
@@ -232,7 +232,7 @@ int main(int argc, char **argv) {
   free(musicsPath);
 
   GHashTable *usersTable =
-      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, destroyUser);
+      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyUser);
 
   fp = fopen(usersPath, "r");
   if (!fp) {

@@ -1,6 +1,11 @@
 #include "gestor_users.h"
 #include "validation.h"
 
+#include <ctype.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+
 void parseUsers(FILE *fp, GHashTable *usersTable, GHashTable *musicsTable) {
   char *line = NULL;
   size_t len = 0;

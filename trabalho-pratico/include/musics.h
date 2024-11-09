@@ -1,15 +1,8 @@
 #ifndef _MUSICS_H_
 #define _MUSICS_H_
 
-#include "utils.h"
-#include "validation.h"
 #include <glib.h>
-#include <assert.h>
-#include <ctype.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 typedef struct musics Musics;
 
@@ -41,6 +34,6 @@ char *getMusicGenre(gpointer music);
 int getMusicYear(gpointer music);
 char *getMusicLyrics(gpointer music);
 
-void destroyMusic(gpointer music);
+void destroyMusic(Musics *music);
 
 #endif

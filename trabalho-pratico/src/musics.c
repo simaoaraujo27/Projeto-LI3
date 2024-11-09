@@ -1,4 +1,12 @@
 #include "musics.h"
+#include "utils.h"
+#include "validation.h"
+
+#include <assert.h>
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 struct musics {
   char *id;            // identificador único da música
@@ -109,13 +117,14 @@ int getMusicYear(gpointer music) {
   return strdup(m->lyrics);
 } */
 
-void destroyMusic(gpointer music) {
-  Musics *m = (Musics *)music;
+void destroyMusic(Musics *music) {
 
-  free(m->title);
-  free(m->artist_id);
-  free(m->genre);
-  /* free(m->lyrics); */
+  if(music){
+  free(music->id);
+  free(music->title);
+  free(music->artist_id);
+  free(music->genre);
 
-  free(m);
+  free(music);
+  }
 }

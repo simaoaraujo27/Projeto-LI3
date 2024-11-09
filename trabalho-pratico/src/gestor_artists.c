@@ -1,8 +1,8 @@
 #include "gestor_artists.h"
+#include "artists.h"
 #include "validation.h"
+#include "utils.h"
 
-#include <glib.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 

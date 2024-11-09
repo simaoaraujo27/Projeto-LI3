@@ -1,4 +1,12 @@
 #include "gestor_musics.h"
+//#include "utils.h"
+#include "validation.h"
+
+#include <assert.h>
+#include <ctype.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 
 void parseMusics(FILE *fp, GHashTable *musicsTable, GHashTable *artistsTable) {
   char *line = NULL;

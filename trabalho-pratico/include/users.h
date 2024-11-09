@@ -1,14 +1,8 @@
 #ifndef _USERS_H_
 #define _USERS_H_
 
-//#include "validation.h"
-#include "utils.h"
 #include <glib.h>
-#include <ctype.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 
 typedef struct users Users;
 
@@ -45,6 +39,6 @@ char *getUserSubscriptionType(gpointer user);
 char *getUserLikedMusicsId(gpointer user);
 char *getUserLikedMusicsId(gpointer user);
 
-void destroyUser(gpointer user);
+void destroyUser(Users *u);
 
 #endif

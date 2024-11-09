@@ -1,13 +1,10 @@
 #ifndef _ARTISTS_H_
 #define _ARTISTS_H_
 
-#include "utils.h"
-#include <ctype.h>
 #include <glib.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 
 enum tipoArtista;
 
@@ -41,7 +38,8 @@ void procuraArt(Artists *artist, GList **listaResposta, int numeroArtistas);
 
 void colocaZero(GHashTable *artistsTable);
 
-void destroyArtist(gpointer artist);
+void destroyArtist(Artists *a);
+
 void print(GList **listaResposta, int numeroArtistas, FILE *newFile);
 
 char *pegarArtistId(Artists *artist);

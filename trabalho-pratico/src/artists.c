@@ -1,5 +1,8 @@
 #include "artists.h"
 #include "utils.h"
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 enum tipoArtista { Individual, Grupo };
 
@@ -225,13 +228,13 @@ int getArtistDiscografia(gpointer artist) {
   return (a->discografia);
 }
 
-void destroyArtist(gpointer artist) {
-  Artists *a = (Artists *)artist;
+void destroyArtist(Artists *a) {
 
-  g_free(a->name);
-  /*  g_free(a->description); */
-  g_free(a->id_constituent);
-  g_free(a->country);
-  g_free(a->id);
-  g_free(a);
+  if (a){
+  free(a->id);
+  free(a->name);
+  free(a->id_constituent);
+  free(a->country);
+  free(a);
+  }
 }

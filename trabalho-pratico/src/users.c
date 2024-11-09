@@ -1,4 +1,11 @@
 #include "users.h"
+#include "utils.h"
+
+#include <ctype.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 struct users {
   char *username;          // identificador único do utilizador
@@ -137,9 +144,8 @@ char *getUserLikedMusicsId(gpointer user) {
 }
 
 
-void destroyUser(gpointer user) {
-  Users *u = (Users *)user;
-
+void destroyUser(Users *u) {
+  if (u){
   free(u->username);
   free(u->email);
   free(u->first_name);
@@ -147,8 +153,8 @@ void destroyUser(gpointer user) {
   free(u->birth_date);
   free(u->country);
   free(u->subscription_type);
-  // free(u->liked_musics_id);
-
+  free(u->liked_musics_id);
   free(u);
+  }
 }
 
