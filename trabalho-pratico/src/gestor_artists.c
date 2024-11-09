@@ -6,8 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-
 // Definição completa da estrutura gestorArtists
 struct gestorArtists {
   FILE *errorsFile;

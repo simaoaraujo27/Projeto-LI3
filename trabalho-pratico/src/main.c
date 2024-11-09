@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyUser);
 
   gestorUsers *gestorUsers =
-      initGestorUsers("./resultados/musics_errors.csv", usersTable);
+      initGestorUsers("./resultados/users_errors.csv", usersTable);
   if (!gestorUsers) {
     fprintf(stderr, "Failed to initialize gestorUsers\n");
     return EXIT_FAILURE;

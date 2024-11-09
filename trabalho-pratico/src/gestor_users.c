@@ -43,24 +43,20 @@ void parseUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic) {
   char *username;
   Users *user = NULL;
 
-  FILE *newFile = fopen("./resultados/users_errors.csv", "w");
-  if (newFile == NULL) {
-    perror("Erro ao abrir o ficheiro de erros");
-    return;
-  }
   getline(&line, &len, fp);
   while (getline(&line, &len, fp) != -1) {
-    if (validateUsersLine(strdup(line), getMusicsTable(gestorMusic))) {
+    if (validateUsersLine(strdup(line), gestorMusic)) {
       user = separateUsers(line);
       username = getUserUsername(user);
 
       // Insere na HashTable usando o user->username como key
       g_hash_table_insert(gestorUser->usersTable, username, user);
     } else {
-      fprintf(newFile, "%s", line);
+      fprintf(gestorUser->errorsFile, "%s", line);
+    
     }
   }
-  fclose(newFile);
+
   free(line);
 }
 

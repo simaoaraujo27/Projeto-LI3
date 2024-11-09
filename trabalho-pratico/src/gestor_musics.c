@@ -46,24 +46,23 @@ void parseMusics(FILE *fp, gestorMusics *gestorMusic,
   size_t len = 0;
   char *id;
   Musics *music = NULL;
-  FILE *newFile = fopen("./resultados/musics_errors.csv", "w");
-  if (newFile == NULL) {
-    perror("Erro ao abrir o ficheiro de erros");
-    return;
-  }
+  int a = 0;
+
   getline(&line, &len, fp);
   while (getline(&line, &len, fp) != -1) {
-    if (validateMusicsLine(strdup(line), getArtistTable(gestorArtist))) {
+    if (validateMusicsLine(strdup(line), gestorArtist)) {
       music = separateMusics(strdup(line));
       // Insere na HashTable usando o music->id como key
       id = getMusicId(music);
       g_hash_table_insert(gestorMusic->musicsTable, id, music);
-    } else {
+    } 
+    else {
       // Escreve a linha inválida no ficheiro de erros
-      fprintf(newFile, "%s", line);
+      fprintf(gestorMusic->errorsFile, "%s", line);
+      
     }
   }
-  fclose(newFile);
+
   free(line);
 }
 

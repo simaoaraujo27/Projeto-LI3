@@ -1,5 +1,8 @@
 #include "validation.h"
 #include "artists.h"
+#include "gestor_artists.h"
+#include "gestor_musics.h"
+#include "gestor_users.h"
 #include "musics.h"
 #include "users.h"
 #include "utils.h"
@@ -107,7 +110,7 @@ bool validateCSVList(char *list) {
           list[lastIndex] == '"');
 }
 
-bool validateMusicsIdUsers(char *musics_id, GHashTable *musicsTable) {
+bool validateMusicsIdUsers(char *musics_id, gestorMusics *gestorMusics) {
   remove_quotes(musics_id);
   removeFstLast(musics_id);
   int l = strlen(musics_id);
@@ -123,8 +126,8 @@ bool validateMusicsIdUsers(char *musics_id, GHashTable *musicsTable) {
       musics_id = musics_id + 3;
     key = strdup(strsep(&musics_id, "'"));
     key[8] = '\0';
-    gboolean found =
-        g_hash_table_lookup_extended(musicsTable, key, &orig_key, &value);
+    gboolean found = g_hash_table_lookup_extended(getMusicsTable(gestorMusics),
+                                                  key, &orig_key, &value);
     if (!found) {
       free(key);
       return false;
@@ -145,7 +148,7 @@ bool validateArtistLine(char *idConstituent, char *type) {
 }
 
 // validar artistas da musica
-bool validateMusicsArtists(char *artists_id, GHashTable *artistsTable) {
+bool validateMusicsArtists(char *artists_id, gestorArtists *gestorArtists) {
   remove_quotes(artists_id);
   removeFstLast(artists_id);
   int l = strlen(artists_id);
@@ -162,8 +165,8 @@ bool validateMusicsArtists(char *artists_id, GHashTable *artistsTable) {
     // printf("Artists ID dentro do whlie : %s\n", artists_id);
     key = strdup(strsep(&artists_id, "'"));
     key[8] = '\0';
-    gboolean found =
-        g_hash_table_lookup_extended(artistsTable, key, &orig_key, &value);
+    gboolean found = g_hash_table_lookup_extended(getArtistTable(gestorArtists),
+                                                  key, &orig_key, &value);
     // printf("Key : %s\n", key);
     // printf("Found : %d\n", found);
     if (!found) {
@@ -177,7 +180,7 @@ bool validateMusicsArtists(char *artists_id, GHashTable *artistsTable) {
   return true;
 }
 
-bool validateMusicsLine(char *line, GHashTable *artistsTable) {
+bool validateMusicsLine(char *line, gestorArtists *gestorArtists) {
   char *a = strdup(strsep(&line, ";"));
   char *b = strdup(strsep(&line, ";"));
   char *artists_id = strdup(strsep(&line, ";"));
@@ -187,7 +190,7 @@ bool validateMusicsLine(char *line, GHashTable *artistsTable) {
 
   bool isValid = validateDuration(durationSeconds) && atoi(year) <= 2024 &&
                  validateCSVList(artists_id) &&
-                 validateMusicsArtists(strdup(artists_id), artistsTable);
+                 validateMusicsArtists(strdup(artists_id), gestorArtists);
 
   free(a);
   free(b);
@@ -199,7 +202,7 @@ bool validateMusicsLine(char *line, GHashTable *artistsTable) {
   return isValid;
 }
 
-bool validateUsersLine(char *line, GHashTable *musicsTable) {
+bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
   char *username = strdup(strsep(&line, ";"));
   char *email = strdup(strsep(&line, ";"));
   remove_quotes(email);
@@ -207,7 +210,7 @@ bool validateUsersLine(char *line, GHashTable *musicsTable) {
   if (!validateEmail(email)) {
     free(username);
     free(email);
-    //printf("ERRO 0\n");
+    // printf("ERRO 0\n");
     return false;
   }
 
@@ -222,7 +225,7 @@ bool validateUsersLine(char *line, GHashTable *musicsTable) {
     free(birth_date);
     free(username);
     free(email);
-    //printf("ERRO 1\n");
+    // printf("ERRO 1\n");
     return false;
   }
 
@@ -238,7 +241,7 @@ bool validateUsersLine(char *line, GHashTable *musicsTable) {
     free(birth_date);
     free(username);
     free(email);
-    //printf("ERRO 2\n");
+    // printf("ERRO 2\n");
     return false;
   }
 
@@ -254,10 +257,10 @@ bool validateUsersLine(char *line, GHashTable *musicsTable) {
     free(username);
     free(email);
     free(liked_musics_id);
-    //printf("ERRO 3\n");
+    // printf("ERRO 3\n");
     return false;
   }
-  if (!validateMusicsIdUsers(liked_musics_id, musicsTable)) {
+  if (!validateMusicsIdUsers(liked_musics_id, gestorMusics)) {
     free(first_name);
     free(country);
     free(subscription_type);
@@ -266,7 +269,7 @@ bool validateUsersLine(char *line, GHashTable *musicsTable) {
     free(username);
     free(email);
     free(liked_musics_id);
-    //printf("ERRO 4\n");
+    // printf("ERRO 4\n");
     return false;
   }
 
@@ -278,6 +281,6 @@ bool validateUsersLine(char *line, GHashTable *musicsTable) {
   free(username);
   free(email);
   free(liked_musics_id);
- // printf("ERRO 5");
+  // printf("ERRO 5");
   return true;
 }
