@@ -1,6 +1,7 @@
 #include "query3.h"
 #include "gestor_musics.h"
 #include "gestor_users.h"
+#include "gestores.h"
 #include "utils.h"
 #include <stdio.h>
 // #include <.h>
@@ -122,13 +123,12 @@ gint comparar_likes(gconstpointer a, gconstpointer b) {
 }
 
 NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, guint idade_max,
-                             gestorMusics *gestorMusics,
-                             gestorUsers *gestorUsers) {
+                                    Gestores *gestor) {
 
   // Itera sobre a tabela de users para processar as músicas que eles gostam
   GHashTableIter iter;
   gpointer hash_key, hash_value;
-  g_hash_table_iter_init(&iter, getUsersTable(gestorUsers));
+  g_hash_table_iter_init(&iter, getUsersTable(pegarGestorUser(gestor)));
 
   while (g_hash_table_iter_next(&iter, &hash_key, &hash_value)) {
     char *birthDate = getUserBirthDate(hash_value);
@@ -152,8 +152,8 @@ NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, guint idade_max,
       gpointer music_value;
       gpointer orig_music_key;
       gboolean found =
-          g_hash_table_lookup_extended(getMusicsTable(gestorMusics), music_id,
-                                       &music_value, &orig_music_key);
+          g_hash_table_lookup_extended(getMusicsTable(pegarGestorMusic(gestor)),
+                                       music_id, &music_value, &orig_music_key);
 
       if (found) {
         char *genre = getMusicGenre(orig_music_key);

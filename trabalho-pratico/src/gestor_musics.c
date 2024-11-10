@@ -20,21 +20,21 @@ struct gestorMusics {
 gestorMusics *initGestorMusics(const char *errorsFilePath,
                                GHashTable *musicsTable) {
   // Aloca memória para a estrutura
-  gestorMusics *gestor = malloc(sizeof(gestorMusics));
-  if (!gestor)
+  gestorMusics *gestorMusic = malloc(sizeof(gestorMusics));
+  if (!gestorMusic)
     return NULL;
 
   // Abre o ficheiro para escrita de erros
-  gestor->errorsFile = fopen(errorsFilePath, "w");
-  if (!gestor->errorsFile) {
+  gestorMusic->errorsFile = fopen(errorsFilePath, "w");
+  if (!gestorMusic->errorsFile) {
     perror("Erro ao abrir o ficheiro de erros");
-    free(gestor);
+    free(gestorMusic);
     return NULL;
   }
 
   // Atribui a tabela hash fornecida
-  gestor->musicsTable = musicsTable;
-  return gestor;
+  gestorMusic->musicsTable = musicsTable;
+  return gestorMusic;
 }
 
 // Função para liberar a estrutura gestorMusics e seus recursos

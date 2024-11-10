@@ -9,20 +9,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-void gestorQueries(char *line, gestorArtists *gestorArtists,
-                   gestorMusics *gestorMusics, gestorUsers *gestorUsers,
-                   int firstOcorr, int maxAge, int minAge, NodoMusica *lista,
-                   int i) {
+void gestorQueries(char *line, Gestores *gestor, int firstOcorr, int maxAge,
+                   int minAge, NodoMusica *lista, int i) {
   if (line[0] == '1') {
-    query1(gestorUsers, line, i);
+    query1(pegarGestorUser(gestor), line, i);
 
   } else if (line[0] == '2') {
     if (!temAspas(line)) {
-      query2(atoi(line + 2), NULL, gestorArtists, gestorMusics, i);
+      query2(atoi(line + 2), NULL, gestor, i);
 
     } else {
       firstOcorr = primeiraOcorr(line, '"');
-      query2(atoi(line + 2), line + firstOcorr, gestorArtists, gestorMusics, i);
+      query2(atoi(line + 2), line + firstOcorr, gestor, i);
     }
   } else if (line[0] == '3') {
     minAge = atoi(line + 2);

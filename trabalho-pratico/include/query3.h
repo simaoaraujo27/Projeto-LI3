@@ -1,9 +1,10 @@
 #ifndef _QUERY3_H_
 #define _QUERY3_H_
 
-#include <glib.h>
 #include "gestor_musics.h"
 #include "gestor_users.h"
+#include "gestores.h"
+#include <glib.h>
 
 typedef struct nodoMusica NodoMusica;
 
@@ -23,7 +24,6 @@ gint comparar_likes(gconstpointer a, gconstpointer b);
 void query3(int minAge, int maxAge, NodoMusica *lista, int i);
 
 NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, guint idade_max,
-                             gestorMusics *gestorMusics,
-                             gestorUsers *gestorUsers);
+                                    Gestores *gestor);
 
 #endif

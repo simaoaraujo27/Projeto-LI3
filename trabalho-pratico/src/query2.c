@@ -2,6 +2,7 @@
 #include "gestor_artists.h"
 #include "gestor_musics.h"
 #include "gestor_prints.h"
+#include "gestores.h"
 #include "musics.h"
 #include "utils.h"
 #include <ctype.h>
@@ -12,8 +13,7 @@
 #include <string.h>
 
 // Função que executa a consulta 2
-void query2(int numeroArtistas, char *country, gestorArtists *gestorArtist,
-            gestorMusics *gestorMusic, int i) {
+void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
   // Criação do arquivo para salvar os resultados
   FILE *newFile;
   char *path = "./resultados/commandx_output.txt"; // Caminho base para o
@@ -28,8 +28,8 @@ void query2(int numeroArtistas, char *country, gestorArtists *gestorArtist,
   // Iterador para percorrer a tabela de músicas
   GHashTableIter iter;
   g_hash_table_iter_init(
-      &iter, getMusicsTable(
-                 gestorMusic)); // Inicializa o iterador da tabela de músicas
+      &iter, getMusicsTable(pegarGestorMusic(
+                 gestor))); // Inicializa o iterador da tabela de músicas
   gpointer key1, value1;
   GList *listaResposta = NULL; // Lista para armazenar a resposta
   char *artistId = NULL;
@@ -67,8 +67,9 @@ void query2(int numeroArtistas, char *country, gestorArtists *gestorArtist,
           strsep(&artistId, "'")); // Extrai o ID do artista entre as aspas
 
       // Procura o artista na tabela de artistas
-      if (g_hash_table_lookup_extended(getArtistTable(gestorArtist), key,
-                                       &orig_key, &value)) {
+      if (g_hash_table_lookup_extended(
+              getArtistTable(pegarGestorArtist(gestor)), key, &orig_key,
+              &value)) {
         // Se o artista for encontrado, incrementa a discografia do artista
         increment_artist_discografia(value, duracao, &listaResposta,
                                      numeroArtistas, country);
@@ -83,7 +84,7 @@ void query2(int numeroArtistas, char *country, gestorArtists *gestorArtist,
   printQuery2(&listaResposta, newFile);
 
   // coloca a tabela de artistas a zero
-  colocaZero(getArtistTable(gestorArtist));
+  colocaZero(getArtistTable(pegarGestorArtist(gestor)));
 
   // Libera a memória alocada para a lista de respostas
   g_list_free(listaResposta);

@@ -2,6 +2,7 @@
 #include "gestor_musics.h"
 #include "gestor_queires.h"
 #include "gestor_users.h"
+#include "gestores.h"
 #include "query1.h"
 #include "query2.h"
 #include "query3.h"
@@ -118,6 +119,8 @@ int main(int argc, char **argv) {
   }
   free(usersPath); // Libera a memória do caminho dos users
 
+  Gestores *gestor = initgestor(gestorArtists, gestorMusics, gestorUsers);
+
   // Abre o arquivo de texto passado como argumento para executar as queries
   char *txt = argv[2];
   fp = fopen(txt, "r");
@@ -128,7 +131,6 @@ int main(int argc, char **argv) {
 
   char *line = NULL;
   size_t len = 0;
-
   int i = 1; // Contador para o número da query
   int firstOcorr = 0, minAge = 0, maxAge = 0;
   int IDADE_INICIAL = 120;
@@ -136,12 +138,12 @@ int main(int argc, char **argv) {
       NULL; // Lista de músicas baseadas nas preferências dos users
   guint idade_max = IDADE_INICIAL; // Inicializa a idade máxima
 
-  lista = CriaListaRespostaQuery3(lista, idade_max, gestorMusics, gestorUsers);
+  lista = CriaListaRespostaQuery3(lista, idade_max, gestor);
 
   // Processa as queries lidas do arquivo
   while (getline(&line, &len, fp) != -1) {
-    gestorQueries(line, gestorArtists, gestorMusics, gestorUsers, firstOcorr, maxAge,
-      minAge, lista, i);
+    gestorQueries(line, gestor, firstOcorr,
+                  maxAge, minAge, lista, i);
     i++;
   }
   fclose(fp);
@@ -155,6 +157,6 @@ int main(int argc, char **argv) {
   freeGestorArtists(gestorArtists);
   freeGestorMusics(gestorMusics);
   freeGestorUsers(gestorUsers);
-
+  destroyGestor(gestor);
   return 0;
 }

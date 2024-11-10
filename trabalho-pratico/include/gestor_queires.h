@@ -6,10 +6,7 @@
 #include "gestor_users.h"
 #include "query3.h"
 
-
-void gestorQueries(char *line, gestorArtists *gestorArtists,
-                   gestorMusics *gestorMusics, gestorUsers *gestorUsers,
-                   int firstOcorr, int maxAge, int minAge, NodoMusica *lista,
-                   int i);
+void gestorQueries(char *line, Gestores *gestor, int firstOcorr, int maxAge,
+                   int minAge, NodoMusica *lista, int i);
 
 #endif
