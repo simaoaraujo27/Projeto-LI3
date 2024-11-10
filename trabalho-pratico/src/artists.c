@@ -4,33 +4,23 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Definição dos tipos de artista: Individual ou Grupo
 enum tipoArtista { Individual, Grupo };
 
+// Estrutura que armazena informações sobre um artista
 struct artists {
-  char *id;              // identificador único do artista
-  char *name;            // nome do artista
-                         /*   char *description;     // descrição do artista
-                           int recipe_per_stream; // dinheiro auferido de cada vez que uma das músicas
-                                                  // do artista é reproduzida */
-  char *id_constituent;  // lista de identificadores únicos dos seus
-                         // constituintes, no caso de se tratar de um artista
-                         // coletivo. Este campo pode ser uma lista vazia.
-  char *country;         // nacionalidade do artista.
-  enum tipoArtista tipo; // tipo de artista, i.e., individual ou grupo musical,
-  int discografia;       // discografia do artista
+  char *id;              // Identificador único do artista
+  char *name;            // Nome do artista
+  char *id_constituent;  // Lista de IDs dos constituintes (para grupos)
+  char *country;         // Nacionalidade do artista
+  enum tipoArtista tipo; // Tipo de artista (individual ou grupo)
+  int discografia;       // Número de músicas ou discos associados ao artista
 };
 
+// Funções para definir campos específicos da estrutura "Artists"
 void setArtistId(Artists *a, char *id) { a->id = id; }
 
 void setArtistName(Artists *a, char *name) { a->name = name; }
-
-/* void setArtistDescription(Artists *a, char *description) {
-  a->description = description;
-}
-
-void setArtistRecipePerStream(Artists *a, int recipe_per_stream) {
-  a->recipe_per_stream = recipe_per_stream;
-} */
 
 void setArtistIdConstituent(Artists *a, char *id_constituent) {
   a->id_constituent = id_constituent;
@@ -44,48 +34,57 @@ void setArtistDiscografia(Artists *a, int discografia) {
   a->discografia = discografia;
 }
 
+// Função que separa os dados de um artista a partir de uma linha do CSV
 Artists *separateArtists(char *line) {
-  // Separa a linha e guarda os respetivos dados na struct artistas
-
+  // Aloca memória para um novo artista
   Artists *artist = malloc(sizeof(struct artists));
   if (!artist) {
-    fprintf(stderr, "Malloc failed!");
+    fprintf(stderr, "Erro: Falha ao alocar memória!");
     return NULL;
   }
 
+  // Atribui valores aos campos do artista a partir da linha CSV
   setArtistId(artist, strdup(strsep(&line, ";")));
-
   setArtistName(artist, strdup(strsep(&line, ";")));
-  /*   setArtistDescription(artist, strdup(strsep(&line, ";")));
-    setArtistRecipePerStream(artist, atoi(strdup(strsep(&line, ";")))); */
-  char *a = strdup(strsep(&line, ";"));
-  char *b = strdup(strsep(&line, ";"));
+
+  // Ignora alguns campos não utilizados atualmente
+  char *id = strdup(strsep(&line, ";"));
+  char *name = strdup(strsep(&line, ";"));
+
   setArtistIdConstituent(artist, strdup(strsep(&line, ";")));
   setArtistCountry(artist, strdup(strsep(&line, ";")));
+
+  // Determina se o artista é um grupo ou individual
   char *linhaTipo = strdup(strsep(&line, "\n"));
-  remove_quotes(linhaTipo);
+  remove_quotes(linhaTipo); // Remove aspas da string
   if (!strcmp(linhaTipo, "individual"))
     setArtistTipo(artist, Individual);
   else
     setArtistTipo(artist, Grupo);
+
+  // Inicializa discografia com zero
   setArtistDiscografia(artist, 0);
 
-  free(a);
-  free(b);
+  // Libera memória das variáveis temporárias
+  free(id);
+  free(name);
   free(linhaTipo);
+
   return artist;
 }
 
-///////////////
-
+// Função que valida se um artista é válido
 bool validateArtist(Artists *artist) {
   return ((artist->tipo == Individual && strlen(artist->id_constituent) == 0) ||
           (artist->tipo == Grupo && strlen(artist->id_constituent) != 0));
 }
 
+// Remove um artista da lista se ele já existir
 void removeArtistId(GList **listaResposta, Artists *artist) {
   GList *node = *listaResposta;
   Artists *currentArtist;
+
+  // Percorre a lista à procura do artista
   while (node != NULL) {
     currentArtist = (Artists *)node->data;
     if (strcmp(currentArtist->id, artist->id) == 0) {
@@ -96,11 +95,14 @@ void removeArtistId(GList **listaResposta, Artists *artist) {
   }
 }
 
+// Insere um artista em um array ordenado pela discografia
 void insertArtistArray(GList **listaResposta, Artists *artist,
                        int numeroArtistas) {
   removeArtistId(listaResposta, artist);
   GList *node = *listaResposta;
   Artists *currentArtist;
+
+  // Insere o artista na posição correta baseada na discografia
   while (node != NULL) {
     currentArtist = (Artists *)node->data;
     if (currentArtist->discografia < artist->discografia) {
@@ -113,6 +115,7 @@ void insertArtistArray(GList **listaResposta, Artists *artist,
     }
     node = node->next;
   }
+
   *listaResposta = g_list_append(*listaResposta, artist);
   if (g_list_length(*listaResposta) > (guint)numeroArtistas) {
     *listaResposta =
@@ -120,9 +123,11 @@ void insertArtistArray(GList **listaResposta, Artists *artist,
   }
 }
 
+// Procura por um artista na lista e atualiza suas informações
 void procuraArt(Artists *artist, GList **listaResposta) {
   GList *current = *listaResposta;
   Artists *currentArtist;
+
   while (current != NULL) {
     currentArtist = (Artists *)current->data;
     if (strcmp(currentArtist->id, artist->id) == 0) {
@@ -133,10 +138,12 @@ void procuraArt(Artists *artist, GList **listaResposta) {
   }
 }
 
+// Inicializa a discografia de todos os artistas para zero
 void colocaZero(GHashTable *artistsTable) {
   GList *listaArtistas = g_hash_table_get_values(artistsTable);
   GList *node = listaArtistas;
   Artists *currentArtist;
+
   while (node != NULL) {
     currentArtist = (Artists *)node->data;
     currentArtist->discografia = 0;
@@ -145,6 +152,8 @@ void colocaZero(GHashTable *artistsTable) {
   g_list_free(listaArtistas);
 }
 
+// Incrementa a discografia de um artista se ele corresponder ao país
+// especificado
 void increment_artist_discografia(gpointer value, int duracao,
                                   GList **listaResposta, int numeroArtistas,
                                   char *country) {
@@ -156,58 +165,49 @@ void increment_artist_discografia(gpointer value, int duracao,
   }
 }
 
-///////////////
-
+// Funções para obter os valores dos campos de um artista
 char *pegarArtistId(Artists *artist) { return strdup(artist->id); }
 
 char *pegarArtistName(Artists *artist) { return strdup(artist->name); }
 
 char *pegarArtistIdConstituent(Artists *artist) {
-
   return strdup(artist->id_constituent);
 }
 
 char *pegarArtistCountry(Artists *artist) { return strdup(artist->country); }
 
 char *pegarArtistType(Artists *artist) {
-  if (artist->tipo == Grupo) {
-    return strdup("group");
-  } else
-    return strdup("individual");
+  return strdup(artist->tipo == Grupo ? "group" : "individual");
 }
 
-int pegarArtistDiscografia(Artists *artist) { return (artist->discografia); }
+int pegarArtistDiscografia(Artists *artist) { return artist->discografia; }
 
+// Funções para obter campos a partir de um ponteiro genérico
 char *getArtistId(gpointer artist) {
-  struct artists *a = (struct artists *)artist;
-  return strdup(a->id);
+  return strdup(((struct artists *)artist)->id);
 }
 
 char *getArtistName(gpointer artist) {
-  struct artists *a = (struct artists *)artist;
-  return strdup(a->name);
+  return strdup(((struct artists *)artist)->name);
 }
 
 char *getArtistIdConstituent(gpointer artist) {
-  struct artists *a = (struct artists *)artist;
-  return strdup(a->id_constituent);
+  return strdup(((struct artists *)artist)->id_constituent);
 }
 
 char *getArtistCountry(gpointer artist) {
-  struct artists *a = (struct artists *)artist;
-  return strdup(a->country);
+  return strdup(((struct artists *)artist)->country);
 }
 
 enum tipoArtista getArtistType(gpointer artist) {
-  struct artists *a = (struct artists *)artist;
-  return (a->tipo);
+  return ((struct artists *)artist)->tipo;
 }
 
 int getArtistDiscografia(gpointer artist) {
-  struct artists *a = (struct artists *)artist;
-  return (a->discografia);
+  return ((struct artists *)artist)->discografia;
 }
 
+// Função para liberar a memória alocada para um artista
 void destroyArtist(Artists *a) {
   if (a) {
     free(a->id);

@@ -7,69 +7,78 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Definição da estrutura de dados que representa um user
 struct users {
-  char *username;          // identificador único do utilizador
-  char *email;             // email de registo do utilizador
-  char *first_name;        // primeiro nome do utilizador
-  char *last_name;         // apelido do utilizador
-  char *birth_date;        // data de nascimento
-  char *country;           // país onde a conta do utilizador foi registada
-  char *subscription_type; // tipo de subscrição, i.e., normal ou premium
-  char *liked_musics_id;
+  char *username;          // Nome de user (identificador único)
+  char *email;             // Email de registro
+  char *first_name;        // Primeiro nome
+  char *last_name;         // Sobrenome
+  char *birth_date;        // Data de nascimento
+  char *country;           // País onde a conta foi registrada
+  char *subscription_type; // Tipo de assinatura (normal ou premium)
+  char *liked_musics_id;   // IDs das músicas curtidas
 };
 
-
+// Função para definir o nome de user de um user
 void setUserUsername(Users *u, char *username) {
-  remove_quotes(username);
+  remove_quotes(username); // Remove aspas, se houver
   u->username = username;
 }
 
+// Função para definir o email de um user
 void setUserEmail(Users *u, char *email) {
-  remove_quotes(email);
+  remove_quotes(email); // Remove aspas, se houver
   u->email = email;
 }
 
+// Função para definir o primeiro nome de um user
 void setUserFirstName(Users *u, char *first_name) {
-  remove_quotes(first_name);
+  remove_quotes(first_name); // Remove aspas, se houver
   u->first_name = first_name;
 }
 
+// Função para definir o sobrenome de um user
 void setUserLastName(Users *u, char *last_name) {
-  remove_quotes(last_name);
+  remove_quotes(last_name); // Remove aspas, se houver
   u->last_name = last_name;
 }
 
+// Função para definir a data de nascimento de um user
 void setUserBirthDate(Users *u, char *birth_date) {
-  remove_quotes(birth_date);
+  remove_quotes(birth_date); // Remove aspas, se houver
   u->birth_date = birth_date;
 }
 
+// Função para definir o país de um user
 void setUserCountry(Users *u, char *country) {
-  remove_quotes(country);
+  remove_quotes(country); // Remove aspas, se houver
   u->country = country;
 }
 
+// Função para definir o tipo de assinatura de um user
 void setUserSubscriptionType(Users *u, char *subscription_type) {
-  remove_quotes(subscription_type);
+  remove_quotes(subscription_type); // Remove aspas, se houver
   u->subscription_type = subscription_type;
 }
 
+// Função para definir o ID das músicas curtidas de um user
 void setUserLikedMusicsId(Users *u, char *liked_musics_id) {
-  remove_quotes(liked_musics_id);
+  remove_quotes(liked_musics_id); // Remove aspas, se houver
   u->liked_musics_id = liked_musics_id;
 }
 
-
-
+// Função para separar os dados de um user a partir de uma linha de texto
 Users *separateUsers(char *line) {
-  // separa cada linha pelas suas respetivas variáveis
+  // Aloca memória para um novo user
   Users *user = malloc(sizeof(struct users));
   if (!user) {
-    fprintf(stderr, "Malloc failed!");
+    fprintf(
+        stderr,
+        "Malloc failed!"); // Se a alocação falhar, exibe uma mensagem de erro
     return NULL;
   }
 
-
+  // Separa a linha pelos delimitadores ';' e preenche os campos do user
   setUserUsername(user, strdup(strsep(&line, ";")));
   setUserEmail(user, strdup(strsep(&line, ";")));
   setUserFirstName(user, strdup(strsep(&line, ";")));
@@ -77,32 +86,27 @@ Users *separateUsers(char *line) {
   setUserBirthDate(user, strdup(strsep(&line, ";")));
   setUserCountry(user, strdup(strsep(&line, ";")));
   setUserSubscriptionType(user, strdup(strsep(&line, ";")));
-  setUserLikedMusicsId(user, strdup(strsep(&line, "\n")));
+  setUserLikedMusicsId(
+      user, strdup(strsep(
+                &line, "\n"))); // A última parte da linha é o liked_musics_id
 
   return user;
 }
 
-
+// Funções para pegar os valores de cada campo de um user
 char *pegarUserUsername(Users *u) { return strdup(u->username); }
-
 char *pegarUserEmail(Users *u) { return strdup(u->email); }
-
 char *pegarUserFirstName(Users *u) { return strdup(u->first_name); }
-
 char *pegarUserLastName(Users *u) { return strdup(u->last_name); }
-
 char *pegarUserBirthDate(Users *u) { return strdup(u->birth_date); }
-
 char *pegarUserCountry(Users *u) { return strdup(u->country); }
-
 char *pegarUserSubscriptionType(Users *u) {
   return strdup(u->subscription_type);
 }
+char *pegarUserLikedMusicsId(Users *u) { return strdup(u->liked_musics_id); }
 
-char *pegarUserLikedMusicsId(Users *u) {
-  return strdup(u->liked_musics_id);
-}
-
+// Funções para pegar os valores de cada campo de um user, usando gpointer
+// (útil para GList)
 char *getUserUsername(gpointer user) {
   struct users *u = (struct users *)user;
   return strdup(u->username);
@@ -143,18 +147,17 @@ char *getUserLikedMusicsId(gpointer user) {
   return strdup(u->liked_musics_id);
 }
 
-
+// Função para liberar a memória associada a um user
 void destroyUser(Users *u) {
-  if (u){
-  free(u->username);
-  free(u->email);
-  free(u->first_name);
-  free(u->last_name);
-  free(u->birth_date);
-  free(u->country);
-  free(u->subscription_type);
-  free(u->liked_musics_id);
-  free(u);
+  if (u) {
+    free(u->username);          // Libera a memória do nome de user
+    free(u->email);             // Libera a memória do email
+    free(u->first_name);        // Libera a memória do primeiro nome
+    free(u->last_name);         // Libera a memória do sobrenome
+    free(u->birth_date);        // Libera a memória da data de nascimento
+    free(u->country);           // Libera a memória do país
+    free(u->subscription_type); // Libera a memória do tipo de assinatura
+    free(u->liked_musics_id);   // Libera a memória do ID das músicas curtidas
+    free(u);                    // Libera a memória do user
   }
 }
-
