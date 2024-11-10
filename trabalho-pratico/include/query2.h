@@ -2,6 +2,6 @@
 #define _QUERIE2_H_
 
 void query2(int numeroArtistas, char *country, gestorArtists *gestorArtist,
-            gestorMusics *gestorMusic, char *line, int i);
+            gestorMusics *gestorMusic, int i);
 
 #endif

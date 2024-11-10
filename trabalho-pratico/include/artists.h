@@ -34,7 +34,7 @@ int getArtistDiscografia(gpointer artist);
 void increment_artist_discografia(gpointer value, int duracao,
                                   GList **listaResposta, int numeroArtistas,
                                   char *country);
-void procuraArt(Artists *artist, GList **listaResposta, int numeroArtistas);
+void procuraArt(Artists *artist, GList **listaResposta);
 
 void colocaZero(GHashTable *artistsTable);
 

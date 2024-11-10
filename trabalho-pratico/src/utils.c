@@ -79,7 +79,7 @@ char *calculate_age_str(char *birth_date) {
   }
 
   char *age_str =
-      malloc(4 * sizeof(char)); // Idades razoáveis cabem em 3 dígitos + '\0'
+      malloc(12 * sizeof(char)); // Idades razoáveis cabem em 3 dígitos + '\0'
 
   if (age_str == NULL) {
     return NULL; // Se a alocação falhar
@@ -90,15 +90,14 @@ char *calculate_age_str(char *birth_date) {
   return age_str;
 }
 
-int calculateAge(char *birth_date){
+int calculateAge(char *birth_date) {
   int year = atoi(birth_date);
   int month = atoi(birth_date + 6);
   int day = atoi(birth_date + 9);
 
   // Data fixa: 2024/09/09
   int age = 2024 - year;
-  if (9 < month ||
-      (month == 9 && 9 < day)) {
+  if (9 < month || (month == 9 && 9 < day)) {
     age--;
   }
   return age;

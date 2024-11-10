@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 struct gestorUsers {
   FILE *errorsFile;
@@ -13,7 +14,7 @@ struct gestorUsers {
 
 gestorUsers *initGestorUsers(const char *errorsFilePath,
                              GHashTable *usersTable) {
-  gestorUsers *gestorUser = malloc(sizeof(gestorUser));
+  gestorUsers *gestorUser = malloc(sizeof(struct gestorUsers));
   if (!gestorUser)
     return NULL;
 
@@ -43,7 +44,7 @@ void parseUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic) {
   char *username;
   Users *user = NULL;
 
-  getline(&line, &len, fp);
+  assert(getline(&line, &len, fp) != -1);
   while (getline(&line, &len, fp) != -1) {
     if (validateUsersLine(strdup(line), gestorMusic)) {
       user = separateUsers(line);

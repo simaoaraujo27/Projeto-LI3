@@ -13,7 +13,7 @@
 #include <string.h>
 
 void query2(int numeroArtistas, char *country, gestorArtists *gestorArtist,
-            gestorMusics *gestorMusic, char *line, int i) {
+            gestorMusics *gestorMusic, int i) {
   FILE *newFile;
   char *path = "./resultados/commandx_output.txt";
   char *new = malloc(sizeof(char) * (strlen(path) + 10));
@@ -50,7 +50,7 @@ void query2(int numeroArtistas, char *country, gestorArtists *gestorArtist,
       }
     }
   }
-  printQuery2(&listaResposta, numeroArtistas, newFile);
+  printQuery2(&listaResposta, newFile);
   colocaZero(getArtistTable(gestorArtist));
   g_list_free(listaResposta);
   free(new);

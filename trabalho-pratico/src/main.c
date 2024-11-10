@@ -109,9 +109,8 @@ int main(int argc, char **argv) {
 
   char *line = NULL;
   size_t len = 0;
+
   int i = 1;
-  int numeroArtist = 0;
-  char *country;
   int firstOcorr, minAge, maxAge;
   int IDADE_INICIAL = 120;
 
@@ -168,12 +167,11 @@ int main(int argc, char **argv) {
       i++;
     } else if (line[0] == '2') {
       if (!temAspas(line)) {
-        query2(atoi(line + 2), NULL, gestorArtists, gestorMusics, line, i);
+        query2(atoi(line + 2), NULL, gestorArtists, gestorMusics, i);
         i++;
       } else {
         firstOcorr = primeiraOcorr(line, '"');
-        query2(atoi(line + 2), line + firstOcorr, gestorArtists, gestorMusics,
-               line, i);
+        query2(atoi(line + 2), line + firstOcorr, gestorArtists, gestorMusics, i);
         i++;
       }
     } else if (line[0] == '3') {
@@ -186,7 +184,6 @@ int main(int argc, char **argv) {
   }
   fclose(fp);
   free(line);
-  free(country);
   g_hash_table_destroy(musicsTable);
   g_hash_table_destroy(artistsTable);
   g_hash_table_destroy(usersTable);

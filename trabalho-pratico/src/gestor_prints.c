@@ -6,12 +6,12 @@ char *SegundosParaHoras(int segundos) {
   int horas = segundos / 3600;
   int minutos = (segundos % 3600) / 60;
   int segundosRestantes = segundos % 60;
-  char *hora = malloc(10);
-  snprintf(hora, 16, "%02d:%02d:%02d", horas, minutos, segundosRestantes);
+  char *hora = malloc(20 * sizeof(char));
+  snprintf(hora, 20, "%02d:%02d:%02d", horas, minutos, segundosRestantes);
   return hora;
 }
 
-void printQuery2(GList **listaResposta, int numeroArtistas, FILE *newFile) {
+void printQuery2(GList **listaResposta, FILE *newFile) {
   GList *node = *listaResposta;
   char *name;
   char *type;
@@ -26,9 +26,9 @@ void printQuery2(GList **listaResposta, int numeroArtistas, FILE *newFile) {
     discografia = SegundosParaHoras(pegarArtistDiscografia(currentArtist));
     country = pegarArtistCountry(currentArtist);
 
-    int total_len = strlen(name) + strlen(type) + 4 /*tamanho da discografia*/ +
-                    strlen(country) + 4;              // 4 para os ';' e o '\0'
+    int total_len = strlen(name) + strlen(type) + 4 + strlen(country) + 4;
     new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
+
     remove_quotes(name);
     remove_quotes(country);
     snprintf(new_str, total_len + 1, "%s;%s;%s;%s\n", name, type, discografia,
@@ -45,7 +45,7 @@ void printQuery2(GList **listaResposta, int numeroArtistas, FILE *newFile) {
   }
 
   // Caso seja um ficheiro vazio, apenas coloca uma '\n'
-  if (i == 0) 
-    fprintf(newFile,"\n");
+  if (i == 0)
+    fprintf(newFile, "\n");
   fclose(newFile);
 }

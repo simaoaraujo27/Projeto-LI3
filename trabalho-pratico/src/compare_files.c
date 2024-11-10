@@ -5,8 +5,6 @@ bool compareFiles(FILE *fp1, FILE *fp2, int totalTestesQ1, int totalTestesQ2,
   int ch1, ch2;
   int position = 0, line = 1;
 
-  int q1 = 0, q2 = 0, q3 = 0;
-
   while (1) {
     // Ignora caracteres especiais no fim da linha
     do {
@@ -29,7 +27,7 @@ bool compareFiles(FILE *fp1, FILE *fp2, int totalTestesQ1, int totalTestesQ2,
         nQuery = 1;
       } else if (i <= totalTestesQ1 + totalTestesQ2) {
         nQuery = 2;
-      } else {
+      } else if (i <= totalTestesQ1 + totalTestesQ2 + totalTestesQ3) {
         nQuery = 3;
       }
 

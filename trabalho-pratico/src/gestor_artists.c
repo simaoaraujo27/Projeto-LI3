@@ -1,10 +1,9 @@
 #include "gestor_artists.h"
-// #include "artists.h"
 #include "utils.h"
 #include "validation.h"
-
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 // Definição completa da estrutura gestorArtists
 struct gestorArtists {
@@ -46,7 +45,7 @@ void parseArtists(FILE *fp, gestorArtists *gestor) {
   Artists *artist = NULL;
 
   // Ignora a primeira linha (cabeçalho)
-  getline(&line, &len, fp);
+  assert(getline(&line, &len, fp) != -1);
 
   // Lê o arquivo linha por linha
   while (getline(&line, &len, fp) != -1) {

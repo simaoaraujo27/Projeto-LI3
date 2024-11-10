@@ -113,14 +113,14 @@ bool validateCSVList(char *list) {
 bool validateMusicsIdUsers(char *musics_id, gestorMusics *gestorMusics) {
   remove_quotes(musics_id);
   removeFstLast(musics_id);
-  int l = strlen(musics_id);
+  int l = (int)strlen(musics_id);
 
   char *key = NULL;
   gpointer orig_key;
   gpointer value;
 
   while (l > 0) {
-    if (l == strlen(musics_id)) {
+    if (l == (int)strlen(musics_id)) {
       musics_id = musics_id + 1;
     } else
       musics_id = musics_id + 3;
@@ -151,14 +151,14 @@ bool validateArtistLine(char *idConstituent, char *type) {
 bool validateMusicsArtists(char *artists_id, gestorArtists *gestorArtists) {
   remove_quotes(artists_id);
   removeFstLast(artists_id);
-  int l = strlen(artists_id);
+  int l = (int)strlen(artists_id);
   // printf("Artists ID original : %s\n", artists_id);
   char *key = NULL;
   gpointer orig_key;
   gpointer value;
 
   while (l > 0) {
-    if (l == strlen(artists_id)) {
+    if (l == (int)strlen(artists_id)) {
       artists_id = artists_id + 1;
     } else
       artists_id = artists_id + 3;

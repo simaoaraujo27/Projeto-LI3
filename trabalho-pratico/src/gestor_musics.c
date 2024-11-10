@@ -1,6 +1,5 @@
 #include "gestor_musics.h"
 #include "gestor_artists.h"
-// #include "utils.h"
 #include "validation.h"
 
 #include <assert.h>
@@ -46,20 +45,16 @@ void parseMusics(FILE *fp, gestorMusics *gestorMusic,
   size_t len = 0;
   char *id;
   Musics *music = NULL;
-  int a = 0;
 
-  getline(&line, &len, fp);
   while (getline(&line, &len, fp) != -1) {
     if (validateMusicsLine(strdup(line), gestorArtist)) {
       music = separateMusics(strdup(line));
       // Insere na HashTable usando o music->id como key
       id = getMusicId(music);
       g_hash_table_insert(gestorMusic->musicsTable, id, music);
-    } 
-    else {
+    } else {
       // Escreve a linha inválida no ficheiro de erros
       fprintf(gestorMusic->errorsFile, "%s", line);
-      
     }
   }
 

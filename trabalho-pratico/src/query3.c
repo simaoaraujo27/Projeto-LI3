@@ -123,7 +123,7 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i) {
 
   while (l != NULL) {
     guint count = 0;
-    for (guint j = minAge; j <= maxAge; j++) {
+    for (guint j = (guint)minAge; j <= (guint)maxAge; j++) {
       count += g_array_index(l->likes, guint, j);
     }
 

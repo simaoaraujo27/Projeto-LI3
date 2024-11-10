@@ -105,7 +105,7 @@ void insertArtistArray(GList **listaResposta, Artists *artist,
     currentArtist = (Artists *)node->data;
     if (currentArtist->discografia < artist->discografia) {
       *listaResposta = g_list_insert_before(*listaResposta, node, artist);
-      if (g_list_length(*listaResposta) > numeroArtistas) {
+      if (g_list_length(*listaResposta) > (guint)numeroArtistas) {
         *listaResposta =
             g_list_remove(*listaResposta, g_list_last(*listaResposta)->data);
       }
@@ -114,13 +114,13 @@ void insertArtistArray(GList **listaResposta, Artists *artist,
     node = node->next;
   }
   *listaResposta = g_list_append(*listaResposta, artist);
-  if (g_list_length(*listaResposta) > numeroArtistas) {
+  if (g_list_length(*listaResposta) > (guint)numeroArtistas) {
     *listaResposta =
         g_list_remove(*listaResposta, g_list_last(*listaResposta)->data);
   }
 }
 
-void procuraArt(Artists *artist, GList **listaResposta, int numeroArtistas) {
+void procuraArt(Artists *artist, GList **listaResposta) {
   GList *current = *listaResposta;
   Artists *currentArtist;
   while (current != NULL) {
@@ -151,7 +151,7 @@ void increment_artist_discografia(gpointer value, int duracao,
   Artists *artist = (Artists *)value;
   if (!(country != NULL && comparaStrings(artist->country, country))) {
     artist->discografia += duracao;
-    procuraArt(artist, listaResposta, numeroArtistas);
+    procuraArt(artist, listaResposta);
     insertArtistArray(listaResposta, artist, numeroArtistas);
   }
 }
