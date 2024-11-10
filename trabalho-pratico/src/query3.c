@@ -1,4 +1,6 @@
 #include "query3.h"
+#include "gestor_musics.h"
+#include "gestor_users.h"
 #include "utils.h"
 #include <stdio.h>
 // #include <.h>
@@ -117,6 +119,53 @@ gint comparar_likes(gconstpointer a, gconstpointer b) {
   const GeneroLikes *g2 = b;
   // Ordena de forma decrescente pela contagem de likes
   return (g1->count < g2->count) - (g1->count > g2->count);
+}
+
+NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, guint idade_max,
+                             gestorMusics *gestorMusics,
+                             gestorUsers *gestorUsers) {
+
+  // Itera sobre a tabela de users para processar as músicas que eles gostam
+  GHashTableIter iter;
+  gpointer hash_key, hash_value;
+  g_hash_table_iter_init(&iter, getUsersTable(gestorUsers));
+
+  while (g_hash_table_iter_next(&iter, &hash_key, &hash_value)) {
+    char *birthDate = getUserBirthDate(hash_value);
+    char *age = calculate_age_str(birthDate); // Calcula a idade do user
+
+    int userAge = atoi(age);
+    char *liked_musics_id = getUserLikedMusicsId(hash_value);
+
+    free(birthDate);
+    free(age);
+
+    removeFstLast(liked_musics_id); // Remove primeiros e últimos caracteres
+    char *music_id = strtok(liked_musics_id, ", ");
+    while (music_id != NULL) {
+      if (music_id[0] == '\'')
+        music_id++;
+      if (music_id[strlen(music_id) - 1] == '\'')
+        music_id[strlen(music_id) - 1] = '\0';
+
+      // Procura pela música na tabela
+      gpointer music_value;
+      gpointer orig_music_key;
+      gboolean found =
+          g_hash_table_lookup_extended(getMusicsTable(gestorMusics), music_id,
+                                       &music_value, &orig_music_key);
+
+      if (found) {
+        char *genre = getMusicGenre(orig_music_key);
+        lista = adicionar_like(lista, genre, userAge,
+                               &idade_max); // Adiciona à lista
+        free(genre);
+      }
+      music_id = strtok(NULL, ", ");
+    }
+    free(liked_musics_id);
+  }
+  return lista;
 }
 
 // Função principal para a consulta 3

@@ -1,5 +1,6 @@
 #include "gestor_artists.h"
 #include "gestor_musics.h"
+#include "gestor_queires.h"
 #include "gestor_users.h"
 #include "query1.h"
 #include "query2.h"
@@ -129,75 +130,19 @@ int main(int argc, char **argv) {
   size_t len = 0;
 
   int i = 1; // Contador para o número da query
-  int firstOcorr, minAge, maxAge;
+  int firstOcorr = 0, minAge = 0, maxAge = 0;
   int IDADE_INICIAL = 120;
-
   NodoMusica *lista =
       NULL; // Lista de músicas baseadas nas preferências dos users
   guint idade_max = IDADE_INICIAL; // Inicializa a idade máxima
 
-  // Itera sobre a tabela de users para processar as músicas que eles gostam
-  GHashTableIter iter;
-  gpointer hash_key, hash_value;
-  g_hash_table_iter_init(&iter, usersTable);
-
-  while (g_hash_table_iter_next(&iter, &hash_key, &hash_value)) {
-    char *birthDate = getUserBirthDate(hash_value);
-    char *age = calculate_age_str(birthDate); // Calcula a idade do user
-
-    int userAge = atoi(age);
-    char *liked_musics_id = getUserLikedMusicsId(hash_value);
-
-    free(birthDate);
-    free(age);
-
-    removeFstLast(liked_musics_id); // Remove primeiros e últimos caracteres
-    char *music_id = strtok(liked_musics_id, ", ");
-    while (music_id != NULL) {
-      if (music_id[0] == '\'')
-        music_id++;
-      if (music_id[strlen(music_id) - 1] == '\'')
-        music_id[strlen(music_id) - 1] = '\0';
-
-      // Procura pela música na tabela
-      gpointer music_value;
-      gpointer orig_music_key;
-      gboolean found = g_hash_table_lookup_extended(
-          musicsTable, music_id, &music_value, &orig_music_key);
-
-      if (found) {
-        char *genre = getMusicGenre(orig_music_key);
-        lista = adicionar_like(lista, genre, userAge,
-                               &idade_max); // Adiciona à lista
-        free(genre);
-      }
-      music_id = strtok(NULL, ", ");
-    }
-    free(liked_musics_id);
-  }
+  lista = CriaListaRespostaQuery3(lista, idade_max, gestorMusics, gestorUsers);
 
   // Processa as queries lidas do arquivo
   while (getline(&line, &len, fp) != -1) {
-    if (line[0] == '1') {
-      query1(gestorUsers, line, i);
-      i++;
-    } else if (line[0] == '2') {
-      if (!temAspas(line)) {
-        query2(atoi(line + 2), NULL, gestorArtists, gestorMusics, i);
-        i++;
-      } else {
-        firstOcorr = primeiraOcorr(line, '"');
-        query2(atoi(line + 2), line + firstOcorr, gestorArtists, gestorMusics,
-               i);
-        i++;
-      }
-    } else if (line[0] == '3') {
-      minAge = atoi(line + 2);
-      firstOcorr = primeiraOcorr(line + 2, ' ');
-      maxAge = atoi(line + 2 + firstOcorr);
-      query3(minAge, maxAge, lista, i);
-      i++;
-    }
+    gestorQueries(line, gestorArtists, gestorMusics, gestorUsers, firstOcorr, maxAge,
+      minAge, lista, i);
+    i++;
   }
   fclose(fp);
   free(line);
