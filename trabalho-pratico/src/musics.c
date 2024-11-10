@@ -37,29 +37,35 @@ void setMusicYear(Musics *m, int year) { m->year = year; }
 void setMusicLyrics(Musics *m, char *lyrics) { m->lyrics = lyrics; } */
 
 Musics *separateMusics(char *line) {
-  // Separa cada linha pelas suas respetivas variáveis
-
+  // Aloca a estrutura Musics
   Musics *music = malloc(sizeof(struct musics));
   if (!music) {
     fprintf(stderr, "Malloc failed!");
     return NULL;
   }
 
+  // Duplicação e atribuição dos campos
   setMusicId(music, strdup(strsep(&line, ";")));
   setMusicTitle(music, strdup(strsep(&line, ";")));
   setMusicArtistId(music, strdup(strsep(&line, ";")));
+
   char *duration_str = strdup(strsep(&line, ";"));
   setMusicGenre(music, strdup(strsep(&line, ";")));
-  setMusicYear(music, atoi(strdup(strsep(&line, ";"))));
-  /* setMusicLyrics(music, strdup(strsep(&line, ";"))); */
 
+  char *year_str = strdup(strsep(&line, ";"));
+  setMusicYear(music, atoi(year_str));
+  free(year_str);
+
+  // Configuração da duração, com validação
   if (validateDuration(duration_str)) {
     setMusicDurationSeconds(music,
-                            atoi(duration_str) /* horas */ * 3600 +
-                                atoi(duration_str + 3) /* minutos */ * 60 +
-                                atoi(duration_str + 6) /* segundos */);
-  } else
+                            atoi(duration_str) * 3600 +       // horas
+                                atoi(duration_str + 3) * 60 + // minutos
+                                atoi(duration_str + 6));      // segundos
+  } else {
     setMusicDurationSeconds(music, -1);
+  }
+  free(duration_str);
 
   return music;
 }
@@ -119,12 +125,12 @@ int getMusicYear(gpointer music) {
 
 void destroyMusic(Musics *music) {
 
-  if(music){
-  free(music->id);
-  free(music->title);
-  free(music->artist_id);
-  free(music->genre);
+  if (music) {
+    free(music->id);
+    free(music->title);
+    free(music->artist_id);
+    free(music->genre);
 
-  free(music);
+    free(music);
   }
 }

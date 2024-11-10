@@ -171,7 +171,8 @@ int main(int argc, char **argv) {
         i++;
       } else {
         firstOcorr = primeiraOcorr(line, '"');
-        query2(atoi(line + 2), line + firstOcorr, gestorArtists, gestorMusics, i);
+        query2(atoi(line + 2), line + firstOcorr, gestorArtists, gestorMusics,
+               i);
         i++;
       }
     } else if (line[0] == '3') {

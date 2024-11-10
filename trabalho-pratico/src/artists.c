@@ -1,8 +1,8 @@
 #include "artists.h"
 #include "utils.h"
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 enum tipoArtista { Individual, Grupo };
 
@@ -162,16 +162,6 @@ char *pegarArtistId(Artists *artist) { return strdup(artist->id); }
 
 char *pegarArtistName(Artists *artist) { return strdup(artist->name); }
 
-/* char *pegarArtistDescription(Artists *artist) {
-
-  return strdup(artist->description);
-}
-
-int pegarArtistRecipePerStream(Artists *artist) {
-
-  return (artist->recipe_per_stream);
-} */
-
 char *pegarArtistIdConstituent(Artists *artist) {
 
   return strdup(artist->id_constituent);
@@ -181,9 +171,9 @@ char *pegarArtistCountry(Artists *artist) { return strdup(artist->country); }
 
 char *pegarArtistType(Artists *artist) {
   if (artist->tipo == Grupo) {
-    return "group";
+    return strdup("group");
   } else
-    return "individual";
+    return strdup("individual");
 }
 
 int pegarArtistDiscografia(Artists *artist) { return (artist->discografia); }
@@ -197,16 +187,6 @@ char *getArtistName(gpointer artist) {
   struct artists *a = (struct artists *)artist;
   return strdup(a->name);
 }
-
-/* char *getArtistDescription(gpointer artist) {
-  struct artists *a = (struct artists *)artist;
-  return strdup(a->description);
-}
-
-int getArtistRecipePerStream(gpointer artist) {
-  struct artists *a = (struct artists *)artist;
-  return (a->recipe_per_stream);
-} */
 
 char *getArtistIdConstituent(gpointer artist) {
   struct artists *a = (struct artists *)artist;
@@ -229,12 +209,11 @@ int getArtistDiscografia(gpointer artist) {
 }
 
 void destroyArtist(Artists *a) {
-
-  if (a){
-  free(a->id);
-  free(a->name);
-  free(a->id_constituent);
-  free(a->country);
-  free(a);
+  if (a) {
+    free(a->id);
+    free(a->name);
+    free(a->id_constituent);
+    free(a->country);
+    free(a);
   }
 }

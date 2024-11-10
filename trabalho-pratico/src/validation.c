@@ -142,7 +142,7 @@ bool validateMusicsIdUsers(char *musics_id, gestorMusics *gestorMusics) {
 bool validateArtistLine(char *idConstituent, char *type) {
   removeFstLast(idConstituent);
   removeFstLast(idConstituent);
-  /* printf("Tipo: %s Tamanho Const: %ld\n", type, strlen(idConstituent)); */
+
   return (((strcmp(type, "individual") == 0) && strlen(idConstituent) == 0) ||
           ((strcmp(type, "group")) == 0 && (strlen(idConstituent) != 0)));
 }
@@ -187,10 +187,11 @@ bool validateMusicsLine(char *line, gestorArtists *gestorArtists) {
   char *durationSeconds = strdup(strsep(&line, ";"));
   char *c = strdup(strsep(&line, ";"));
   char *year = strdup(strsep(&line, "\n"));
+  char *artist_id_copia = strdup(artists_id);
 
   bool isValid = validateDuration(durationSeconds) && atoi(year) <= 2024 &&
                  validateCSVList(artists_id) &&
-                 validateMusicsArtists(strdup(artists_id), gestorArtists);
+                 validateMusicsArtists(artist_id_copia, gestorArtists);
 
   free(a);
   free(b);
@@ -198,6 +199,7 @@ bool validateMusicsLine(char *line, gestorArtists *gestorArtists) {
   free(durationSeconds);
   free(c);
   free(year);
+  free(artist_id_copia);
 
   return isValid;
 }

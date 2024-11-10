@@ -159,6 +159,7 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i) {
   }
 
   g_list_free(generos_lista);
+  free(new);
 
   fclose(newFile);
 }

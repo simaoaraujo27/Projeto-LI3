@@ -13,13 +13,14 @@ char *SegundosParaHoras(int segundos) {
 
 void printQuery2(GList **listaResposta, FILE *newFile) {
   GList *node = *listaResposta;
-  char *name;
-  char *type;
-  char *discografia;
-  char *country;
-  char *new_str;
   int i = 0;
   while (node != NULL) {
+    char *name;
+    char *type;
+    char *discografia;
+    char *country;
+    char *new_str;
+
     Artists *currentArtist = (Artists *)node->data;
     name = pegarArtistName(currentArtist);
     type = pegarArtistType(currentArtist);
@@ -38,10 +39,16 @@ void printQuery2(GList **listaResposta, FILE *newFile) {
       fprintf(newFile, "%s", new_str);
     else
       fprintf(newFile, "%s", new_str);
-    free(new_str);
+
     node = node->next;
 
     i++;
+
+    free(name);
+    free(type);
+    free(discografia);
+    free(country);
+    free(new_str);
   }
 
   // Caso seja um ficheiro vazio, apenas coloca uma '\n'

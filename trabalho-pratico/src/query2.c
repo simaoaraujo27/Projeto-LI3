@@ -24,13 +24,13 @@ void query2(int numeroArtistas, char *country, gestorArtists *gestorArtist,
   g_hash_table_iter_init(&iter, getMusicsTable(gestorMusic));
   gpointer key1, value1;
   GList *listaResposta = NULL;
-  char *artistId;
-  char *key;
+  char *artistId = NULL;
   int l = 0;
   int duracao = 0;
   while (g_hash_table_iter_next(&iter, &key1, &value1)) {
     Musics *music = (Musics *)value1;
-    artistId = getMusicArtistId(music);
+    char *orig = getMusicArtistId(music);
+    artistId = orig;
     remove_quotes(artistId);
     removeFstLast(artistId);
     duracao = getMusicDuration(music);
@@ -38,6 +38,7 @@ void query2(int numeroArtistas, char *country, gestorArtists *gestorArtist,
     gpointer orig_key;
     l = strlen(artistId);
     for (int j = 0; j < l; j += 12) {
+      char *key;
       if (j == 0)
         artistId = artistId + 1;
       else
@@ -48,7 +49,10 @@ void query2(int numeroArtistas, char *country, gestorArtists *gestorArtist,
         increment_artist_discografia(value, duracao, &listaResposta,
                                      numeroArtistas, country);
       }
+      free(key);
     }
+
+    free(orig);
   }
   printQuery2(&listaResposta, newFile);
   colocaZero(getArtistTable(gestorArtist));

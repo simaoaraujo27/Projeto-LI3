@@ -46,7 +46,8 @@ void parseUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic) {
 
   assert(getline(&line, &len, fp) != -1);
   while (getline(&line, &len, fp) != -1) {
-    if (validateUsersLine(strdup(line), gestorMusic)) {
+    char *copia = strdup(line);
+    if (validateUsersLine(copia, gestorMusic)) {
       user = separateUsers(line);
       username = getUserUsername(user);
 
@@ -54,8 +55,9 @@ void parseUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic) {
       g_hash_table_insert(gestorUser->usersTable, username, user);
     } else {
       fprintf(gestorUser->errorsFile, "%s", line);
-    
     }
+
+    free(copia);
   }
 
   free(line);

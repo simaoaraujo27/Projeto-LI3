@@ -13,7 +13,8 @@ void printQuery1(gpointer orig_key, FILE *newFile) {
   char *email = getUserEmail(orig_key);
   char *firstName = getUserFirstName(orig_key);
   char *lastName = getUserLastName(orig_key);
-  char *age = calculate_age_str(getUserBirthDate(orig_key));
+  char *birth_date = getUserBirthDate(orig_key);
+  char *age = calculate_age_str(birth_date);
   char *country = getUserCountry(orig_key);
 
   int total_len = strlen(email) + strlen(firstName) + strlen(lastName) +
@@ -29,6 +30,7 @@ void printQuery1(gpointer orig_key, FILE *newFile) {
   free(email);
   free(firstName);
   free(lastName);
+  free(birth_date);
   free(age);
   free(country);
   free(new_str);

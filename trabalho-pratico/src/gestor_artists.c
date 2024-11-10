@@ -1,9 +1,9 @@
 #include "gestor_artists.h"
 #include "utils.h"
 #include "validation.h"
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
 // Definição completa da estrutura gestorArtists
 struct gestorArtists {
@@ -29,7 +29,7 @@ gestorArtists *initGestorArtists(const char *errorsFilePath,
   return gestor;
 }
 
-// Função para liberar a estrutura gestorArtists e seus recursos
+// Função para libertar a estrutura gestorArtists e seus recursos
 void freeGestorArtists(gestorArtists *gestor) {
   if (gestor) {
     if (gestor->errorsFile)
@@ -38,7 +38,7 @@ void freeGestorArtists(gestorArtists *gestor) {
   }
 }
 
-// Função para processar o arquivo de artistas usando gestorArtists
+// Função para processar o ficheiro de artistas usando gestorArtists
 void parseArtists(FILE *fp, gestorArtists *gestor) {
   char *line = NULL;
   size_t len = 0;
@@ -47,25 +47,47 @@ void parseArtists(FILE *fp, gestorArtists *gestor) {
   // Ignora a primeira linha (cabeçalho)
   assert(getline(&line, &len, fp) != -1);
 
-  // Lê o arquivo linha por linha
   while (getline(&line, &len, fp) != -1) {
     if (line != NULL) {
-      artist = separateArtists(strdup(line));
-      if (validateArtistLine(pegarArtistIdConstituent(artist),
-                             pegarArtistType(artist)) &&
-          validateCSVList(pegarArtistIdConstituent(artist))) {
+      char *line_copy = strdup(line); // Duplicação segura da linha
+      if (!line_copy) {
+        fprintf(stderr, "Erro ao duplicar a linha\n");
+        continue;
+      }
+
+      artist = separateArtists(line_copy);
+
+      char *idConstituentLine = pegarArtistIdConstituent(artist);
+      char *idConstituentCSV = pegarArtistIdConstituent(artist);
+      char *type = pegarArtistType(artist);
+
+      if (validateArtistLine(idConstituentLine, type) &&
+          validateCSVList(idConstituentCSV)) {
 
         // Insere na hash table se for válido
         char *id = getArtistId(artist);
         remove_quotes(id);
+
+        // Verifica se a chave já existe e libera o valor antigo, se necessário
+        Artists *existing_artist =
+            g_hash_table_lookup(gestor->artistsTable, id);
+        if (existing_artist != NULL) {
+          destroyArtist(existing_artist); // Libera o artista duplicado
+        }
+
         g_hash_table_insert(gestor->artistsTable, id, artist);
       } else {
         fprintf(gestor->errorsFile, "%s", line);
         destroyArtist(artist);
       }
+      // Liberta a linha duplicada
+      free(line_copy);
+      free(idConstituentLine);
+      free(idConstituentCSV);
+      free(type);
+      
     }
   }
-
   free(line);
 }
 
