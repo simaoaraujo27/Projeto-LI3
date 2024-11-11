@@ -4,13 +4,12 @@
 #include "gestores.h"
 #include "utils.h"
 #include <stdio.h>
-// #include <.h>
 
-// Definição da estrutura de dados para armazenar informações sobre uma música
+// Definição da estrutura de dados que armazena o genero e a quantidade de likes desse género para cada idade
 struct nodoMusica {
   char *genero;  // género da música
-  GArray *likes; // GArray que armazena a contagem de likes por faixa etária
-  struct nodoMusica *prox; // Pointer para o próximo nodo na lista
+  GArray *likes; // GArray que armazena a contagem de likes por idade
+  struct nodoMusica *prox; // Pointer para o próximo nodo da lista
 };
 
 // Função para criar um novo nodo com um género e inicializar o GArray de likes
@@ -96,14 +95,14 @@ NodoMusica *adicionar_like(NodoMusica *lista, char *genero, guint idade,
   return lista;
 }
 
-// Função para liberar a memória da lista
+// Função para libertar a memória da lista
 void liberar_lista(NodoMusica *lista) {
   NodoMusica *atual = lista;
   while (atual != NULL) {
     NodoMusica *prox = atual->prox;
-    g_array_free(atual->likes, TRUE); // Libera o GArray de likes
-    free(atual->genero);              // Libera a string do género
-    free(atual);                      // Libera a memória do nodo
+    g_array_free(atual->likes, TRUE); // Liberta o GArray de likes
+    free(atual->genero);              // Liberta a string do género
+    free(atual);                      // Liberta a memória do nodo
     atual = prox;                     // Avança para o próximo nodo
   }
 }
@@ -119,7 +118,6 @@ struct generoLikes {
 gint comparar_likes(gconstpointer a, gconstpointer b) {
   const GeneroLikes *g1 = a;
   const GeneroLikes *g2 = b;
-  // Ordena de forma decrescente pela contagem de likes
   return (g1->count < g2->count) - (g1->count > g2->count);
 }
 
@@ -141,7 +139,7 @@ NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, guint idade_max,
     free(birthDate);
     free(age);
 
-    removeFstLast(liked_musics_id); // Remove primeiros e últimos caracteres
+    removeFstLast(liked_musics_id); // Remove o primeiro e último caracteres
 
     // Percorre a lista de liked_musics_id
     char *music_id = strtok(liked_musics_id, ", ");
@@ -175,12 +173,12 @@ NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, guint idade_max,
 void query3(int minAge, int maxAge, NodoMusica *lista, int i) {
   NodoMusica *l = lista;
   GList *generos_lista =
-      NULL; // Lista para armazenar os géneros e suas contagens de likes
+      NULL; // Lista para armazenar os géneros e as suas contagens de likes
 
-  // Criar o arquivo de saída
+  // Criar o arquivo para escrever
   FILE *newFile;
   char *path =
-      "./resultados/commandx_output.txt"; // Caminho base para o arquivo
+      "./resultados/commandx_output.txt"; // Path base para o arquivo
   char *new =
       malloc(sizeof(char) *
              (strlen(path) + 10)); // Aloca memória para o nome do arquivo
@@ -220,8 +218,8 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i) {
               genero_likes->count); // Escreve no arquivo
       tudoAZero = 0; // Se houver pelo menos um like, a flag é alterada
     }
-    free(genero_likes->genero); // Libera a memória alocada para o género
-    free(genero_likes); // Libera a memória alocada para o objeto GeneroLikes
+    free(genero_likes->genero); // Liberta a memória alocada para o género
+    free(genero_likes); // Liberta a memória alocada para o GeneroLikes
   }
 
   // Se todos os likes forem zero, escreve uma linha em branco
@@ -229,7 +227,7 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i) {
     fprintf(newFile, "\n");
   }
 
-  // Libera a lista de géneros e fecha o arquivo
+  // Liberta a lista de géneros e fecha o arquivo
   g_list_free(generos_lista);
   free(new);
   fclose(newFile);

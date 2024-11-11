@@ -6,7 +6,6 @@
 #include <glib.h>
 #include <stdbool.h>
 
-// Funções para validar os campos
 bool validateDate(char *date);
 bool validateDuration(char *duration);
 bool validateEmail(char *email);

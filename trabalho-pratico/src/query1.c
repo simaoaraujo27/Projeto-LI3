@@ -10,7 +10,7 @@
 
 // Função para imprimir os dados de um user na consulta 1
 void printQuery1(gpointer orig_key, FILE *newFile) {
-  // Obtém os dados do user usando as funções de acesso
+  // Obtém os dados do user usando os getters
   char *email = getUserEmail(orig_key);
   char *firstName = getUserFirstName(orig_key);
   char *lastName = getUserLastName(orig_key);
@@ -28,13 +28,13 @@ void printQuery1(gpointer orig_key, FILE *newFile) {
   snprintf(new_str, total_len + 1, "%s;%s;%s;%s;%s\n", email, firstName,
            lastName, age, country);
 
-  // Escreve a string formatada no arquivo de saída
+  // Escreve a string formatada no arquivo
   fprintf(newFile, "%s", new_str);
 
-  // Fecha o arquivo de saída
+  // Fecha o arquivo/file
   fclose(newFile);
 
-  // Libera a memória alocada para as strings
+  // Liberta a memória alocada para as strings
   free(email);
   free(firstName);
   free(lastName);
@@ -50,12 +50,12 @@ void query1(gestorUsers *gestorUser, char *line, int i) {
   line = line + 2;
   line[strlen(line) - 1] = '\0'; // Remove o caractere de nova linha no final
 
-  // Cria o caminho para o arquivo de resultados na pasta "resultados"
+  // Cria o path para o arquivo de resultados na pasta "resultados"
   FILE *newFile;
   char *path = "./resultados/commandx_output.txt";
   char *new =
       malloc(sizeof(char) *
-             (strlen(path) + 10)); // Aloca memória para o caminho do arquivo
+             (strlen(path) + 10)); // Aloca memória para o path do arquivo
   snprintf(new, strlen(path) + 10, "./resultados/command%d_output.txt",
            i);               // Formata o nome do arquivo
   newFile = fopen(new, "w"); // Abre o arquivo para escrita
@@ -63,11 +63,11 @@ void query1(gestorUsers *gestorUser, char *line, int i) {
   gpointer value;
   gpointer orig_key;
 
-  // Tenta buscar o user na tabela hash usando a chave fornecida (line)
+  // Procura o user na hashtable usando a chave fornecida (line)
   gboolean found = g_hash_table_lookup_extended(getUsersTable(gestorUser), line,
                                                 &value, &orig_key);
 
-  // Se o user for encontrado, imprime seus dados no arquivo
+  // Se o user for encontrado, imprime os seus dados no arquivo
   if (found) {
     printQuery1(orig_key, newFile);
   } else {
@@ -76,6 +76,6 @@ void query1(gestorUsers *gestorUser, char *line, int i) {
     fclose(newFile); // Fecha o arquivo
   }
 
-  // Libera a memória alocada para o caminho do arquivo
+  // Liberta a memória alocada para o path do arquivo
   free(new);
 }

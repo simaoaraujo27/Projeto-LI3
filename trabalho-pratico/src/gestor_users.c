@@ -10,7 +10,7 @@
 // Definição da estrutura gestorUsers
 struct gestorUsers {
   FILE *errorsFile;       // Arquivo onde erros serão registrados
-  GHashTable *usersTable; // Tabela hash para armazenar os users
+  GHashTable *usersTable; // Hashtable para armazenar os users
 };
 
 // Função para inicializar a estrutura gestorUsers
@@ -28,21 +28,21 @@ gestorUsers *initGestorUsers(const char *errorsFilePath,
     return NULL;
   }
 
-  // Inicializa a tabela hash de users
+  // Inicializa a hashtable de users
   gestorUser->usersTable = usersTable;
   return gestorUser;
 }
 
-// Função para liberar a estrutura gestorUsers e seus recursos
+// Função para libertar a estrutura gestorUsers e os seus recursos
 void freeGestorUsers(gestorUsers *gestorUser) {
   if (gestorUser) {
     if (gestorUser->errorsFile)
       fclose(gestorUser->errorsFile); // Fecha o arquivo de erros
-    free(gestorUser);                 // Libera a memória da estrutura
+    free(gestorUser);                 // Liberta a memória da estrutura
   }
 }
 
-// Função para processar o arquivo de users e inserir os dados na tabela hash
+// Função para processar o arquivo de users e inserir os dados na hashtable
 void parseUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic) {
   char *line = NULL;
   size_t len = 0;
@@ -63,18 +63,18 @@ void parseUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic) {
 
       username = getUserUsername(user); // Obtém o nome do user
 
-      // Insere o user na tabela hash usando o username como chave
+      // Insere o user na hashtable usando o username como chave
       g_hash_table_insert(gestorUser->usersTable, username, user);
     } else {
       // Se a linha for inválida, escreve no arquivo de erros
       fprintf(gestorUser->errorsFile, "%s", line);
     }
-    free(copia); // Libera a memória da cópia da linha
+    free(copia); // Liberta a memória da cópia da linha
   }
-  free(line); // Libera a memória da linha lida
+  free(line); // Liberta a memória da linha lida
 }
 
-// Função para obter a tabela de users
+// Função para obter a hashtable dos users
 GHashTable *getUsersTable(gestorUsers *gestorUser) {
   return gestorUser->usersTable;
 }

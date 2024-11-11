@@ -9,7 +9,7 @@ bool compareFiles(FILE *fp1, FILE *fp2, int totalTestesQ1, int totalTestesQ2,
 
   // Loop que percorre ambos os ficheiros simultaneamente
   while (1) {
-    // Ignora caracteres '\r' (usados em sistemas Windows para indicar fim de linha)
+    // Ignora caracteres '\r' 
     do {
       ch1 = fgetc(fp1);
     } while (ch1 == '\r');
@@ -36,7 +36,7 @@ bool compareFiles(FILE *fp1, FILE *fp2, int totalTestesQ1, int totalTestesQ2,
         nQuery = 3;
       }
 
-      // Imprime uma mensagem indicando onde a diferença foi encontrada
+      // Imprime uma mensagem que indica onde é que a diferença foi encontrada
       printf("Diferença encontrada na query %d: linha %d no ficheiro "
              "resultados/command%d_output.txt\n",
              nQuery, line, i);

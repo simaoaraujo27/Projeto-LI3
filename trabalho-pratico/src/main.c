@@ -15,7 +15,7 @@
 #include <string.h>
 #include <sys/resource.h>
 
-// Define o tamanho máximo para os caminhos dos arquivos
+// Define o tamanho máximo para os paths dos arquivos
 #define MAX_PATH_SIZE 1024
 
 int main(int argc, char **argv) {
@@ -28,7 +28,7 @@ int main(int argc, char **argv) {
 
   clock_t start, end;
 
-  // Verifica se foram passados argumentos suficientes (caminho + nome do
+  // Verifica se foram passados argumentos suficientes (path + nome do
   // arquivo de texto)
   if (argc < 3) {
     fp = stdin;
@@ -36,20 +36,20 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  // Armazena o caminho base passado como argumento
+  // Armazena o path base passado como argumento
   char *path = argv[1];
 
-  // Aloca memória para os caminhos completos dos arquivos
+  // Aloca memória para os paths completos dos arquivos
   char *artistsPath = malloc(MAX_PATH_SIZE * sizeof(char));
   char *musicsPath = malloc(MAX_PATH_SIZE * sizeof(char));
   char *usersPath = malloc(MAX_PATH_SIZE * sizeof(char));
 
-  // Constroi os caminhos completos para os arquivos CSV
+  // Constroi os paths completos para os arquivos CSV
   snprintf(artistsPath, MAX_PATH_SIZE, "%s/%s", path, "artists.csv");
   snprintf(musicsPath, MAX_PATH_SIZE, "%s/%s", path, "musics.csv");
   snprintf(usersPath, MAX_PATH_SIZE, "%s/%s", path, "users.csv");
 
-  // Inicializa a tabela de hash para os artistas
+  // Inicializa a hashtable para os artistas
   GHashTable *artistsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyArtist);
 
@@ -73,9 +73,9 @@ int main(int argc, char **argv) {
     freeGestorArtists(gestorArtists);
     return EXIT_FAILURE;
   }
-  free(artistsPath); // Libera a memoria do caminho dos artistas
+  free(artistsPath); // Liberta a memoria do path dos artistas
 
-  // Inicializa a tabela de hash para musicas
+  // Inicializa a hashtable para musicas
   GHashTable *musicsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyMusic);
 
@@ -99,9 +99,9 @@ int main(int argc, char **argv) {
     freeGestorMusics(gestorMusics);
     return EXIT_FAILURE;
   }
-  free(musicsPath); // Libera a memória do caminho das musicas
+  free(musicsPath); // Liberta a memória do path das musicas
 
-  // Inicializa a tabela de hash para users
+  // Inicializa a hashtable para users
   GHashTable *usersTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyUser);
 
@@ -125,7 +125,7 @@ int main(int argc, char **argv) {
     freeGestorUsers(gestorUsers);
     return EXIT_FAILURE;
   }
-  free(usersPath); // Libera a memória do caminho dos users
+  free(usersPath); // Liberta a memória do path dos users
 
   Gestores *gestor = initgestor(gestorArtists, gestorMusics, gestorUsers);
 
@@ -161,7 +161,7 @@ int main(int argc, char **argv) {
   fclose(fp);
   free(line);
 
-  // Libera toda a memória alocada e destrói as tabelas de hash
+  // Liberta toda a memória alocada e destrói as hashtables
   g_hash_table_destroy(musicsTable);
   g_hash_table_destroy(artistsTable);
   g_hash_table_destroy(usersTable);

@@ -6,14 +6,14 @@
 #include <string.h>
 
 // Definição completa da estrutura gestorArtists, que contém um ficheiro para
-// erros e uma tabela hash para artistas
+// erros e uma hashtable para artistas
 struct gestorArtists {
   FILE *errorsFile;         // Ficheiro para registo de erros
-  GHashTable *artistsTable; // Hash table para armazenar os artistas
+  GHashTable *artistsTable; // Hashtable para armazenar os artistas
 };
 
 // Função para inicializar a estrutura gestorArtists
-// Abre o ficheiro de erros e atribui a tabela hash fornecida
+// Abre o ficheiro de erros e atribui a hashtable fornecida
 gestorArtists *initGestorArtists(const char *errorsFilePath,
                                  GHashTable *artistsTable) {
   gestorArtists *gestor =
@@ -46,7 +46,7 @@ void freeGestorArtists(gestorArtists *gestor) {
 // Função para processar o ficheiro de artistas utilizando a estrutura
 // gestorArtists
 void parseArtists(FILE *fp, gestorArtists *gestor) {
-  char *line = NULL; // Ponteiro para armazenar cada linha lida
+  char *line = NULL; // Pointer para armazenar cada linha lida
   size_t len = 0;    // Tamanho da linha
   Artists *artist = NULL;
 
@@ -75,11 +75,11 @@ void parseArtists(FILE *fp, gestorArtists *gestor) {
       if (validateArtistLine(idConstituentLine, type) &&
           validateCSVList(idConstituentCSV)) {
 
-        // Obtém o ID do artista e remove aspas, se presentes
+        // Obtém o ID do artista e remove aspas
         char *id = getArtistId(artist);
         remove_quotes(id);
 
-        // Verifica se o artista já está presente na tabela hash
+        // Verifica se o artista já está presente na hashtable
         Artists *existing_artist =
             g_hash_table_lookup(gestor->artistsTable, id);
         if (existing_artist != NULL) {
@@ -105,7 +105,7 @@ void parseArtists(FILE *fp, gestorArtists *gestor) {
   free(line);
 }
 
-// Função para obter a tabela hash de artistas da estrutura gestorArtists
+// Função para obter a hashtable de artistas da estrutura gestorArtists
 GHashTable *getArtistTable(gestorArtists *gestorArtist) {
   return gestorArtist->artistsTable;
 }

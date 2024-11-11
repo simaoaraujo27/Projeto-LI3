@@ -44,7 +44,7 @@ void printQuery2(GList **listaResposta, FILE *newFile) {
     new_str =
         malloc((total_len + 1) * sizeof(char)); // +1 para o caractere '\0'
 
-    // Remove aspas, se existirem, no nome e país
+    // Remove aspas no nome e país
     remove_quotes(name);
     remove_quotes(country);
 

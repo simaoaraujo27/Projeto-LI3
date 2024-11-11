@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  clock_gettime(CLOCK_REALTIME, &end); // Registra o tempo de término
+  clock_gettime(CLOCK_REALTIME, &end); // Regista o tempo de término
   elapsed = (end.tv_sec - start.tv_sec) +
             (end.tv_nsec - start.tv_nsec) / 1e9; // Calcula o tempo de execução
 
@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  // Contadores para os testes de cada tipo de consulta
+  // Contadores para os testes de cada query
   int totalTestesQ1 = 0;
   int totalTestesQ2 = 0;
   int totalTestesQ3 = 0;
@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
 
   // Loop para verificar os resultados dos testes
   for (int i = 1; i <= totalTestes; i++) {
-    // Formata os caminhos para os arquivos de resultados
+    // Formata os paths para os arquivos de resultados
     snprintf(filenameResultados, MAX_PATH_SIZE,
              "./resultados/command%d_output.txt", i);
 
@@ -131,7 +131,7 @@ int main(int argc, char **argv) {
     fclose(fp2); // Fecha o arquivo esperado
   }
 
-  // Exibe o número de testes corretos para cada tipo de consulta
+  // Printa o número de testes corretos para cada query
   printf("Query 1: %d/%d testes corretos!\n", corretasQ1, totalTestesQ1);
   printf("Query 2: %d/%d testes corretos!\n", corretasQ2, totalTestesQ2);
   printf("Query 3: %d/%d testes corretos! \n", corretasQ3, totalTestesQ3);
@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
   // Printa o tempo de execução
   printf("Tempo total de execução: %.6f segundos\n", elapsed);
 
-  // Libera a memória alocada para os caminhos dos arquivos
+  // Liberta a memória alocada para os paths dos arquivos
   free(filenameResultados);
   free(filenameResultadosEsperados);
   free(executaMain);

@@ -12,11 +12,11 @@ void remove_quotes(char *str) {
   // Verifica se a string tem pelo menos dois caracteres e começa e termina com
   // aspas
   if (len > 1 && str[0] == '"' && str[len - 1] == '"') {
-    // Desloca os caracteres da string para a esquerda, sobrescrevendo as aspas
+    // Desloca os caracteres da string para a esquerda
     for (int i = 0; i < len - 1; i++) {
       str[i] = str[i + 1];
     }
-    str[len - 2] = '\0'; // Adiciona o terminador nulo no final da string
+    str[len - 2] = '\0'; // Adiciona o \0 no final da string
   }
 }
 
@@ -50,25 +50,24 @@ void removeFstLast(char *str) {
     str[i] = str[i + 1];
   }
   str[len - 2] =
-      '\0'; // Adiciona o terminador nulo, removendo o último caractere
+      '\0'; // Adiciona o \0, removendo o último caractere
 }
 
-// Função para remover o caractere extra e as aspas da string de "liked musics"
+// Função para remover o espaço e as aspas da string de "liked musics"
 void removeForLikedMusics(char *str) {
   int len = strlen(str);
 
-  // Desloca a string para a esquerda, removendo as aspas e o caractere
-  // adicional
+  // Desloca a string para a esquerda, removendo as aspas e o espaço
   for (int i = 0; i < len - 1; i++) {
-    str[i] = str[i + 2]; // Pula o caractere extra e as aspas
+    str[i] = str[i + 2];
   }
-  str[len - 5] = '\0'; // Adiciona o terminador nulo no final
+  str[len - 5] = '\0'; // Adiciona o \0 no final
 }
 
-// Função para remover o caractere de nova linha no final de uma string
+// Função para remover o ultimo caractere de uma string
 void removeLast(char *str) {
   int len = strlen(str);
-  str[len - 1] = '\0'; // Substitui o '\n' final por '\0'
+  str[len - 1] = '\0';
 }
 
 // Função para calcular a idade de uma pessoa com base na data de nascimento
@@ -89,7 +88,7 @@ char *calculate_age_str(char *birth_date) {
   // Ajusta a idade se o aniversário ainda não tiver ocorrido em 2024
   if (current_month < birth_month ||
       (current_month == birth_month && current_day < birth_day)) {
-    age--; // Subtrai um ano caso ainda não tenha feito aniversário
+    age--; // Subtrai um ano caso ainda não tenha feito anos
   }
 
   // Aloca memória para armazenar a idade em string
@@ -118,7 +117,7 @@ int calculateAge(char *birth_date) {
 
   // Ajusta a idade se o aniversário ainda não tiver ocorrido em 2024
   if (9 < month || (month == 9 && 9 < day)) {
-    age--; // Subtrai um ano caso o aniversário não tenha passado
+    age--; // Subtrai um ano caso ainda não tenha feito anos
   }
 
   return age; // Retorna a idade calculada

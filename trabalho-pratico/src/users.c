@@ -19,7 +19,7 @@ struct users {
   char *liked_musics_id;   // IDs das músicas curtidas
 };
 
-// Função para definir o nome de user de um user
+// Função para definir o username de um user
 void setUserUsername(Users *u, char *username) {
   remove_quotes(username); // Remove aspas, se houver
   u->username = username;
@@ -61,7 +61,7 @@ void setUserSubscriptionType(Users *u, char *subscription_type) {
   u->subscription_type = subscription_type;
 }
 
-// Função para definir o ID das músicas curtidas de um user
+// Função para definir o ID das músicas com like de um user
 void setUserLikedMusicsId(Users *u, char *liked_musics_id) {
   remove_quotes(liked_musics_id); // Remove aspas, se houver
   u->liked_musics_id = liked_musics_id;
@@ -74,7 +74,7 @@ Users *separateUsers(char *line) {
   if (!user) {
     fprintf(
         stderr,
-        "Malloc failed!"); // Se a alocação falhar, exibe uma mensagem de erro
+        "Malloc failed!"); // Se a alocação falhar, mostra uma mensagem de erro
     return NULL;
   }
 
@@ -147,17 +147,17 @@ char *getUserLikedMusicsId(gpointer user) {
   return strdup(u->liked_musics_id);
 }
 
-// Função para liberar a memória associada a um user
+// Função para libertar a memória associada a um user
 void destroyUser(Users *u) {
   if (u) {
-    free(u->username);          // Libera a memória do nome de user
-    free(u->email);             // Libera a memória do email
-    free(u->first_name);        // Libera a memória do primeiro nome
-    free(u->last_name);         // Libera a memória do sobrenome
-    free(u->birth_date);        // Libera a memória da data de nascimento
-    free(u->country);           // Libera a memória do país
-    free(u->subscription_type); // Libera a memória do tipo de assinatura
-    free(u->liked_musics_id);   // Libera a memória do ID das músicas curtidas
-    free(u);                    // Libera a memória do user
+    free(u->username);          
+    free(u->email);             
+    free(u->first_name);        
+    free(u->last_name);         
+    free(u->birth_date);        
+    free(u->country);           
+    free(u->subscription_type); 
+    free(u->liked_musics_id);   
+    free(u);                    
   }
 }

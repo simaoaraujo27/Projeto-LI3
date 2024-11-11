@@ -112,7 +112,7 @@ bool validateEmail(char *email) {
   return true;
 }
 
-// Função para validar o tipo de assinatura ('normal' ou 'premium')
+// Função para validar o subscription type ('normal' ou 'premium')
 bool validateSubscriptionType(char *type) {
   return (strcmp(type, "normal") == 0 || strcmp(type, "premium") == 0);
 }
@@ -125,10 +125,9 @@ bool validateCSVList(char *list) {
           list[lastIndex] == '"');
 }
 
-// Função para validar os IDs das músicas de um user
 bool validateMusicsIdUsers(char *musics_id, gestorMusics *gestorMusics) {
   remove_quotes(musics_id);       // Remove as aspas
-  removeFstLast(musics_id);       // Remove os primeiros e últimos caracteres
+  removeFstLast(musics_id);       // Remove o primeiro e último caracteres
   int l = (int)strlen(musics_id); // Obtém o comprimento da string
 
   char *key = NULL;
@@ -158,17 +157,17 @@ bool validateMusicsIdUsers(char *musics_id, gestorMusics *gestorMusics) {
 
 // Função para validar uma linha de artistas
 bool validateArtistLine(char *idConstituent, char *type) {
-  removeFstLast(idConstituent); // Remove os primeiros e últimos caracteres
-  removeFstLast(idConstituent); // Remove mais um caractere
+  removeFstLast(idConstituent); // Remove o primeiro e último caracteres
+  removeFstLast(idConstituent); 
   // Valida se o tipo de artista é 'individual' ou 'grupo'
   return (((strcmp(type, "individual") == 0) && strlen(idConstituent) == 0) ||
           ((strcmp(type, "group")) == 0 && (strlen(idConstituent) != 0)));
 }
 
-// Função para validar os artistas associados a uma música
+// Função para validar os artistas de uma música
 bool validateMusicsArtists(char *artists_id, gestorArtists *gestorArtists) {
   remove_quotes(artists_id);       // Remove as aspas
-  removeFstLast(artists_id);       // Remove os primeiros e últimos caracteres
+  removeFstLast(artists_id);       // Remove o primeiro e último caracteres
   int l = (int)strlen(artists_id); // Obtém o comprimento da string
   char *key = NULL;
   gpointer orig_key;
@@ -206,13 +205,12 @@ bool validateMusicsLine(char *line, gestorArtists *gestorArtists) {
   char *year = strdup(strsep(&line, "\n"));
   char *artist_id_copia = strdup(artists_id);
 
-  // Valida a duração, o ano, o formato da lista CSV e os artistas associados à
-  // música
+  // Valida a duração, o ano, o formato da lista CSV e os artistas da música
   bool isValid = validateDuration(durationSeconds) && atoi(year) <= 2024 &&
                  validateCSVList(artists_id) &&
                  validateMusicsArtists(artist_id_copia, gestorArtists);
 
-  free(id); // Libera a memória
+  free(id); // Liberta a memória
   free(title);
   free(artists_id);
   free(durationSeconds);
@@ -223,7 +221,7 @@ bool validateMusicsLine(char *line, gestorArtists *gestorArtists) {
   return isValid;
 }
 
-// Função para validar uma linha de user
+// Função para validar uma linha de users
 bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
   // Divide a linha em diferentes partes usando o delimitador ";"
   char *username = strdup(strsep(&line, ";"));
@@ -254,9 +252,9 @@ bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
 
   char *country = strdup(strsep(&line, ";"));
   char *subscription_type = strdup(strsep(&line, ";"));
-  remove_quotes(subscription_type); // Remove as aspas do tipo de assinatura
+  remove_quotes(subscription_type); // Remove as aspas do subscription type
 
-  // Valida o tipo de assinatura
+  // Valida o subscription type
   if (!validateSubscriptionType(subscription_type)) {
     free(first_name);
     free(country);
@@ -268,7 +266,7 @@ bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
     return false;
   }
 
-  // Valida a lista de músicas favoritas
+  // Valida a lista de músicas com like
   char *liked_musics_id = strdup(line);
   removeLast(liked_musics_id); // Remove o último caractere
   if (!validateCSVList(liked_musics_id)) {
@@ -283,7 +281,7 @@ bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
     return false;
   }
 
-  // Valida os IDs das músicas favoritas
+  // Valida os IDs das músicas com like
   if (!validateMusicsIdUsers(liked_musics_id, gestorMusics)) {
     free(first_name);
     free(country);
@@ -296,7 +294,7 @@ bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
     return false;
   }
 
-  // Libera a memória alocada
+  // Liberta a memória alocada
   free(first_name);
   free(country);
   free(subscription_type);

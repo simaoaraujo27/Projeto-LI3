@@ -62,10 +62,10 @@ Artists *separateArtists(char *line) {
   else
     setArtistTipo(artist, Grupo);
 
-  // Inicializa discografia com zero
+  // Inicializa a discografia com zero
   setArtistDiscografia(artist, 0);
 
-  // Libera memória das variáveis temporárias
+  // Liberta memória das variáveis temporárias
   free(id);
   free(name);
   free(linhaTipo);
@@ -102,7 +102,7 @@ void insertArtistArray(GList **listaResposta, Artists *artist,
   GList *node = *listaResposta;
   Artists *currentArtist;
 
-  // Insere o artista na posição correta baseada na discografia
+  // Insere o artista na posição correta baseado na discografia
   while (node != NULL) {
     currentArtist = (Artists *)node->data;
     if (currentArtist->discografia < artist->discografia) {
@@ -123,7 +123,7 @@ void insertArtistArray(GList **listaResposta, Artists *artist,
   }
 }
 
-// Procura por um artista na lista e atualiza suas informações
+// Procura por um artista na lista e atualiza as suas informações
 void procuraArt(Artists *artist, GList **listaResposta) {
   GList *current = *listaResposta;
   Artists *currentArtist;
@@ -138,7 +138,7 @@ void procuraArt(Artists *artist, GList **listaResposta) {
   }
 }
 
-// Inicializa a discografia de todos os artistas para zero
+// Inicializa a discografia de todos os artistas a zero
 void colocaZero(GHashTable *artistsTable) {
   GList *listaArtistas = g_hash_table_get_values(artistsTable);
   GList *node = listaArtistas;
@@ -182,7 +182,7 @@ char *pegarArtistType(Artists *artist) {
 
 int pegarArtistDiscografia(Artists *artist) { return artist->discografia; }
 
-// Funções para obter campos a partir de um ponteiro genérico
+// Funções para obter os valores dos campos de um artista passando um gpointer
 char *getArtistId(gpointer artist) {
   return strdup(((struct artists *)artist)->id);
 }
@@ -207,7 +207,7 @@ int getArtistDiscografia(gpointer artist) {
   return ((struct artists *)artist)->discografia;
 }
 
-// Função para liberar a memória alocada para um artista
+// Função para libertar a memória alocada para um artista
 void destroyArtist(Artists *a) {
   if (a) {
     free(a->id);
