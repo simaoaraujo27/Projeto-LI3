@@ -10,7 +10,7 @@
 struct nodoMusica {
   char *genero;  // género da música
   GArray *likes; // GArray que armazena a contagem de likes por faixa etária
-  struct nodoMusica *prox; // Ponteiro para o próximo nodo na lista
+  struct nodoMusica *prox; // Pointer para o próximo nodo na lista
 };
 
 // Função para criar um novo nodo com um género e inicializar o GArray de likes
@@ -54,7 +54,7 @@ void expandir_arrays(NodoMusica *lista, guint nova_idade_max) {
   }
 }
 
-// Função para adicionar um like a uma faixa etária específica
+// Função para adicionar um like a uma idade específica
 NodoMusica *adicionar_like(NodoMusica *lista, char *genero, guint idade,
                            guint *idade_max) {
   // Se a idade for maior que a idade máxima, expande todos os arrays
@@ -109,6 +109,7 @@ void liberar_lista(NodoMusica *lista) {
 }
 
 // Estrutura temporária para armazenar o género e a contagem de likes
+// Esta struct irá servir para printar no ficheiro por ordem decrescente
 struct generoLikes {
   char *genero; // género da música
   guint count;  // Contagem total de likes para o género
@@ -141,6 +142,8 @@ NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, guint idade_max,
     free(age);
 
     removeFstLast(liked_musics_id); // Remove primeiros e últimos caracteres
+
+    // Percorre a lista de liked_musics_id
     char *music_id = strtok(liked_musics_id, ", ");
     while (music_id != NULL) {
       if (music_id[0] == '\'')
@@ -168,13 +171,13 @@ NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, guint idade_max,
   return lista;
 }
 
-// Função principal para a consulta 3
+// Função principal para a query 3
 void query3(int minAge, int maxAge, NodoMusica *lista, int i) {
   NodoMusica *l = lista;
   GList *generos_lista =
       NULL; // Lista para armazenar os géneros e suas contagens de likes
 
-  // Criação do arquivo de saída
+  // Criar o arquivo de saída
   FILE *newFile;
   char *path =
       "./resultados/commandx_output.txt"; // Caminho base para o arquivo
@@ -194,12 +197,12 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i) {
           g_array_index(l->likes, guint, j); // Soma os likes para a idade j
     }
 
-    // Cria um objeto GeneroLikes e armazena o género e a contagem de likes
+    // Cria uma struct GeneroLikes e armazena o género e a contagem de likes
     GeneroLikes *genero_likes = malloc(sizeof(GeneroLikes));
     genero_likes->genero = strdup(l->genero); // Duplica a string do género
     genero_likes->count = count;              // Armazena a contagem de likes
 
-    // Adiciona o objeto GeneroLikes à lista de géneros
+    // Adiciona o nodo GeneroLikes à lista de géneros
     generos_lista = g_list_prepend(generos_lista, genero_likes);
     l = l->prox; // Avança para o próximo nodo na lista
   }

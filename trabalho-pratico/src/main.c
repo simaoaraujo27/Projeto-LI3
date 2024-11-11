@@ -21,6 +21,13 @@
 int main(int argc, char **argv) {
   FILE *fp = NULL;
 
+  // Variáveis para calcular o tempo total de duração de cada query
+  double total_time_query1 = 0;
+  double total_time_query2 = 0;
+  double total_time_query3 = 0;
+
+  clock_t start, end;
+
   // Verifica se foram passados argumentos suficientes (caminho + nome do
   // arquivo de texto)
   if (argc < 3) {
@@ -139,11 +146,16 @@ int main(int argc, char **argv) {
       NULL; // Lista de músicas baseadas nas preferências dos users
   guint idade_max = IDADE_INICIAL; // Inicializa a idade máxima
 
+  start = clock();
   lista = CriaListaRespostaQuery3(lista, idade_max, gestor);
+  end = clock();
+
+  total_time_query3 += (double)(end - start) / CLOCKS_PER_SEC;
 
   // Processa as queries lidas do arquivo
   while (getline(&line, &len, fp) != -1) {
-    gestorQueries(line, gestor, firstOcorr, maxAge, minAge, lista, i);
+    gestorQueries(line, gestor, firstOcorr, maxAge, minAge, lista, i,
+                  &total_time_query1, &total_time_query2, &total_time_query3);
     i++;
   }
   fclose(fp);
@@ -163,6 +175,11 @@ int main(int argc, char **argv) {
     struct rusage r_usage;
     getrusage(RUSAGE_SELF, &r_usage);
     printf("Memória utilizada: %ld KB\n", r_usage.ru_maxrss);
+
+    printf("Tempos de execução: \n");
+    printf("Q1: %fs\n", total_time_query1);
+    printf("Q2: %fs\n", total_time_query2);
+    printf("Q3: %fs\n", total_time_query3);
   }
   return 0;
 }

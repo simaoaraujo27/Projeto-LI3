@@ -7,6 +7,8 @@
 #include "query3.h"
 
 void gestorQueries(char *line, Gestores *gestor, int firstOcorr, int maxAge,
-                   int minAge, NodoMusica *lista, int i);
+                   int minAge, NodoMusica *lista, int i,
+                   double *total_time_query1, double *total_time_query2,
+                   double *total_time_query3);
 
 #endif
