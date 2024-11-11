@@ -1,4 +1,4 @@
-#include "gestor_queires.h"
+#include "gestor_queries.h"
 #include "query1.h"
 #include "query2.h"
 #include "utils.h"
@@ -8,12 +8,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 void gestorQueries(char *line, Gestores *gestor, int firstOcorr, int maxAge,
                    int minAge, NodoMusica *lista, int i) {
   if (line[0] == '1') {
     query1(pegarGestorUser(gestor), line, i);
-
   } else if (line[0] == '2') {
     if (!temAspas(line)) {
       query2(atoi(line + 2), NULL, gestor, i);

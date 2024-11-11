@@ -1,6 +1,6 @@
 #include "gestor_artists.h"
 #include "gestor_musics.h"
-#include "gestor_queires.h"
+#include "gestor_queries.h"
 #include "gestor_users.h"
 #include "gestores.h"
 #include "query1.h"
@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/resource.h>
 
 // Define o tamanho máximo para os caminhos dos arquivos
 #define MAX_PATH_SIZE 1024
@@ -154,5 +155,14 @@ int main(int argc, char **argv) {
   g_hash_table_destroy(usersTable);
   liberar_lista(lista);
   destroyGestor(gestor);
+
+  // Medir o uso de memória no final da execução
+  // Verifica se o programa foi chamado com RAM_MONITOR
+  if (getenv("RAM_MONITOR") != NULL) {
+    // Medir o uso de memória no final da execução
+    struct rusage r_usage;
+    getrusage(RUSAGE_SELF, &r_usage);
+    printf("Memória utilizada: %ld KB\n", r_usage.ru_maxrss);
+  }
   return 0;
 }

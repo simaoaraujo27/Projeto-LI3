@@ -25,7 +25,8 @@ int main(int argc, char **argv) {
   // Cria o comando para executar o programa principal com os arquivos
   // fornecidos como argumento
   snprintf(executaMain, sizeof(char) * MAX_PATH_SIZE,
-           "./programa-principal %s %s", argv[1], argv[2]);
+           "RAM_MONITOR=1 ./programa-principal %s %s", argv[1], argv[2]);
+
   // Executa o comando do sistema
   int ret = system(executaMain);
   if (ret == -1) {
@@ -135,10 +136,7 @@ int main(int argc, char **argv) {
   printf("Query 2: %d/%d testes corretos!\n", corretasQ2, totalTestesQ2);
   printf("Query 3: %d/%d testes corretos! \n", corretasQ3, totalTestesQ3);
 
-  // Exibe o uso de memória e o tempo total de execução
-  struct rusage r_usage;
-  getrusage(RUSAGE_SELF, &r_usage);
-  printf("Memória utilizada: %ld KB\n", r_usage.ru_maxrss);
+  // Printa o tempo de execução
   printf("Tempo total de execução: %.6f segundos\n", elapsed);
 
   // Libera a memória alocada para os caminhos dos arquivos

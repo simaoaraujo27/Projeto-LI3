@@ -1,5 +1,5 @@
 #include "gestores.h"
-#include "gestor_queires.h"
+#include "gestor_queries.h"
 #include "query1.h"
 #include "query2.h"
 #include "utils.h"
