@@ -142,8 +142,7 @@ int main(int argc, char **argv) {
 
   // Processa as queries lidas do arquivo
   while (getline(&line, &len, fp) != -1) {
-    gestorQueries(line, gestor, firstOcorr,
-                  maxAge, minAge, lista, i);
+    gestorQueries(line, gestor, firstOcorr, maxAge, minAge, lista, i);
     i++;
   }
   fclose(fp);
@@ -154,9 +153,6 @@ int main(int argc, char **argv) {
   g_hash_table_destroy(artistsTable);
   g_hash_table_destroy(usersTable);
   liberar_lista(lista);
-  freeGestorArtists(gestorArtists);
-  freeGestorMusics(gestorMusics);
-  freeGestorUsers(gestorUsers);
   destroyGestor(gestor);
   return 0;
 }
