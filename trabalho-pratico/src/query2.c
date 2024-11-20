@@ -53,15 +53,14 @@ void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
     l = strlen(artistId); // Tamanho do ID do artista
 
     // Percorre os ID's dos artistas
-    for (int j = 0; j < l;
-         j += 12) {
+    for (int j = 0; j < l; j += 12) {
       char *key;
       if (j == 0)
-        artistId =
-            artistId + 1; // Ajusta o pointer
+        artistId = artistId + 1; // Ajusta o pointer
       else
-        artistId = artistId +
-                   3; // Ajusta o ponteiro para também passar à frente o espaço e o ; 
+        artistId =
+            artistId +
+            3; // Ajusta o ponteiro para também passar à frente o espaço e o ;
       key = strdup(
           strsep(&artistId, "'")); // Extrai o ID do artista entre as aspas
 

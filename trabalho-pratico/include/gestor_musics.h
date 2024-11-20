@@ -7,8 +7,8 @@
 
 typedef struct gestorMusics gestorMusics;
 
-void parseMusics(FILE *fp, gestorMusics *gestorMusic,
-                 gestorArtists *gestorArtist);
+int GestorMusics(FILE *fp, gestorMusics *gestorMusic,
+                  gestorArtists *gestorArtist, char *musicsPath);
 
 gestorMusics *initGestorMusics(const char *errorsFilePath,
                                GHashTable *musicsTable);

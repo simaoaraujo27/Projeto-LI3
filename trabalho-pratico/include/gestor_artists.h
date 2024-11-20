@@ -12,6 +12,6 @@ GHashTable *getArtistTable(gestorArtists *gestorArtist);
 
 void freeGestorArtists(gestorArtists *gestor);
 
-void parseArtists(FILE *fp, gestorArtists *gestor);
+int GestorArtists(FILE *fp, gestorArtists *gestor, char *artistsPath);
 
 #endif // _GESTORARTISTS_H_

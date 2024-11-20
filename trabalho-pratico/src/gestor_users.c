@@ -1,4 +1,5 @@
 #include "gestor_users.h"
+#include "parsers.h"
 #include "validation.h"
 
 #include <assert.h>
@@ -43,35 +44,32 @@ void freeGestorUsers(gestorUsers *gestorUser) {
 }
 
 // Função para processar o arquivo de users e inserir os dados na hashtable
-void parseUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic) {
-  char *line = NULL;
-  size_t len = 0;
-  char *username;
-  Users *user = NULL;
+int GestorUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic,
+               char *usersPath) {
+  // Abre o arquivo de users e carrega os dados
+  fp = fopen(usersPath, "r");
+  if (fp) {
+    char *line = NULL;
+    size_t len = 0;
+ 
 
-  // Ignora a primeira linha do arquivo (cabeçalho)
-  assert(getline(&line, &len, fp) != -1);
+    // Ignora a primeira linha do arquivo (cabeçalho)
+    assert(getline(&line, &len, fp) != -1);
 
-  // Lê o arquivo linha por linha
-  while (getline(&line, &len, fp) != -1) {
-    char *copia = strdup(line); // Faz uma cópia segura da linha
-
-    // Valida a linha com base nas regras definidas
-    if (validateUsersLine(copia, gestorMusic)) {
-      user = separateUsers(
-          line); // Se a linha for válida, separa os dados do user
-
-      username = getUserUsername(user); // Obtém o nome do user
-
-      // Insere o user na hashtable usando o username como chave
-      g_hash_table_insert(gestorUser->usersTable, username, user);
-    } else {
-      // Se a linha for inválida, escreve no arquivo de erros
-      fprintf(gestorUser->errorsFile, "%s", line);
+    // Lê o arquivo linha por linha
+    while (getline(&line, &len, fp) != -1) {
+      parserUser(line, gestorMusic, gestorUser->errorsFile,
+                 gestorUser->usersTable);
     }
-    free(copia); // Liberta a memória da cópia da linha
+    free(line); // Liberta a memória da linha lida
+
+    fclose(fp);
+  } else {
+    perror("Error opening users file");
+    return 0;
   }
-  free(line); // Liberta a memória da linha lida
+  free(usersPath); // Liberta a memória do path dos users
+  return 1;
 }
 
 // Função para obter a hashtable dos users

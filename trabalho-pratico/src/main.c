@@ -49,6 +49,9 @@ int main(int argc, char **argv) {
   snprintf(musicsPath, MAX_PATH_SIZE, "%s/%s", path, "musics.csv");
   snprintf(usersPath, MAX_PATH_SIZE, "%s/%s", path, "users.csv");
 
+  /* criar um ficheiro chamado inicializador onde inicializamos a GHashtable; os
+   * gestor fazemos uma funçao no ficheiro gestor_do que for preciso */
+
   // Inicializa a hashtable para os artistas
   GHashTable *artistsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyArtist);
@@ -63,17 +66,10 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  // Abre o arquivo de artistas e carrega os dados
-  fp = fopen(artistsPath, "r");
-  if (fp) {
-    parseArtists(fp, gestorArtists); // Faz o parsing dos dados dos artistas
-    fclose(fp);
-  } else {
-    perror("Error opening artists file");
-    freeGestorArtists(gestorArtists);
+  if (!GestorArtists(fp, gestorArtists, artistsPath)) {
     return EXIT_FAILURE;
+    freeGestorArtists(gestorArtists);
   }
-  free(artistsPath); // Liberta a memoria do path dos artistas
 
   // Inicializa a hashtable para musicas
   GHashTable *musicsTable = g_hash_table_new_full(
@@ -89,17 +85,10 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  // Abre o arquivo de musicas e carrega os dados
-  fp = fopen(musicsPath, "r");
-  if (fp) {
-    parseMusics(fp, gestorMusics, gestorArtists); // Faz o parsing das musicas
-    fclose(fp);
-  } else {
-    perror("Error opening musics file");
+  if (!GestorMusics(fp, gestorMusics, gestorArtists, musicsPath)) {
     freeGestorMusics(gestorMusics);
     return EXIT_FAILURE;
-  }
-  free(musicsPath); // Liberta a memória do path das musicas
+  } // Faz o parsing das musicas
 
   // Inicializa a hashtable para users
   GHashTable *usersTable = g_hash_table_new_full(
@@ -115,17 +104,10 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  // Abre o arquivo de users e carrega os dados
-  fp = fopen(usersPath, "r");
-  if (fp) {
-    parseUsers(fp, gestorUsers, gestorMusics); // Faz o parsing dos users
-    fclose(fp);
-  } else {
-    perror("Error opening users file");
+  if (!GestorUsers(fp, gestorUsers, gestorMusics, usersPath)) {
     freeGestorUsers(gestorUsers);
     return EXIT_FAILURE;
   }
-  free(usersPath); // Liberta a memória do path dos users
 
   Gestores *gestor = initgestor(gestorArtists, gestorMusics, gestorUsers);
 

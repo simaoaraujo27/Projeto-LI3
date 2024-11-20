@@ -7,7 +7,8 @@
 
 typedef struct gestorUsers gestorUsers;
 
-void parseUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic);
+int GestorUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic,
+               char *usersPath);
 
 gestorUsers *initGestorUsers(const char *errorsFilePath,
                              GHashTable *usersTable);
