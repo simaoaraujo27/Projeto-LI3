@@ -10,8 +10,7 @@ typedef struct gestorMusics gestorMusics;
 int GestorMusics(FILE *fp, gestorMusics *gestorMusic,
                   gestorArtists *gestorArtist, char *musicsPath);
 
-gestorMusics *initGestorMusics(const char *errorsFilePath,
-                               GHashTable *musicsTable);
+gestorMusics *initGestorMusics(const char *errorsFilePath);
 
 void freeGestorMusics(gestorMusics *gestor);
 

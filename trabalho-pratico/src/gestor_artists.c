@@ -14,8 +14,11 @@ struct gestorArtists {
 
 // Função para inicializar a estrutura gestorArtists
 // Abre o ficheiro de erros e atribui a hashtable fornecida
-gestorArtists *initGestorArtists(const char *errorsFilePath,
-                                 GHashTable *artistsTable) {
+gestorArtists *initGestorArtists(const char *errorsFilePath) {
+
+  // Inicializa a hashtable para os artistas
+  GHashTable *artistsTable = g_hash_table_new_full(
+      g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyArtist);
   gestorArtists *gestor =
       malloc(sizeof(gestorArtists)); // Aloca memória para a estrutura
   if (!gestor)
@@ -39,6 +42,7 @@ void freeGestorArtists(gestorArtists *gestor) {
   if (gestor) {
     if (gestor->errorsFile)
       fclose(gestor->errorsFile); // Fecha o ficheiro de erros, se aberto
+    g_hash_table_destroy(gestor->artistsTable);
     free(gestor);                 // Liberta a memória da estrutura
   }
 }

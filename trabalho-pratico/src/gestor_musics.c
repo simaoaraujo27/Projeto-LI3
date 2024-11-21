@@ -17,8 +17,10 @@ struct gestorMusics {
 
 // Função para inicializar a estrutura gestorMusics
 // Abre o ficheiro de erros e atribui a hashtable fornecida
-gestorMusics *initGestorMusics(const char *errorsFilePath,
-                               GHashTable *musicsTable) {
+gestorMusics *initGestorMusics(const char *errorsFilePath) {
+  // Inicializa a hashtable para musicas
+  GHashTable *musicsTable = g_hash_table_new_full(
+      g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyMusic);
   // Aloca memória para a estrutura
   gestorMusics *gestorMusic = malloc(sizeof(gestorMusics));
   if (!gestorMusic)
@@ -43,6 +45,7 @@ void freeGestorMusics(gestorMusics *gestor) {
     if (gestor->errorsFile)
       fclose(
           gestor->errorsFile); // Fecha o ficheiro de erros, se estiver aberto
+    g_hash_table_destroy(gestor->musicsTable);
     free(gestor);              // Liberta a memória da estrutura
   }
 }

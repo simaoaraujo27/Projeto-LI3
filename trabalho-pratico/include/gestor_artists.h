@@ -5,8 +5,7 @@
 
 typedef struct gestorArtists gestorArtists;
 
-gestorArtists *initGestorArtists(const char *errorsFilePath,
-                                 GHashTable *artistsTable);
+gestorArtists *initGestorArtists(const char *errorsFilePath);
 
 GHashTable *getArtistTable(gestorArtists *gestorArtist);
 

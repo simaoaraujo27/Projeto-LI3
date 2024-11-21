@@ -50,13 +50,9 @@ int main(int argc, char **argv) {
   snprintf(musicsPath, MAX_PATH_SIZE, "%s/%s", path, "musics.csv");
   snprintf(usersPath, MAX_PATH_SIZE, "%s/%s", path, "users.csv");
 
-  // Inicializa a hashtable para os artistas
-  GHashTable *artistsTable = g_hash_table_new_full(
-      g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyArtist);
-
   // Inicializa o gestor de artistas com o arquivo de erros
   gestorArtists *gestorArtists =
-      initGestorArtists("./resultados/artists_errors.csv", artistsTable);
+      initGestorArtists("./resultados/artists_errors.csv");
 
   // Verifica se o gestor de artistas foi inicializado corretamente
   if (!gestorArtists) {
@@ -64,13 +60,9 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  // Inicializa a hashtable para musicas
-  GHashTable *musicsTable = g_hash_table_new_full(
-      g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyMusic);
-
   // Inicializa o gestor de músicas
   gestorMusics *gestorMusics =
-      initGestorMusics("./resultados/musics_errors.csv", musicsTable);
+      initGestorMusics("./resultados/musics_errors.csv");
 
   // Verifica se o gestor de musicas foi inicializado corretamente
   if (!gestorMusics) {
@@ -135,8 +127,6 @@ int main(int argc, char **argv) {
   free(line);
 
   // Liberta toda a memória alocada e destrói as hashtables
-  g_hash_table_destroy(musicsTable);
-  g_hash_table_destroy(artistsTable);
   g_hash_table_destroy(usersTable);
   liberar_lista(lista);
   destroyGestor(gestor);
