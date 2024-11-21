@@ -46,3 +46,4 @@ void destroyGestor(Gestores *gestor) {
   freeGestorUsers(gestor->gestorUsers);
   free(gestor);
 }
+

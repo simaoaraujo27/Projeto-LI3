@@ -1,5 +1,4 @@
 #include "gestor_artists.h"
-#include "parsers.h"
 #include "utils.h"
 #include "validation.h"
 #include <assert.h>
@@ -42,6 +41,39 @@ void freeGestorArtists(gestorArtists *gestor) {
       fclose(gestor->errorsFile); // Fecha o ficheiro de erros, se aberto
     free(gestor);                 // Liberta a memória da estrutura
   }
+}
+
+void parserArtist(GHashTable *ArtistsTable, Artists *artist, FILE *errorsFile,
+                  char *line) {
+  // Extrai informações do artista para validação
+  char *idConstituentLine = pegarArtistIdConstituent(artist);
+  char *idConstituentCSV = pegarArtistIdConstituent(artist);
+  char *type = pegarArtistType(artist);
+
+  // Valida a linha e a lista de constituintes
+  if (validateArtistLine(idConstituentLine, type) &&
+      validateCSVList(idConstituentCSV)) {
+
+    // Obtém o ID do artista e remove aspas
+    char *id = getArtistId(artist);
+    remove_quotes(id);
+
+    // Verifica se o artista já está presente na hashtable
+    Artists *existing_artist = g_hash_table_lookup(ArtistsTable, id);
+    if (existing_artist != NULL) {
+      destroyArtist(existing_artist); // Liberta o artista duplicado
+    }
+
+    // Insere o novo artista na tabela hash
+    g_hash_table_insert(ArtistsTable, id, artist);
+  } else {
+    // Regista a linha no ficheiro de erros se não for válida
+    fprintf(errorsFile, "%s", line);
+    destroyArtist(artist); // Liberta a memória do artista inválido
+  }
+  free(idConstituentLine);
+  free(idConstituentCSV);
+  free(type);
 }
 
 // Função para processar o ficheiro de artistas utilizando a estrutura

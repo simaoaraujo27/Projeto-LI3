@@ -1,3 +1,4 @@
+#include "gestorParsers.h"
 #include "gestor_artists.h"
 #include "gestor_musics.h"
 #include "gestor_queries.h"
@@ -49,9 +50,6 @@ int main(int argc, char **argv) {
   snprintf(musicsPath, MAX_PATH_SIZE, "%s/%s", path, "musics.csv");
   snprintf(usersPath, MAX_PATH_SIZE, "%s/%s", path, "users.csv");
 
-  /* criar um ficheiro chamado inicializador onde inicializamos a GHashtable; os
-   * gestor fazemos uma funçao no ficheiro gestor_do que for preciso */
-
   // Inicializa a hashtable para os artistas
   GHashTable *artistsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyArtist);
@@ -64,11 +62,6 @@ int main(int argc, char **argv) {
   if (!gestorArtists) {
     fprintf(stderr, "Failed to initialize gestorArtists\n");
     return EXIT_FAILURE;
-  }
-
-  if (!GestorArtists(fp, gestorArtists, artistsPath)) {
-    return EXIT_FAILURE;
-    freeGestorArtists(gestorArtists);
   }
 
   // Inicializa a hashtable para musicas
@@ -85,11 +78,6 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  if (!GestorMusics(fp, gestorMusics, gestorArtists, musicsPath)) {
-    freeGestorMusics(gestorMusics);
-    return EXIT_FAILURE;
-  } // Faz o parsing das musicas
-
   // Inicializa a hashtable para users
   GHashTable *usersTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyUser);
@@ -104,12 +92,15 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  if (!GestorUsers(fp, gestorUsers, gestorMusics, usersPath)) {
+  Gestores *gestor = initgestor(gestorArtists, gestorMusics, gestorUsers);
+
+  if (!GestorParsers(fp, gestorArtists, gestorMusics, gestorUsers, artistsPath,
+                     musicsPath, usersPath)) {
+    freeGestorArtists(gestorArtists);
+    freeGestorMusics(gestorMusics);
     freeGestorUsers(gestorUsers);
     return EXIT_FAILURE;
   }
-
-  Gestores *gestor = initgestor(gestorArtists, gestorMusics, gestorUsers);
 
   // Abre o arquivo de texto passado como argumento para executar as queries
   char *txt = argv[2];

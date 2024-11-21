@@ -1,6 +1,5 @@
 #include "gestor_musics.h"
-#include "gestor_artists.h"
-#include "parsers.h"
+#include "gestor_artists.h" 
 #include "validation.h"
 
 #include <assert.h>
@@ -45,6 +44,22 @@ void freeGestorMusics(gestorMusics *gestor) {
       fclose(
           gestor->errorsFile); // Fecha o ficheiro de erros, se estiver aberto
     free(gestor);              // Liberta a memória da estrutura
+  }
+}
+
+void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
+                 Musics *music, GHashTable *musicsTable, FILE *errorsFile) {
+  char *id; // ID da música
+  if (validateMusicsLine(copia, gestorArtist)) {
+    // Se a linha for válida, separa os campos e cria um objeto Musics
+    music = separateMusics(line);
+
+    // Obtém o ID da música e insere na hashtable usando o ID como chave
+    id = getMusicId(music);
+    g_hash_table_insert(musicsTable, id, music);
+  } else {
+    // Escreve a linha inválida no ficheiro de erros
+    fprintf(errorsFile, "%s", line);
   }
 }
 

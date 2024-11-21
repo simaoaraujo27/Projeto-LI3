@@ -1,5 +1,4 @@
 #include "gestor_users.h"
-#include "parsers.h"
 #include "validation.h"
 
 #include <assert.h>
@@ -43,15 +42,35 @@ void freeGestorUsers(gestorUsers *gestorUser) {
   }
 }
 
+void parserUser(char *line, gestorMusics *gestorMusic, FILE *errorsFile,
+                GHashTable *usersTable) {
+  char *copia = strdup(line); // Faz uma cópia segura da linha
+  Users *user;
+  char *username;
+  // Valida a linha com base nas regras definidas
+  if (validateUsersLine(copia, gestorMusic)) {
+    user =
+        separateUsers(line); // Se a linha for válida, separa os dados do user
+
+    username = getUserUsername(user); // Obtém o nome do user
+
+    // Insere o user na hashtable usando o username como chave
+    g_hash_table_insert(usersTable, username, user);
+  } else {
+    // Se a linha for inválida, escreve no arquivo de erros
+    fprintf(errorsFile, "%s", line);
+  }
+  free(copia); // Liberta a memória da cópia da linha
+}
+
 // Função para processar o arquivo de users e inserir os dados na hashtable
 int GestorUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic,
-               char *usersPath) {
+                char *usersPath) {
   // Abre o arquivo de users e carrega os dados
   fp = fopen(usersPath, "r");
   if (fp) {
     char *line = NULL;
     size_t len = 0;
- 
 
     // Ignora a primeira linha do arquivo (cabeçalho)
     assert(getline(&line, &len, fp) != -1);
