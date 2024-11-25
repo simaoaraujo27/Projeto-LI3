@@ -82,9 +82,10 @@ void parserArtist(GHashTable *ArtistsTable, Artists *artist, FILE *errorsFile,
 
 // Função para processar o ficheiro de artistas utilizando a estrutura
 // gestorArtists
-int GestorArtists(FILE *fp, gestorArtists *gestor, char *artistsPath) {
+int GestorArtists( gestorArtists *gestor, char *artistsPath) {
   // Abre o arquivo de artistas e carrega os dados
-  fp = fopen(artistsPath, "r");
+  FILE *fp = fopen(artistsPath, "r");
+  
   if (fp) {
 
     char *line = NULL; // Pointer para armazenar cada linha lida

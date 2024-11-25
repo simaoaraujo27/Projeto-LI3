@@ -5,10 +5,11 @@
 #include "utils.h"
 #include <stdio.h>
 
-// Definição da estrutura de dados que armazena o genero e a quantidade de likes desse género para cada idade
+// Definição da estrutura de dados que armazena o genero e a quantidade de likes
+// desse género para cada idade
 struct nodoMusica {
-  char *genero;  // género da música
-  GArray *likes; // GArray que armazena a contagem de likes por idade
+  char *genero;            // género da música
+  GArray *likes;           // GArray que armazena a contagem de likes por idade
   struct nodoMusica *prox; // Pointer para o próximo nodo da lista
 };
 
@@ -121,9 +122,10 @@ gint comparar_likes(gconstpointer a, gconstpointer b) {
   return (g1->count < g2->count) - (g1->count > g2->count);
 }
 
-NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, guint idade_max,
+NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista,
                                     Gestores *gestor) {
-
+  int IDADE_INICIAL = 120;
+  guint idade_max = IDADE_INICIAL; // Inicializa a idade máxima
   // Itera sobre a tabela de users para processar as músicas que eles gostam
   GHashTableIter iter;
   gpointer hash_key, hash_value;
@@ -177,8 +179,7 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i) {
 
   // Criar o arquivo para escrever
   FILE *newFile;
-  char *path =
-      "./resultados/commandx_output.txt"; // Path base para o arquivo
+  char *path = "./resultados/commandx_output.txt"; // Path base para o arquivo
   char *new =
       malloc(sizeof(char) *
              (strlen(path) + 10)); // Aloca memória para o nome do arquivo
@@ -219,7 +220,7 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i) {
       tudoAZero = 0; // Se houver pelo menos um like, a flag é alterada
     }
     free(genero_likes->genero); // Liberta a memória alocada para o género
-    free(genero_likes); // Liberta a memória alocada para o GeneroLikes
+    free(genero_likes);         // Liberta a memória alocada para o GeneroLikes
   }
 
   // Se todos os likes forem zero, escreve uma linha em branco

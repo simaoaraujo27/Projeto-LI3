@@ -6,8 +6,7 @@
 #include "gestor_users.h"
 #include "query3.h"
 
-void gestorQueries(char *line, Gestores *gestor, int firstOcorr, int maxAge,
-                   int minAge, NodoMusica *lista, int i,
+void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
                    double *total_time_query1, double *total_time_query2,
                    double *total_time_query3);
 

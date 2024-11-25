@@ -67,10 +67,10 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
 }
 
 // Função para processar o ficheiro de músicas usando a estrutura gestorMusics
-int GestorMusics(FILE *fp, gestorMusics *gestorMusic,
+int GestorMusics( gestorMusics *gestorMusic,
                  gestorArtists *gestorArtist, char *musicsPath) {
   // Abre o arquivo de musicas e carrega os dados
-  fp = fopen(musicsPath, "r");
+  FILE *fp = fopen(musicsPath, "r");
   if (fp) {
     char *line = NULL; // Pointer para armazenar cada linha lida
     size_t len = 0;    // Tamanho da linha

@@ -12,8 +12,7 @@
 
 typedef struct gestores Gestores;
 
-Gestores *initgestor(gestorArtists *gestorArtists, gestorMusics *gestorMusics,
-                     gestorUsers *gestorUsers);
+Gestores *initgestor(int *flag);
 
 gestorArtists *pegarGestorArtist(Gestores *gestor);
 

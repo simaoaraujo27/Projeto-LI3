@@ -14,8 +14,11 @@ struct gestorUsers {
 };
 
 // Função para inicializar a estrutura gestorUsers
-gestorUsers *initGestorUsers(const char *errorsFilePath,
-                             GHashTable *usersTable) {
+gestorUsers *initGestorUsers(const char *errorsFilePath) {
+
+  // Inicializa a hashtable para users
+  GHashTable *usersTable = g_hash_table_new_full(
+      g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyUser);
   gestorUsers *gestorUser = malloc(sizeof(struct gestorUsers));
   if (!gestorUser)
     return NULL;
@@ -64,10 +67,10 @@ void parserUser(char *line, gestorMusics *gestorMusic, FILE *errorsFile,
 }
 
 // Função para processar o arquivo de users e inserir os dados na hashtable
-int GestorUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic,
+int GestorUsers( gestorUsers *gestorUser, gestorMusics *gestorMusic,
                 char *usersPath) {
   // Abre o arquivo de users e carrega os dados
-  fp = fopen(usersPath, "r");
+  FILE *fp = fopen(usersPath, "r");
   if (fp) {
     char *line = NULL;
     size_t len = 0;

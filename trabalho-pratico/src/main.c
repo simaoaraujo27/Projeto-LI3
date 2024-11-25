@@ -23,74 +23,30 @@ int main(int argc, char **argv) {
   FILE *fp = NULL;
 
   // Variáveis para calcular o tempo total de duração de cada query
-  double total_time_query1 = 0;
-  double total_time_query2 = 0;
-  double total_time_query3 = 0;
+  double total_time_query1 = 0, total_time_query2 = 0, total_time_query3 = 0;
 
   clock_t start, end;
 
   // Verifica se foram passados argumentos suficientes (path + nome do
   // arquivo de texto)
   if (argc < 3) {
-    fp = stdin;
     fprintf(stderr, "Error: Missing filename\n");
     return EXIT_FAILURE;
   }
 
   // Armazena o path base passado como argumento
   char *path = argv[1];
+  int flag = 0;
 
-  // Aloca memória para os paths completos dos arquivos
-  char *artistsPath = malloc(MAX_PATH_SIZE * sizeof(char));
-  char *musicsPath = malloc(MAX_PATH_SIZE * sizeof(char));
-  char *usersPath = malloc(MAX_PATH_SIZE * sizeof(char));
+  Gestores *gestor = initgestor(&flag);
 
-  // Constroi os paths completos para os arquivos CSV
-  snprintf(artistsPath, MAX_PATH_SIZE, "%s/%s", path, "artists.csv");
-  snprintf(musicsPath, MAX_PATH_SIZE, "%s/%s", path, "musics.csv");
-  snprintf(usersPath, MAX_PATH_SIZE, "%s/%s", path, "users.csv");
-
-  // Inicializa o gestor de artistas com o arquivo de erros
-  gestorArtists *gestorArtists =
-      initGestorArtists("./resultados/artists_errors.csv");
-
-  // Verifica se o gestor de artistas foi inicializado corretamente
-  if (!gestorArtists) {
-    fprintf(stderr, "Failed to initialize gestorArtists\n");
+  if (flag == 1) {
+    fprintf(stderr, "Failed to initialize Gestor\n");
     return EXIT_FAILURE;
   }
-
-  // Inicializa o gestor de músicas
-  gestorMusics *gestorMusics =
-      initGestorMusics("./resultados/musics_errors.csv");
-
-  // Verifica se o gestor de musicas foi inicializado corretamente
-  if (!gestorMusics) {
-    fprintf(stderr, "Failed to initialize gestorMusics\n");
-    return EXIT_FAILURE;
-  }
-
-  // Inicializa a hashtable para users
-  GHashTable *usersTable = g_hash_table_new_full(
-      g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyUser);
-
-  // Inicializa o gestor de users
-  gestorUsers *gestorUsers =
-      initGestorUsers("./resultados/users_errors.csv", usersTable);
-
-  // Verifica se o gestor de users foi inicializado corretamente
-  if (!gestorUsers) {
-    fprintf(stderr, "Failed to initialize gestorUsers\n");
-    return EXIT_FAILURE;
-  }
-
-  Gestores *gestor = initgestor(gestorArtists, gestorMusics, gestorUsers);
-
-  if (!GestorParsers(fp, gestorArtists, gestorMusics, gestorUsers, artistsPath,
-                     musicsPath, usersPath)) {
-    freeGestorArtists(gestorArtists);
-    freeGestorMusics(gestorMusics);
-    freeGestorUsers(gestorUsers);
+  
+  if (!GestorParsers(gestor, path)) {
+    destroyGestor(gestor);
     return EXIT_FAILURE;
   }
 
@@ -105,29 +61,25 @@ int main(int argc, char **argv) {
   char *line = NULL;
   size_t len = 0;
   int i = 1; // Contador para o número da query
-  int firstOcorr = 0, minAge = 0, maxAge = 0;
-  int IDADE_INICIAL = 120;
   NodoMusica *lista =
       NULL; // Lista de músicas baseadas nas preferências dos users
-  guint idade_max = IDADE_INICIAL; // Inicializa a idade máxima
 
   start = clock();
-  lista = CriaListaRespostaQuery3(lista, idade_max, gestor);
+  lista = CriaListaRespostaQuery3(lista, gestor);
   end = clock();
 
   total_time_query3 += (double)(end - start) / CLOCKS_PER_SEC;
 
   // Processa as queries lidas do arquivo
   while (getline(&line, &len, fp) != -1) {
-    gestorQueries(line, gestor, firstOcorr, maxAge, minAge, lista, i,
-                  &total_time_query1, &total_time_query2, &total_time_query3);
+    gestorQueries(line, gestor, lista, i, &total_time_query1,
+                  &total_time_query2, &total_time_query3);
     i++;
   }
   fclose(fp);
   free(line);
 
   // Liberta toda a memória alocada e destrói as hashtables
-  g_hash_table_destroy(usersTable);
   liberar_lista(lista);
   destroyGestor(gestor);
 

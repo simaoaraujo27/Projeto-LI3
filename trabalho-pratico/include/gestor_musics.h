@@ -7,7 +7,7 @@
 
 typedef struct gestorMusics gestorMusics;
 
-int GestorMusics(FILE *fp, gestorMusics *gestorMusic,
+int GestorMusics( gestorMusics *gestorMusic,
                   gestorArtists *gestorArtist, char *musicsPath);
 
 gestorMusics *initGestorMusics(const char *errorsFilePath);

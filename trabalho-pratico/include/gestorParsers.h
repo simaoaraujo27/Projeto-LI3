@@ -4,10 +4,9 @@
 #include "gestor_artists.h"
 #include "gestor_musics.h"
 #include "gestor_users.h"
+#include "gestores.h"
 #include <stdio.h>
 
-int GestorParsers(FILE *fp, gestorArtists *gestorArtists,
-                  gestorMusics *gestorMusics, gestorUsers *gestorUsers,
-                  char *artistsPath, char *musicsPath, char *usersPath);
+int GestorParsers(Gestores *gestor, char *path);
 
 #endif

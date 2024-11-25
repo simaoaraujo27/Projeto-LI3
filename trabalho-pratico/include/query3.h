@@ -23,7 +23,7 @@ gint comparar_likes(gconstpointer a, gconstpointer b);
 
 void query3(int minAge, int maxAge, NodoMusica *lista, int i);
 
-NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, guint idade_max,
+NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, 
                                     Gestores *gestor);
 
 #endif

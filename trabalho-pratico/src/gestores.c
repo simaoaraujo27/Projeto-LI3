@@ -16,12 +16,40 @@ struct gestores {
   gestorUsers *gestorUsers;
 };
 
-Gestores *initgestor(gestorArtists *gestorArtists, gestorMusics *gestorMusics,
-                     gestorUsers *gestorUsers) {
+Gestores *initgestor(int *flag) {
+
   // Aloca memória para a estrutura
   Gestores *gestor = malloc(sizeof(Gestores));
   if (!gestor)
     return NULL;
+
+  // Inicializa o gestor de artistas com o arquivo de erros
+  gestorArtists *gestorArtists =
+      initGestorArtists("./resultados/artists_errors.csv");
+
+  // Verifica se o gestor de artistas foi inicializado corretamente
+  if (!gestorArtists) {
+    *flag = 1;
+    return NULL;
+  }
+
+  // Inicializa o gestor de músicas
+  gestorMusics *gestorMusics =
+      initGestorMusics("./resultados/musics_errors.csv");
+
+  // Verifica se o gestor de musicas foi inicializado corretamente
+  if (!gestorMusics) {
+    *flag = 1;
+    return NULL;
+  }
+  // Inicializa o gestor de users
+  gestorUsers *gestorUsers = initGestorUsers("./resultados/users_errors.csv");
+
+  // Verifica se o gestor de users foi inicializado corretamente
+  if (!gestorUsers) {
+    *flag = 1;
+    return NULL;
+  }
 
   // Atribui os Gestores fornecidos
   gestor->gestorMusics = gestorMusics;
@@ -46,4 +74,3 @@ void destroyGestor(Gestores *gestor) {
   freeGestorUsers(gestor->gestorUsers);
   free(gestor);
 }
-

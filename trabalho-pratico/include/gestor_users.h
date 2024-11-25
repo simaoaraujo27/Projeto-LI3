@@ -7,11 +7,10 @@
 
 typedef struct gestorUsers gestorUsers;
 
-int GestorUsers(FILE *fp, gestorUsers *gestorUser, gestorMusics *gestorMusic,
-               char *usersPath);
+int GestorUsers( gestorUsers *gestorUser, gestorMusics *gestorMusic,
+                char *usersPath);
 
-gestorUsers *initGestorUsers(const char *errorsFilePath,
-                             GHashTable *usersTable);
+gestorUsers *initGestorUsers(const char *errorsFilePath);
 
 void freeGestorUsers(gestorUsers *gestorUser);
 
