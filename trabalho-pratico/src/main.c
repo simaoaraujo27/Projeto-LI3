@@ -42,9 +42,10 @@ int main(int argc, char **argv) {
 
   if (flag == 1) {
     fprintf(stderr, "Failed to initialize Gestor\n");
+    destroyGestor(gestor);
     return EXIT_FAILURE;
   }
-  
+
   if (!GestorParsers(gestor, path)) {
     destroyGestor(gestor);
     return EXIT_FAILURE;

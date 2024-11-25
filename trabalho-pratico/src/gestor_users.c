@@ -41,7 +41,8 @@ void freeGestorUsers(gestorUsers *gestorUser) {
   if (gestorUser) {
     if (gestorUser->errorsFile)
       fclose(gestorUser->errorsFile); // Fecha o arquivo de erros
-    free(gestorUser);                 // Liberta a memória da estrutura
+    g_hash_table_destroy(gestorUser->usersTable);
+    free(gestorUser); // Liberta a memória da estrutura
   }
 }
 
@@ -67,7 +68,7 @@ void parserUser(char *line, gestorMusics *gestorMusic, FILE *errorsFile,
 }
 
 // Função para processar o arquivo de users e inserir os dados na hashtable
-int GestorUsers( gestorUsers *gestorUser, gestorMusics *gestorMusic,
+int GestorUsers(gestorUsers *gestorUser, gestorMusics *gestorMusic,
                 char *usersPath) {
   // Abre o arquivo de users e carrega os dados
   FILE *fp = fopen(usersPath, "r");
