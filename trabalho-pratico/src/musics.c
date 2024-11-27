@@ -1,7 +1,6 @@
 #include "musics.h"
 #include "utils.h"
 #include "validation.h"
-
 #include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -20,19 +19,15 @@ struct musics {
 
 // Função para definir o id de uma música
 void setMusicId(Musics *m, char *id) {
-  remove_quotes(id); 
-  m->id = id;        
+  remove_quotes(id);
+  m->id = id;
 }
 
 // Função para definir o título de uma música
-void setMusicTitle(Musics *m, char *title) {
-  m->title = title; 
-}
+void setMusicTitle(Musics *m, char *title) { m->title = title; }
 
 // Função para definir o(s) id(s) do(s) artista(s) de uma música
-void setMusicArtistId(Musics *m, char *artist_id) {
-  m->artist_id = artist_id;
-}
+void setMusicArtistId(Musics *m, char *artist_id) { m->artist_id = artist_id; }
 
 // Função para definir a duração de uma música em segundos
 void setMusicDurationSeconds(Musics *m, int durationSeconds) {
@@ -40,14 +35,10 @@ void setMusicDurationSeconds(Musics *m, int durationSeconds) {
 }
 
 // Função para definir o género de uma música
-void setMusicGenre(Musics *m, char *genre) {
-  m->genre = genre; 
-}
+void setMusicGenre(Musics *m, char *genre) { m->genre = genre; }
 
 // Função para definir o ano de lançamento de uma música
-void setMusicYear(Musics *m, int year) {
-  m->year = year;
-}
+void setMusicYear(Musics *m, int year) { m->year = year; }
 
 // Função para separar os campos de uma linha e criar uma estrutura Musics
 Musics *separateMusics(char *line) {

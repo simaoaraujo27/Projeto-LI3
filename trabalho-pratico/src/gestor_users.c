@@ -99,3 +99,11 @@ int GestorUsers(gestorUsers *gestorUser, gestorMusics *gestorMusic,
 GHashTable *getUsersTable(gestorUsers *gestorUser) {
   return gestorUser->usersTable;
 }
+
+gboolean lookUpUsersHashTable(gestorUsers *gestorUser, char *line,
+                              gpointer *value, gpointer *orig_key) {
+  // Procura o user na hashtable usando a chave fornecida (line)
+  gboolean found = g_hash_table_lookup_extended(gestorUser->usersTable, line,
+                                                value, orig_key);
+  return found;
+}

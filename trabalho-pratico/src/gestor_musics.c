@@ -1,7 +1,6 @@
 #include "gestor_musics.h"
-#include "gestor_artists.h" 
+#include "gestor_artists.h"
 #include "validation.h"
-
 #include <assert.h>
 #include <ctype.h>
 #include <stdbool.h>
@@ -18,9 +17,11 @@ struct gestorMusics {
 // Função para inicializar a estrutura gestorMusics
 // Abre o ficheiro de erros e atribui a hashtable fornecida
 gestorMusics *initGestorMusics(const char *errorsFilePath) {
+
   // Inicializa a hashtable para musicas
   GHashTable *musicsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyMusic);
+
   // Aloca memória para a estrutura
   gestorMusics *gestorMusic = malloc(sizeof(gestorMusics));
   if (!gestorMusic)
@@ -46,7 +47,7 @@ void freeGestorMusics(gestorMusics *gestor) {
       fclose(
           gestor->errorsFile); // Fecha o ficheiro de erros, se estiver aberto
     g_hash_table_destroy(gestor->musicsTable);
-    free(gestor);              // Liberta a memória da estrutura
+    free(gestor); // Liberta a memória da estrutura
   }
 }
 
@@ -67,8 +68,8 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
 }
 
 // Função para processar o ficheiro de músicas usando a estrutura gestorMusics
-int GestorMusics( gestorMusics *gestorMusic,
-                 gestorArtists *gestorArtist, char *musicsPath) {
+int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
+                 char *musicsPath) {
   // Abre o arquivo de musicas e carrega os dados
   FILE *fp = fopen(musicsPath, "r");
   if (fp) {
@@ -103,4 +104,19 @@ int GestorMusics( gestorMusics *gestorMusic,
 // Função para obter a hashtable de músicas da estrutura gestorMusics
 GHashTable *getMusicsTable(gestorMusics *gestorMusic) {
   return gestorMusic->musicsTable;
+}
+
+GHashTableIter iterInitMusicsHashTable(gestorMusics *gestorMusics) {
+  // Iterador para percorrer a hashtable das músicas
+  GHashTableIter iter;
+  g_hash_table_iter_init(
+      &iter, getMusicsTable(
+                 gestorMusics)); // Inicializa o iterador da tabela de músicas
+  return iter;
+}
+
+gboolean iter_HashTableMusics(gpointer *key1,
+                              gpointer *value1, GHashTableIter iter) {
+
+  return g_hash_table_iter_next(&iter, key1, value1);
 }

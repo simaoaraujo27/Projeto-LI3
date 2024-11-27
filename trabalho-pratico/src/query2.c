@@ -3,6 +3,7 @@
 #include "gestor_musics.h"
 #include "gestor_prints.h"
 #include "gestores.h"
+#include "inputResult.h"
 #include "musics.h"
 #include "utils.h"
 #include <ctype.h>
@@ -14,22 +15,11 @@
 
 // Função que executa a query 2
 void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
-  // Criação do arquivo para guardar os resultados
-  FILE *newFile;
-  char *path = "./resultados/commandx_output.txt"; // Path base para o
-                                                   // arquivo de resultados
-  char *new =
-      malloc(sizeof(char) *
-             (strlen(path) + 10)); // Aloca memória para o caminho completo
-  snprintf(new, strlen(path) + 10, "./resultados/command%d_output.txt",
-           i);               // Formata o nome do arquivo
-  newFile = fopen(new, "w"); // Abre o arquivo para escrita
+  FILE *newFile = createFile(i);
 
   // Iterador para percorrer a hashtable das músicas
   GHashTableIter iter;
-  g_hash_table_iter_init(
-      &iter, getMusicsTable(pegarGestorMusic(
-                 gestor))); // Inicializa o iterador da tabela de músicas
+  iter = iterInitMusicsHashTable(pegarGestorMusic(gestor));
   gpointer key1, value1;
   GList *listaResposta = NULL; // Lista para armazenar a resposta
   char *artistId = NULL;
@@ -38,11 +28,10 @@ void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
 
   // Percorre todas as músicas na hashtable das músicas
   while (g_hash_table_iter_next(&iter, &key1, &value1)) {
-    Musics *music = (Musics *)value1; // Obtém a música atual
-    char *orig =
-        getMusicArtistId(music); // Obtém o identificador do artista da música
-    artistId = orig;             // Armazena o ID do artista
-    remove_quotes(artistId);     // Remove aspas do ID do artista
+    Musics *music = (Musics *)value1;   // Obtém a música atual
+    artistId = getMusicArtistId(music); // Obtém o identificador do artista da
+                                        // música Armazena o ID do artista
+    remove_quotes(artistId);            // Remove aspas do ID do artista
     removeFstLast(artistId); // Remove o primeiro e o último caractere do ID
 
     // Obtém a duração da música
@@ -74,8 +63,6 @@ void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
       }
       free(key); // Liberta a key
     }
-
-    free(orig);
   }
 
   // Imprime a resposta da consulta no arquivo
@@ -86,7 +73,4 @@ void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
 
   // Liberta a memória alocada para a lista de respostas
   g_list_free(listaResposta);
-
-  // Liberta a memória alocada para o path do arquivo
-  free(new);
 }

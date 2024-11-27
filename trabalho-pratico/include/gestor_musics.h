@@ -7,13 +7,18 @@
 
 typedef struct gestorMusics gestorMusics;
 
-int GestorMusics( gestorMusics *gestorMusic,
-                  gestorArtists *gestorArtist, char *musicsPath);
+int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
+                 char *musicsPath);
 
 gestorMusics *initGestorMusics(const char *errorsFilePath);
 
 void freeGestorMusics(gestorMusics *gestor);
 
 GHashTable *getMusicsTable(gestorMusics *gestorMusic);
+
+GHashTableIter iterInitMusicsHashTable(gestorMusics *gestorMusics);
+
+gboolean iter_HashTableMusics(gpointer *key1,
+                              gpointer *value1, GHashTableIter iter);
 
 #endif

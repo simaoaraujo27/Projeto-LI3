@@ -40,13 +40,8 @@ int main(int argc, char **argv) {
 
   Gestores *gestor = initgestor(&flag);
 
-  if (flag == 1) {
+  if (flag == 1 || !GestorParsers(gestor, path)) {
     fprintf(stderr, "Failed to initialize Gestor\n");
-    destroyGestor(gestor);
-    return EXIT_FAILURE;
-  }
-
-  if (!GestorParsers(gestor, path)) {
     destroyGestor(gestor);
     return EXIT_FAILURE;
   }
