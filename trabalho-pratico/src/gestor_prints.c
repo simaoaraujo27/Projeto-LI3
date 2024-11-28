@@ -53,12 +53,7 @@ void printQuery2(GList **listaResposta, FILE *newFile) {
              country);
 
     // Escreve no ficheiro
-    if (node->next == NULL)
-      fprintf(newFile, "%s",
-              new_str); // Último elemento não precisa de nova linha extra
-    else
-      fprintf(newFile, "%s",
-              new_str); // Adiciona nova linha para os elementos intermediários
+    fprintf(newFile, "%s", new_str);
 
     // Avança para o próximo nó da lista
     node = node->next;

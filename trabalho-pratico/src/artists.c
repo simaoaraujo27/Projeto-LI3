@@ -138,19 +138,7 @@ void procuraArt(Artists *artist, GList **listaResposta) {
   }
 }
 
-// Inicializa a discografia de todos os artistas a zero
-void colocaZero(GHashTable *artistsTable) {
-  GList *listaArtistas = g_hash_table_get_values(artistsTable);
-  GList *node = listaArtistas;
-  Artists *currentArtist;
-
-  while (node != NULL) {
-    currentArtist = (Artists *)node->data;
-    currentArtist->discografia = 0;
-    node = node->next;
-  }
-  g_list_free(listaArtistas);
-}
+void putArtistsDiscografyZero(Artists *artist) { artist->discografia = 0; }
 
 // Incrementa a discografia de um artista se ele corresponder ao país
 // especificado

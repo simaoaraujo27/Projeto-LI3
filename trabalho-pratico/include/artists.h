@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-
 enum tipoArtista;
 
 typedef struct artists Artists;
@@ -36,7 +35,7 @@ void increment_artist_discografia(gpointer value, int duracao,
                                   char *country);
 void procuraArt(Artists *artist, GList **listaResposta);
 
-void colocaZero(GHashTable *artistsTable);
+void putArtistsDiscografyZero(Artists *artist);
 
 void destroyArtist(Artists *a);
 

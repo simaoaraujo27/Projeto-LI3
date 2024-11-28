@@ -54,12 +54,11 @@ void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
       key = strdup(
           strsep(&artistId, "'")); // Extrai o ID do artista entre as aspas
 
+      gboolean found = lookUpArtistsHashTable(pegarGestorArtist(gestor), key,
+                                              &value, &orig_key);
+
       // Procura o artista na hashtable dos artistas
-      if (g_hash_table_lookup_extended(
-             getArtistTable(pegarGestorArtist(gestor)), key, &orig_key,
-             &value) 
-          /* lookUpArtistsHashTable(pegarGestorArtist(gestor), key, &value,
-                                 &orig_key) */) {
+      if (found) {
         // Se o artista for encontrado, incrementa a sua discografia
         increment_artist_discografia(value, duracao, &listaResposta,
                                      numeroArtistas, country);
@@ -73,7 +72,7 @@ void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
   printQuery2(&listaResposta, newFile);
 
   // coloca a tabela de artistas a zero
-  colocaZero(getArtistTable(pegarGestorArtist(gestor)));
+  colocaZero(pegarGestorArtist(gestor));
 
   // Liberta a memória alocada para a lista de respostas
   g_list_free(listaResposta);

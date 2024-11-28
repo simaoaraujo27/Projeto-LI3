@@ -1,4 +1,5 @@
 #include "gestor_artists.h"
+#include "artists.h"
 #include "utils.h"
 #include "validation.h"
 #include <assert.h>
@@ -132,10 +133,26 @@ GHashTable *getArtistTable(gestorArtists *gestorArtist) {
   return gestorArtist->artistsTable;
 }
 
-gboolean lookUpArtistsHashTable(gestorArtists *gestorArtist, char *line,
+gboolean lookUpArtistsHashTable(gestorArtists *gestorArtist, char *key,
                                 gpointer *value, gpointer *orig_key) {
-  // Procura o artist na hashtable usando a chave fornecida (line)
-  gboolean found = g_hash_table_lookup_extended(gestorArtist->artistsTable,
-                                                line, value, orig_key);
+  // Procura o artist na hashtable usando a chave fornecida (key)
+  gboolean found = g_hash_table_lookup_extended(gestorArtist->artistsTable, key,
+                                                orig_key, value);
   return found;
+}
+
+// Inicializa a discografia de todos os artistas a zero
+void colocaZero(gestorArtists *GestorArtists) {
+  GHashTableIter iter;
+  g_hash_table_iter_init(
+      &iter, GestorArtists
+                 ->artistsTable); // Inicializa o iterador da tabela de músicas
+
+  gpointer key1;
+  gpointer value1;
+
+  while (g_hash_table_iter_next(&iter, &key1, &value1)) {
+    Artists *artist = (Artists *)value1;
+    putArtistsDiscografyZero(artist);
+  }
 }

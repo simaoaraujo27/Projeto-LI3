@@ -16,4 +16,6 @@ int GestorArtists(gestorArtists *gestor, char *artistsPath);
 gboolean lookUpArtistsHashTable(gestorArtists *gestorArtist, char *line,
                                 gpointer *value, gpointer *orig_key);
 
+void colocaZero(gestorArtists *GestorArtists);
+
 #endif // _GESTORARTISTS_H_
