@@ -142,6 +142,9 @@ void processAllMusics(gestorMusics *gestorMusics, int numeroArtistas,
   // Percorre todas as músicas na hashtable
   while (g_hash_table_iter_next(&iter, &key1, &value1)) {
     Musics *music = (Musics *)value1; // Obtém a música atual
-    processMusic(music, gestorArtists, numeroArtistas, country, listaResposta);
+    char *artistsId = pegarMusicArtistId(music);
+    processMusic(music, gestorArtists, numeroArtistas, country, listaResposta,
+                 artistsId);
+    free(artistsId);
   }
 }

@@ -6,6 +6,7 @@
 void query2(int numeroArtistas, char *country, Gestores *gestor, int i);
 
 void processMusic(Musics *music, gestorArtists *gestorArtists,
-                  int numeroArtistas, char *country, GList **listaResposta);
+                  int numeroArtistas, char *country, GList **listaResposta,
+                  char *artistsId);
 
 #endif

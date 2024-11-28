@@ -15,11 +15,9 @@
 
 // Função que processa uma música
 void processMusic(Musics *music, gestorArtists *gestorArtists,
-                  int numeroArtistas, char *country, GList **listaResposta) {
-  char *orig =
-      getMusicArtistId(music);   // Obtém o identificador do artista da música
-  char *artistId = strdup(orig); // Faz uma cópia do ID do artista
-  remove_quotes(artistId);       // Remove aspas do ID do artista
+                  int numeroArtistas, char *country, GList **listaResposta,
+                  char *artistId) {
+  remove_quotes(artistId); // Remove aspas do ID do artista
   removeFstLast(artistId); // Remove o primeiro e o último caractere do ID
 
   int duracao = getMusicDuration(music); // Obtém a duração da música
@@ -50,9 +48,6 @@ void processMusic(Musics *music, gestorArtists *gestorArtists,
 
     free(key); // Liberta a key
   }
-
-  free(orig); // Liberta a string original
-  //free(artistId);
 }
 
 // Função principal que executa a query 2
