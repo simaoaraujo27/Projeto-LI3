@@ -12,8 +12,48 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+// Função que processa uma música
+void processMusic(Musics *music, Gestores *gestor, int numeroArtistas,
+                  char *country, GList **listaResposta) {
+  char *orig =
+      getMusicArtistId(music);   // Obtém o identificador do artista da música
+  char *artistId = strdup(orig); // Faz uma cópia do ID do artista
+  remove_quotes(artistId);       // Remove aspas do ID do artista
+  removeFstLast(artistId); // Remove o primeiro e o último caractere do ID
 
-// Função que executa a query 2
+  int duracao = getMusicDuration(music); // Obtém a duração da música
+  gpointer value;
+  gpointer orig_key;
+  int l = strlen(artistId); // Tamanho do ID do artista
+
+  // Percorre os ID's dos artistas
+  for (int j = 0; j < l; j += 12) {
+    char *key;
+    if (j == 0)
+      artistId = artistId + 1; // Ajusta o ponteiro
+    else
+      artistId =
+          artistId + 3; // Ajusta o ponteiro para passar pelo espaço e ';'
+
+    key =
+        strdup(strsep(&artistId, "'")); // Extrai o ID do artista entre as aspas
+
+    // Procura o artista na hashtable dos artistas
+    gboolean found = lookUpArtistsHashTable(pegarGestorArtist(gestor), key,
+                                            &value, &orig_key);
+    if (found) {
+      // Incrementa a discografia do artista
+      increment_artist_discografia(value, duracao, listaResposta,
+                                   numeroArtistas, country);
+    }
+
+    free(key); // Liberta a key
+  }
+
+  free(orig); // Liberta a string original
+}
+
+// Função principal que executa a query 2
 void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
   FILE *newFile = createFile(i);
 
@@ -22,60 +62,19 @@ void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
   iter = iterInitMusicsHashTable(pegarGestorMusic(gestor));
   gpointer key1, value1;
   GList *listaResposta = NULL; // Lista para armazenar a resposta
-  char *artistId = NULL;
-  int l = 0;
-  int duracao = 0;
 
   // Percorre todas as músicas na hashtable das músicas
   while (g_hash_table_iter_next(&iter, &key1, &value1)) {
     Musics *music = (Musics *)value1; // Obtém a música atual
-    char *orig =
-        getMusicArtistId(music); // Obtém o identificador do artista da música
-    artistId = orig;             // Armazena o ID do artista
-    remove_quotes(artistId);     // Remove aspas do ID do artista
-    removeFstLast(artistId); // Remove o primeiro e o último caractere do ID
-
-    // Obtém a duração da música
-    duracao = getMusicDuration(music);
-
-    gpointer value;
-    gpointer orig_key;
-    l = strlen(artistId); // Tamanho do ID do artista
-
-    // Percorre os ID's dos artistas
-    for (int j = 0; j < l; j += 12) {
-      char *key;
-      if (j == 0)
-        artistId = artistId + 1; // Ajusta o pointer
-      else
-        artistId =
-            artistId +
-            3; // Ajusta o ponteiro para também passar à frente o espaço e o ;
-      key = strdup(
-          strsep(&artistId, "'")); // Extrai o ID do artista entre as aspas
-
-      gboolean found = lookUpArtistsHashTable(pegarGestorArtist(gestor), key,
-                                              &value, &orig_key);
-
-      // Procura o artista na hashtable dos artistas
-      if (found) {
-        // Se o artista for encontrado, incrementa a sua discografia
-        increment_artist_discografia(value, duracao, &listaResposta,
-                                     numeroArtistas, country);
-      }
-      free(key); // Liberta a key
-    }
-    free(orig); // Liberta a orig
+    processMusic(music, gestor, numeroArtistas, country, &listaResposta);
   }
 
   // Imprime a resposta da consulta no arquivo
   printQuery2(&listaResposta, newFile);
 
-  // coloca a tabela de artistas a zero
+  // Reseta os valores na tabela de artistas
   colocaZero(pegarGestorArtist(gestor));
 
   // Liberta a memória alocada para a lista de respostas
   g_list_free(listaResposta);
-
-  // free(artistId);
 }
