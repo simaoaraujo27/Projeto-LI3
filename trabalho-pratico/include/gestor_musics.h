@@ -3,6 +3,7 @@
 
 #include "gestor_artists.h"
 #include "musics.h"
+#include <glib.h>
 #include <stdio.h>
 
 typedef struct gestorMusics gestorMusics;
@@ -23,5 +24,9 @@ gboolean iter_HashTableMusics(gpointer *key1, gpointer *value1,
 
 gboolean lookUpMusicsHashTable(gestorMusics *gestormusic, char *line,
                                gpointer *value, gpointer *orig_key);
+
+void processAllMusics(gestorMusics *gestorMusics, int numeroArtistas,
+                      char *country, GList **listaResposta,
+                      gestorArtists *gestorArtists);
 
 #endif

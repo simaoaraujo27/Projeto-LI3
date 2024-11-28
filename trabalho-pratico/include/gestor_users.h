@@ -3,6 +3,7 @@
 
 #include "gestor_musics.h"
 #include "users.h"
+#include <glib.h>
 #include <stdio.h>
 
 typedef struct gestorUsers gestorUsers;

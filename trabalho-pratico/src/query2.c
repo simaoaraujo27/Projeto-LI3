@@ -12,9 +12,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 // Função que processa uma música
-void processMusic(Musics *music, Gestores *gestor, int numeroArtistas,
-                  char *country, GList **listaResposta) {
+void processMusic(Musics *music, gestorArtists *gestorArtists,
+                  int numeroArtistas, char *country, GList **listaResposta) {
   char *orig =
       getMusicArtistId(music);   // Obtém o identificador do artista da música
   char *artistId = strdup(orig); // Faz uma cópia do ID do artista
@@ -39,8 +40,8 @@ void processMusic(Musics *music, Gestores *gestor, int numeroArtistas,
         strdup(strsep(&artistId, "'")); // Extrai o ID do artista entre as aspas
 
     // Procura o artista na hashtable dos artistas
-    gboolean found = lookUpArtistsHashTable(pegarGestorArtist(gestor), key,
-                                            &value, &orig_key);
+    gboolean found =
+        lookUpArtistsHashTable(gestorArtists, key, &value, &orig_key);
     if (found) {
       // Incrementa a discografia do artista
       increment_artist_discografia(value, duracao, listaResposta,
@@ -57,17 +58,11 @@ void processMusic(Musics *music, Gestores *gestor, int numeroArtistas,
 void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
   FILE *newFile = createFile(i);
 
-  // Iterador para percorrer a hashtable das músicas
-  GHashTableIter iter;
-  iter = iterInitMusicsHashTable(pegarGestorMusic(gestor));
-  gpointer key1, value1;
   GList *listaResposta = NULL; // Lista para armazenar a resposta
 
-  // Percorre todas as músicas na hashtable das músicas
-  while (g_hash_table_iter_next(&iter, &key1, &value1)) {
-    Musics *music = (Musics *)value1; // Obtém a música atual
-    processMusic(music, gestor, numeroArtistas, country, &listaResposta);
-  }
+  // Processa todas as músicas na hashtable
+  processAllMusics(pegarGestorMusic(gestor), numeroArtistas, country,
+                   &listaResposta, pegarGestorArtist(gestor));
 
   // Imprime a resposta da consulta no arquivo
   printQuery2(&listaResposta, newFile);
