@@ -16,10 +16,16 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
   clock_t start, end;
   double time_spent;
   int firstOcorr = 0, maxAge = 0, minAge = 0;
+  int temS = 0;
+  if (line[1] == 'S') temS = 1;
 
   if (line[0] == '1') {
     start = clock();
-    query1(pegarGestorUser(gestor), line, i);
+    if ((temS && (line[3] == 'U')) || (!temS && (line[2] == 'U'))){
+    query1User(pegarGestorUser(gestor), line, i, temS);
+    }
+    //else
+    //  query1Artist(pegarGestorArtist(gestor), line, i, temS);
     end = clock();
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;
     *total_time_query1 += time_spent; // Acumula o tempo para Query 1

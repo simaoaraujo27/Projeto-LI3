@@ -52,6 +52,7 @@ void processMusic(Musics *music, gestorArtists *gestorArtists,
   }
 
   free(orig); // Liberta a string original
+  //free(artistId);
 }
 
 // Função principal que executa a query 2
