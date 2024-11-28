@@ -115,8 +115,16 @@ GHashTableIter iterInitMusicsHashTable(gestorMusics *gestorMusics) {
   return iter;
 }
 
-gboolean iter_HashTableMusics(gpointer *key1,
-                              gpointer *value1, GHashTableIter iter) {
+gboolean iter_HashTableMusics(gpointer *key1, gpointer *value1,
+                              GHashTableIter iter) {
 
   return g_hash_table_iter_next(&iter, key1, value1);
+}
+
+gboolean lookUpMusicsHashTable(gestorMusics *gestorMusic, char *line,
+                               gpointer *value, gpointer *orig_key) {
+  // Procura o music na hashtable usando a chave fornecida (line)
+  gboolean found = g_hash_table_lookup_extended(gestorMusic->musicsTable, line,
+                                                value, orig_key);
+  return found;
 }

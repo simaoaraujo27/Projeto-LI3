@@ -43,7 +43,7 @@ void freeGestorArtists(gestorArtists *gestor) {
     if (gestor->errorsFile)
       fclose(gestor->errorsFile); // Fecha o ficheiro de erros, se aberto
     g_hash_table_destroy(gestor->artistsTable);
-    free(gestor);                 // Liberta a memória da estrutura
+    free(gestor); // Liberta a memória da estrutura
   }
 }
 
@@ -82,10 +82,10 @@ void parserArtist(GHashTable *ArtistsTable, Artists *artist, FILE *errorsFile,
 
 // Função para processar o ficheiro de artistas utilizando a estrutura
 // gestorArtists
-int GestorArtists( gestorArtists *gestor, char *artistsPath) {
+int GestorArtists(gestorArtists *gestor, char *artistsPath) {
   // Abre o arquivo de artistas e carrega os dados
   FILE *fp = fopen(artistsPath, "r");
-  
+
   if (fp) {
 
     char *line = NULL; // Pointer para armazenar cada linha lida
@@ -130,4 +130,12 @@ int GestorArtists( gestorArtists *gestor, char *artistsPath) {
 // Função para obter a hashtable de artistas da estrutura gestorArtists
 GHashTable *getArtistTable(gestorArtists *gestorArtist) {
   return gestorArtist->artistsTable;
+}
+
+gboolean lookUpArtistsHashTable(gestorArtists *gestorArtist, char *line,
+                                gpointer *value, gpointer *orig_key) {
+  // Procura o artist na hashtable usando a chave fornecida (line)
+  gboolean found = g_hash_table_lookup_extended(gestorArtist->artistsTable,
+                                                line, value, orig_key);
+  return found;
 }

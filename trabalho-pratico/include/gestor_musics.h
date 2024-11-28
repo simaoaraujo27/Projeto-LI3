@@ -18,7 +18,10 @@ GHashTable *getMusicsTable(gestorMusics *gestorMusic);
 
 GHashTableIter iterInitMusicsHashTable(gestorMusics *gestorMusics);
 
-gboolean iter_HashTableMusics(gpointer *key1,
-                              gpointer *value1, GHashTableIter iter);
+gboolean iter_HashTableMusics(gpointer *key1, gpointer *value1,
+                              GHashTableIter iter);
+
+gboolean lookUpMusicsHashTable(gestorMusics *gestormusic, char *line,
+                               gpointer *value, gpointer *orig_key);
 
 #endif

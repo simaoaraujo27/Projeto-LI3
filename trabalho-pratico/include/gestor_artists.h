@@ -11,6 +11,9 @@ GHashTable *getArtistTable(gestorArtists *gestorArtist);
 
 void freeGestorArtists(gestorArtists *gestor);
 
-int GestorArtists( gestorArtists *gestor, char *artistsPath);
+int GestorArtists(gestorArtists *gestor, char *artistsPath);
+
+gboolean lookUpArtistsHashTable(gestorArtists *gestorArtist, char *line,
+                                gpointer *value, gpointer *orig_key);
 
 #endif // _GESTORARTISTS_H_

@@ -28,10 +28,11 @@ void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
 
   // Percorre todas as músicas na hashtable das músicas
   while (g_hash_table_iter_next(&iter, &key1, &value1)) {
-    Musics *music = (Musics *)value1;   // Obtém a música atual
-    artistId = getMusicArtistId(music); // Obtém o identificador do artista da
-                                        // música Armazena o ID do artista
-    remove_quotes(artistId);            // Remove aspas do ID do artista
+    Musics *music = (Musics *)value1; // Obtém a música atual
+    char *orig =
+        getMusicArtistId(music); // Obtém o identificador do artista da música
+    artistId = orig;             // Armazena o ID do artista
+    remove_quotes(artistId);     // Remove aspas do ID do artista
     removeFstLast(artistId); // Remove o primeiro e o último caractere do ID
 
     // Obtém a duração da música
@@ -55,14 +56,17 @@ void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
 
       // Procura o artista na hashtable dos artistas
       if (g_hash_table_lookup_extended(
-              getArtistTable(pegarGestorArtist(gestor)), key, &orig_key,
-              &value)) {
+             getArtistTable(pegarGestorArtist(gestor)), key, &orig_key,
+             &value) 
+          /* lookUpArtistsHashTable(pegarGestorArtist(gestor), key, &value,
+                                 &orig_key) */) {
         // Se o artista for encontrado, incrementa a sua discografia
         increment_artist_discografia(value, duracao, &listaResposta,
                                      numeroArtistas, country);
       }
       free(key); // Liberta a key
     }
+    free(orig); // Liberta a orig
   }
 
   // Imprime a resposta da consulta no arquivo
@@ -73,4 +77,6 @@ void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
 
   // Liberta a memória alocada para a lista de respostas
   g_list_free(listaResposta);
+
+  // free(artistId);
 }
