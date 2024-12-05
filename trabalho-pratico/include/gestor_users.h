@@ -1,12 +1,13 @@
 #ifndef _GESTOR_USERS_H_
 #define _GESTOR_USERS_H_
 
+typedef struct gestorUsers gestorUsers;
+
 #include "gestor_musics.h"
+#include "gestores.h"
 #include "users.h"
 #include <glib.h>
 #include <stdio.h>
-
-typedef struct gestorUsers gestorUsers;
 
 int GestorUsers(gestorUsers *gestorUser, gestorMusics *gestorMusic,
                 char *usersPath);

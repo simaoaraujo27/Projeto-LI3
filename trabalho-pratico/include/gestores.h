@@ -1,6 +1,8 @@
 #ifndef _GESTORES_H_
 #define _GESTORES_H_
 
+typedef struct gestores Gestores;
+
 #include "gestor_artists.h"
 #include "gestor_musics.h"
 #include "gestor_users.h"
@@ -9,8 +11,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef struct gestores Gestores;
 
 Gestores *initgestor(int *flag);
 

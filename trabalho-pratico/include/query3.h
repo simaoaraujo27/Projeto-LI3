@@ -23,7 +23,9 @@ gint comparar_likes(gconstpointer a, gconstpointer b);
 
 void query3(int minAge, int maxAge, NodoMusica *lista, int i);
 
-NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, 
-                                    Gestores *gestor);
+NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, Gestores *gestor);
+
+void processUserQuery3(char *liked_musics_id, Gestores *gestor,
+                       NodoMusica *lista, int userAge, guint idade_max);
 
 #endif

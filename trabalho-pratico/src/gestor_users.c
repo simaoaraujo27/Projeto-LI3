@@ -107,3 +107,4 @@ gboolean lookUpUsersHashTable(gestorUsers *gestorUser, char *line,
                                                 value, orig_key);
   return found;
 }
+

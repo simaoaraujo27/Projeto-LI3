@@ -122,10 +122,38 @@ gint comparar_likes(gconstpointer a, gconstpointer b) {
   return (g1->count < g2->count) - (g1->count > g2->count);
 }
 
-NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista,
-                                    Gestores *gestor) {
+void processUser(char *liked_musics_id, Gestores *gestor, NodoMusica **lista,
+                 int userAge, guint idade_max) {
+
+  // Percorre a lista de liked_musics_id
+  char *music_id = strtok(liked_musics_id, ", ");
+  while (music_id != NULL) {
+    if (music_id[0] == '\'')
+      music_id++;
+    if (music_id[strlen(music_id) - 1] == '\'')
+      music_id[strlen(music_id) - 1] = '\0';
+
+    // Procura pela música na tabela
+    gpointer music_value;
+    gpointer orig_music_key;
+    gboolean found = lookUpMusicsHashTable(pegarGestorMusic(gestor), music_id,
+                                           &music_value, &orig_music_key);
+
+    if (found) {
+      char *genre = getMusicGenre(orig_music_key);
+      *lista = adicionar_like(*lista, genre, userAge,
+                              &idade_max); // Adiciona à lista
+      free(genre);
+    }
+    music_id = strtok(NULL, ", ");
+  }
+  free(liked_musics_id);
+}
+
+void processAllUsers(Gestores *gestor, NodoMusica **lista) {
   int IDADE_INICIAL = 120;
   guint idade_max = IDADE_INICIAL; // Inicializa a idade máxima
+
   // Itera sobre a tabela de users para processar as músicas que eles gostam
   GHashTableIter iter;
   gpointer hash_key, hash_value;
@@ -154,20 +182,23 @@ NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista,
       // Procura pela música na tabela
       gpointer music_value;
       gpointer orig_music_key;
-      gboolean found =
-          g_hash_table_lookup_extended(getMusicsTable(pegarGestorMusic(gestor)),
-                                       music_id, &music_value, &orig_music_key);
+      gboolean found = lookUpMusicsHashTable(pegarGestorMusic(gestor), music_id,
+                                             &music_value, &orig_music_key);
 
       if (found) {
         char *genre = getMusicGenre(orig_music_key);
-        lista = adicionar_like(lista, genre, userAge,
-                               &idade_max); // Adiciona à lista
+        *lista = adicionar_like(*lista, genre, userAge,
+                                &idade_max); // Adiciona à lista
         free(genre);
       }
       music_id = strtok(NULL, ", ");
     }
     free(liked_musics_id);
   }
+}
+
+NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, Gestores *gestor) {
+  processAllUsers(gestor, &lista);
   return lista;
 }
 
