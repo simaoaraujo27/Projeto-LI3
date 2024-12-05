@@ -15,7 +15,7 @@ char *SegundosParaHoras(int segundos) {
 }
 
 // Função para imprimir os resultados da query 2 em um ficheiro
-void printQuery2(GList **listaResposta, FILE *newFile) {
+void printQuery2(GList **listaResposta, FILE *newFile, int temS) {
   GList *node = *listaResposta;
   int i = 0; // Contador para verificar se a lista está vazia
 
@@ -47,11 +47,15 @@ void printQuery2(GList **listaResposta, FILE *newFile) {
     // Remove aspas no nome e país
     remove_quotes(name);
     remove_quotes(country);
-
+    if(temS){
+    // Formata a string de saída no formato: "name=type=discografia=country"
+    snprintf(new_str, total_len + 1, "%s=%s=%s=%s\n", name, type, discografia,
+             country);
+    }else{
     // Formata a string de saída no formato: "name;type;discografia;country"
     snprintf(new_str, total_len + 1, "%s;%s;%s;%s\n", name, type, discografia,
              country);
-
+    }
     // Escreve no ficheiro
     fprintf(newFile, "%s", new_str);
 

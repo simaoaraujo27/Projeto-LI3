@@ -51,7 +51,7 @@ void processMusic(Musics *music, gestorArtists *gestorArtists,
 }
 
 // Função principal que executa a query 2
-void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
+void query2(int numeroArtistas, char *country, Gestores *gestor, int i, int temS) {
   FILE *newFile = createFile(i);
 
   GList *listaResposta = NULL; // Lista para armazenar a resposta
@@ -61,7 +61,7 @@ void query2(int numeroArtistas, char *country, Gestores *gestor, int i) {
                    &listaResposta, pegarGestorArtist(gestor));
 
   // Imprime a resposta da consulta no arquivo
-  printQuery2(&listaResposta, newFile);
+  printQuery2(&listaResposta, newFile, temS);
 
   // Reseta os valores na tabela de artistas
   colocaZero(pegarGestorArtist(gestor));

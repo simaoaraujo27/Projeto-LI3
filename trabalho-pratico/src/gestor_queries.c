@@ -32,10 +32,10 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
   } else if (line[0] == '2') {
     start = clock();
     if (!temAspas(line)) {
-      query2(atoi(line + 2), NULL, gestor, i);
+      query2(atoi(line + 2), NULL, gestor, i, temS);
     } else {
       firstOcorr = primeiraOcorr(line, '"');
-      query2(atoi(line + 2), line + firstOcorr, gestor, i);
+      query2(atoi(line + 2), line + firstOcorr, gestor, i, temS);
     }
     end = clock();
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;

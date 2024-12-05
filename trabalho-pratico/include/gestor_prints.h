@@ -4,6 +4,6 @@
 #include <glib.h>
 #include <stdio.h>
 
-void printQuery2(GList **listaResposta, FILE *newFile);
+void printQuery2(GList **listaResposta, FILE *newFile, int temS);
 
 #endif
