@@ -1,23 +1,13 @@
 #ifndef _QUERY3_H_
 #define _QUERY3_H_
 
+typedef struct generoLikes GeneroLikes;
+
 #include "gestor_musics.h"
 #include "gestor_users.h"
 #include "gestores.h"
+#include "nodo_musica.h"
 #include <glib.h>
-
-typedef struct nodoMusica NodoMusica;
-
-NodoMusica *criar_nodo(char *genero, guint idade_max);
-
-void expandir_arrays(NodoMusica *lista, guint nova_idade_max);
-
-NodoMusica *adicionar_like(NodoMusica *lista, char *genero, guint idade,
-                           guint *idade_max);
-
-void liberar_lista(NodoMusica *lista);
-
-typedef struct generoLikes GeneroLikes;
 
 gint comparar_likes(gconstpointer a, gconstpointer b);
 

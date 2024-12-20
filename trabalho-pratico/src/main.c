@@ -4,6 +4,7 @@
 #include "gestor_queries.h"
 #include "gestor_users.h"
 #include "gestores.h"
+#include "nodo_musica.h"
 #include "query1.h"
 #include "query2.h"
 #include "query3.h"
