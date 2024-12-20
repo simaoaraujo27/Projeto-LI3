@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Iinclude $(shell pkg-config --cflags glib-2.0) -Wall -Wextra -Werror -O3 -g
 LDFLAGS = $(shell pkg-config --libs glib-2.0)
 
-OBJ_FILES = src/main.o src/gestores.o src/gestor_prints.o src/nodo_musica.o src/outputResult.o src/inputResult.o src/gestorParsers.o src/query1.o src/query2.o src/query3.o src/gestor_queries.o src/musics.o src/users.o src/artists.o src/validation.o src/utils.o src/gestor_artists.o src/gestor_musics.o src/gestor_users.o
+OBJ_FILES = src/main.o src/gestores.o src/gestor_prints.o src/nodo_musica.o src/outputResult.o src/inputResult.o src/gestorParsers.o src/query1.o src/query2.o src/query3.o src/gestor_queries.o src/musics.o src/users.o src/artists.o src/validation.o src/utils.o src/gestor_artists.o src/gestor_musics.o src/gestor_users.o src/albuns.o src/history.o src/gestor_albuns.o src/gestor_history.o
 
 all: programa-principal programa-testes
 
