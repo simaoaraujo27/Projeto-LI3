@@ -1,5 +1,6 @@
 #include "validation.h"
 #include "artists.h"
+
 #include "gestor_artists.h"
 #include "gestor_musics.h"
 #include "gestor_users.h"
@@ -12,6 +13,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+bool validatePlataformHistory(char *plataform) {
+  colocaTudoMinusculo(plataform);
+  return (!strcmp(plataform, "mobile") || !strcmp(plataform, "desktop"));
+}
 
 // Função para validar uma data no formato aaaa/mm/dd
 bool validateDate(char *date) {
@@ -158,57 +164,83 @@ bool validateMusicsIdUsers(char *musics_id, gestorMusics *gestorMusics) {
 // Função para validar uma linha de artistas
 bool validateArtistLine(char *idConstituent, char *type) {
   removeFstLast(idConstituent); // Remove o primeiro e último caracteres
-  removeFstLast(idConstituent); 
+  removeFstLast(idConstituent);
+  colocaTudoMinusculo(type);
   // Valida se o tipo de artista é 'individual' ou 'grupo'
   return (((strcmp(type, "individual") == 0) && strlen(idConstituent) == 0) ||
-          ((strcmp(type, "group")) == 0 && (strlen(idConstituent) != 0)));
+          ((strcmp(type, "group") == 0) && (strlen(idConstituent) != 0)));
 }
 
 // Função para validar os artistas de uma música
-bool validateMusicsArtists(char *artists_id, gestorArtists *gestorArtists) {
-  remove_quotes(artists_id);       // Remove as aspas
-  removeFstLast(artists_id);       // Remove o primeiro e último caracteres
-  int l = (int)strlen(artists_id); // Obtém o comprimento da string
+bool validateMusicsArtistsAndAlbuns(char *albuns_id, char *artists_id,
+                                    gestorArtists *gestorArtists,
+                                    gestorAlbuns *gestorAlbuns) {
+  remove_quotes(artists_id); // Remove as aspas
+  removeFstLast(artists_id); // Remove o primeiro e último caracteres
+  int lentghArtistsId =
+      (int)strlen(artists_id); // Obtém o comprimento da string
+  int lentghAlbunsId = (int)strlen(albuns_id);
   char *key = NULL;
   gpointer orig_key;
   gpointer value;
 
   // Processa os IDs dos artistas
-  while (l > 0) {
-    if (l == (int)strlen(artists_id)) {
+  while (lentghArtistsId > 0) {
+    if (lentghArtistsId == (int)strlen(artists_id)) {
       artists_id = artists_id + 1;
     } else
       artists_id = artists_id + 3;
     key = strdup(strsep(&artists_id, "'")); // Separa o ID do artista
     key[8] = '\0';                          // Limita o ID a 8 caracteres
-    gboolean found = g_hash_table_lookup_extended(getArtistTable(gestorArtists),
-                                                  key, &orig_key, &value);
+    gboolean found =
+        lookUpArtistsHashTable(gestorArtists, key, &value, &orig_key);
     if (!found) { // Se o artista não for encontrado, retorna false
       free(key);
       return false;
     }
-    free(key);
-    l -= 12; // Ajusta o comprimento restante da string
+    lentghArtistsId -= 12; // Ajusta o comprimento restante da string
+  }
+  // Processa os IDs dos álbuns
+  while (lentghAlbunsId > 0) {
+    if (lentghAlbunsId == (int)strlen(albuns_id)) {
+      albuns_id = albuns_id + 1;
+    } else
+      albuns_id = albuns_id + 3;
+    key = strdup(strsep(&albuns_id, "'")); // Separa o ID do artista
+    key[8] = '\0';                         // Limita o ID a 8 caracteres
+    gboolean found =
+        lookUpAlbunsHashTable(gestorAlbuns, key, &value, &orig_key);
+    if (!found) { // Se o artista não for encontrado, retorna false
+      free(key);
+      return false;
+    }
+    lentghAlbunsId -= 12; // Ajusta o comprimento restante da string
   }
 
+  free(key);
   return true;
 }
 
 // Função para validar uma linha de música
-bool validateMusicsLine(char *line, gestorArtists *gestorArtists) {
+bool validateMusicsLine(char *line, gestorArtists *gestorArtists,
+                        gestorAlbuns *gestorAlbuns) {
   // Divide a linha em diferentes partes usando o delimitador ";"
   char *id = strdup(strsep(&line, ";"));
   char *title = strdup(strsep(&line, ";"));
   char *artists_id = strdup(strsep(&line, ";"));
+  char *albuns_id = strdup(strsep(&line, ";"));
   char *durationSeconds = strdup(strsep(&line, ";"));
   char *genre = strdup(strsep(&line, ";"));
   char *year = strdup(strsep(&line, "\n"));
   char *artist_id_copia = strdup(artists_id);
+  char *albuns_id_copia = strdup(albuns_id);
 
   // Valida a duração, o ano, o formato da lista CSV e os artistas da música
-  bool isValid = validateDuration(durationSeconds) && atoi(year) <= 2024 &&
-                 validateCSVList(artists_id) &&
-                 validateMusicsArtists(artist_id_copia, gestorArtists);
+  bool isValid =
+      validateDuration(durationSeconds) && atoi(year) <= 2024 &&
+      validateCSVList(artists_id) &&
+      validateMusicsArtistsAndAlbuns(albuns_id_copia, artist_id_copia,
+                                     gestorArtists, gestorAlbuns);
 
   free(id); // Liberta a memória
   free(title);
