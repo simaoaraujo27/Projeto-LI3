@@ -9,9 +9,10 @@
 
 // Estrutura que representa uma música
 struct musics {
-  char *id;            // identificador único da música
-  char *title;         // nome da música
-  char *artist_id;     // lista de identificadores dos autores da música
+  char *id;        // identificador único da música
+  char *title;     // nome da música
+  char *artist_id; // lista de identificadores dos autores da música
+  char *album_id;  // identificador único do álbum ao qual a música pertence
   int durationSeconds; // tempo de duração em segundos
   char *genre;         // género da música
   int year;            // ano de lançamento
