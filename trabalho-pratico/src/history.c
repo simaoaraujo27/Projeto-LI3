@@ -78,11 +78,24 @@ History *initHistory() {
   return hist;
 }
 
-void freeHistory(History *hist) {
+void destroyHistory(History *hist) {
   free(hist->id);
   free(hist->user_id);
   free(hist->music_id);
   free(hist->timestamp);
   free(hist->duration);
   free(hist->platform);
+}
+
+// Função que separa dados do history a partir de uma linha do CSV
+History *separateHistory(char *line) {
+  History *history = initHistory();
+  setHistoryId(history, strdup(strsep(&line, ";")));
+  setHistoryUserId(history, strdup(strsep(&line, ";")));
+  setHistoryMusicId(history, strdup(strsep(&line, ";")));
+  setHistoryTimestamp(history, strdup(strsep(&line, ";")));
+  setHistoryDuration(history, strdup(strsep(&line, ";")));
+  setHistoryPlatform(history, strdup(strsep(&line, ";")));
+
+  return history;
 }

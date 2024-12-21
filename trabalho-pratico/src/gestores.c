@@ -14,6 +14,8 @@ struct gestores {
   gestorArtists *gestorArtists;
   gestorMusics *gestorMusics;
   gestorUsers *gestorUsers;
+  gestorAlbuns *gestorAlbuns;
+  gestorHistory *gestorHistory;
 };
 
 Gestores *initgestor(int *flag) {
@@ -51,10 +53,32 @@ Gestores *initgestor(int *flag) {
     return NULL;
   }
 
+  // Inicializa o gestor de álbuns
+  gestorAlbuns *gestorAlbuns =
+      initGestorAlbuns("./resultados/albums_errors.csv");
+
+  // Verifica se o gestor de álbuns foi inicializado corretamente
+  if (!gestorAlbuns) {
+    *flag = 1;
+    return NULL;
+  }
+
+  // Inicializa o gestor de history
+  gestorHistory *gestorHistory =
+      initGestorHistory("./resultados/history_errors.csv");
+
+  // Verifica se o gestor de history foi inicializado corretamente
+  if (!gestorHistory) {
+    *flag = 1;
+    return NULL;
+  }
+
   // Atribui os Gestores fornecidos
   gestor->gestorMusics = gestorMusics;
   gestor->gestorArtists = gestorArtists;
   gestor->gestorUsers = gestorUsers;
+  gestor->gestorAlbuns = gestorAlbuns;
+  gestor->gestorHistory = gestorHistory;
   return gestor;
 }
 
@@ -68,9 +92,19 @@ gestorMusics *pegarGestorMusic(Gestores *gestor) {
 
 gestorUsers *pegarGestorUser(Gestores *gestor) { return gestor->gestorUsers; }
 
+gestorAlbuns *pegarGestorAlbum(Gestores *gestor) {
+  return gestor->gestorAlbuns;
+}
+
+gestorHistory *pegarGestorHistory(Gestores *gestor) {
+  return gestor->gestorHistory;
+}
+
 void destroyGestor(Gestores *gestor) {
   freeGestorArtists(gestor->gestorArtists);
   freeGestorMusics(gestor->gestorMusics);
   freeGestorUsers(gestor->gestorUsers);
+  freeGestorAlbuns(gestor->gestorAlbuns);
+  free(gestor->gestorHistory);
   free(gestor);
 }

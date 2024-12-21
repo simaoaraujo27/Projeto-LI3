@@ -3,4 +3,13 @@
 
 typedef struct gestorHistory gestorHistory;
 
+#include "history.h"
+
+gestorHistory *initGestorHistory(const char *errorsFilePath);
+void freeGestorHistory(gestorHistory *gestor);
+
+void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
+                   char *line);
+int GestorHistory(gestorHistory *gestor, char *historyPath);
+
 #endif

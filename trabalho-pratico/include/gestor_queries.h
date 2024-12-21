@@ -4,6 +4,8 @@
 #include "gestor_artists.h"
 #include "gestor_musics.h"
 #include "gestor_users.h"
+#include "gestor_albuns.h"
+#include "gestor_history.h"
 #include "query3.h"
 
 void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,

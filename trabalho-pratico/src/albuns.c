@@ -66,10 +66,22 @@ Albuns *initAlbum() {
   return album;
 }
 
-void freeAlbum(Albuns *album) {
+void destroyAlbum(Albuns *album) {
   free(album->id);
   free(album->title);
   free(album->artists_id);
   free(album->year);
   free(album->producers);
+}
+
+// Função que separa dados de um álbum a partir de uma linha do CSV
+Albuns *separateAlbuns(char *line) {
+  Albuns *album = initAlbum();
+  setAlbumId(album, strdup(strsep(&line, ";")));
+  setAlbumTitle(album, strdup(strsep(&line, ";")));
+  setAlbumArtistsId(album, strdup(strsep(&line, ";")));
+  setAlbumYear(album, strdup(strsep(&line, ";")));
+  setAlbumProducers(album, strdup(strsep(&line, ";")));
+
+  return album;
 }

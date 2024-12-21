@@ -18,6 +18,8 @@ void setHistoryDuration(History *hist, const char *duration);
 void setHistoryPlatform(History *hist, const char *platform);
 
 History *initHistory();
-void freeHistory(History *hist);
+void destroyHistory(History *hist);
+
+History *separateHistory(char *line);
 
 #endif

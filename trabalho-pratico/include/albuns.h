@@ -16,6 +16,8 @@ void setAlbumYear(Albuns *album, const char *year);
 void setAlbumProducers(Albuns *album, const char *producers);
 
 Albuns *initAlbum();
-void freeAlbum(Albuns *album);
+void destroyAlbum(Albuns *album);
+
+Albuns *separateAlbuns(char *line);
 
 #endif
