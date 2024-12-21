@@ -2,6 +2,7 @@
 #include "history.h"
 #include <glib.h>
 #include <stdio.h>
+#include <assert.h>
 
 struct gestorHistory {
   FILE *errorsFile;         // Ficheiro para registo de erros
@@ -12,10 +13,10 @@ struct gestorHistory {
 gestorHistory *initGestorHistory(const char *errorsFilePath) {
 
   GHashTable *gestorTable = g_hash_table_new_full(
-      g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyAlbum);
+      g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyHistory);
 
   // Aloca memória para a estrutura
-  gestorHistory *gestorHistory = malloc(sizeof(gestorHistory));
+  gestorHistory *gestorHistory = malloc(sizeof(struct gestorHistory));
   if (!gestorHistory)
     return NULL;
 
@@ -28,7 +29,7 @@ gestorHistory *initGestorHistory(const char *errorsFilePath) {
   }
 
   // Atribui a hashtable fornecida
-  gestorHistory->historyTable = historyTable;
+  gestorHistory->historyTable = gestorTable;
   return gestorHistory;
 }
 
@@ -46,6 +47,8 @@ void freeGestorHistory(gestorHistory *gestor) {
 void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
                    char *line) {
   // TODO: ADICIONAR O IF DA VALIDAÇÃO QUANDO ESTIVER FEITO
+  // ESTE IF É SÓ PARA NÃO DAR ERRO PORQUE AINDA FALTA A VALIDAÇÃO
+  if (errorsFile && line) {}
 
   // Obtém o ID do history e remove aspas
   char *id = getHistoryId(history);
@@ -91,7 +94,7 @@ int GestorHistory(gestorHistory *gestor, char *historyPath) {
           continue; // Se falhar, passa à próxima linha
         }
 
-        artist = separateHistory(line_copy);
+        history = separateHistory(line_copy);
 
         parserHistory(gestor->historyTable, history, gestor->errorsFile, line);
 

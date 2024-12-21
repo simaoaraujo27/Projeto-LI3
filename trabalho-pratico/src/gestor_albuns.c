@@ -1,6 +1,7 @@
 #include "gestor_albuns.h"
 #include "albuns.h"
 #include "utils.h"
+#include "validation.h"
 #include <assert.h>
 #include <glib.h>
 #include <stdio.h>
@@ -17,7 +18,7 @@ gestorAlbuns *initGestorAlbuns(const char *errorsFilePath) {
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyAlbum);
 
   // Aloca memória para a estrutura
-  gestorAlbuns *gestorAlbuns = malloc(sizeof(gestorAlbuns));
+  gestorAlbuns *gestorAlbuns = malloc(sizeof(struct gestorAlbuns));
   if (!gestorAlbuns)
     return NULL;
 
@@ -48,6 +49,9 @@ void freeGestorAlbuns(gestorAlbuns *gestor) {
 void parserAlbum(GHashTable *albunsTable, Albuns *album, FILE *errorsFile,
                  char *line) {
   // TODO: ADICIONAR O IF DA VALIDAÇÃO QUANDO ESTIVER FEITO
+  // ESTA LINHA SEGUINTE SÃO SÓ PARA NÃO CRASHAR
+  if (errorsFile && line) {
+  }
 
   // Obtém o ID do album e remove aspas
   char *id = getAlbumId(album);

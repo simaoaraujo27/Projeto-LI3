@@ -18,45 +18,45 @@ struct history {
 };
 
 // Funções get
-const char *getHistoryId(const History *hist) { return hist->id; }
+char *getHistoryId(History *hist) { return hist->id; }
 
-const char *getHistoryUserId(const History *hist) { return hist->user_id; }
+char *getHistoryUserId(History *hist) { return hist->user_id; }
 
-const char *getHistoryMusicId(const History *hist) { return hist->music_id; }
+char *getHistoryMusicId(History *hist) { return hist->music_id; }
 
-const char *getHistoryTimestamp(const History *hist) { return hist->timestamp; }
+char *getHistoryTimestamp(History *hist) { return hist->timestamp; }
 
-const char *getHistoryDuration(const History *hist) { return hist->duration; }
+char *getHistoryDuration(History *hist) { return hist->duration; }
 
-const char *getHistoryPlatform(const History *hist) { return hist->platform; }
+char *getHistoryPlatform(History *hist) { return hist->platform; }
 
 // Funções set
-void setHistoryId(History *hist, const char *id) {
+void setHistoryId(History *hist, char *id) {
   free(hist->id); // Libera a memória antiga, se necessário
   hist->id = strdup(id);
 }
 
-void setHistoryUserId(History *hist, const char *user_id) {
+void setHistoryUserId(History *hist, char *user_id) {
   free(hist->user_id);
   hist->user_id = strdup(user_id);
 }
 
-void setHistoryMusicId(History *hist, const char *music_id) {
+void setHistoryMusicId(History *hist, char *music_id) {
   free(hist->music_id);
   hist->music_id = strdup(music_id);
 }
 
-void setHistoryTimestamp(History *hist, const char *timestamp) {
+void setHistoryTimestamp(History *hist, char *timestamp) {
   free(hist->timestamp);
   hist->timestamp = strdup(timestamp);
 }
 
-void setHistoryDuration(History *hist, const char *duration) {
+void setHistoryDuration(History *hist, char *duration) {
   free(hist->duration);
   hist->duration = strdup(duration);
 }
 
-void setHistoryPlatform(History *hist, const char *platform) {
+void setHistoryPlatform(History *hist, char *platform) {
   free(hist->platform);
   hist->platform = strdup(platform);
 }

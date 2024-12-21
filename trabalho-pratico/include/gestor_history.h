@@ -4,6 +4,9 @@
 typedef struct gestorHistory gestorHistory;
 
 #include "history.h"
+#include <stdio.h>
+#include <glib.h>
+#include "utils.h"
 
 gestorHistory *initGestorHistory(const char *errorsFilePath);
 void freeGestorHistory(gestorHistory *gestor);
