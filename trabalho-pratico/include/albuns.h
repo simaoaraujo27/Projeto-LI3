@@ -3,17 +3,17 @@
 
 typedef struct albuns Albuns;
 
-const char *getAlbumId(const Albuns *album);
-const char *getAlbumTitle(const Albuns *album);
-const char *getAlbumArtistsId(const Albuns *album);
-const char *getAlbumYear(const Albuns *album);
-const char *getAlbumProducers(const Albuns *album);
+char *getAlbumId(Albuns *album);
+char *getAlbumTitle(Albuns *album);
+char *getAlbumArtistsId(Albuns *album);
+char *getAlbumYear(Albuns *album);
+char *getAlbumProducers(Albuns *album);
 
-void setAlbumId(Albuns *album, const char *id);
-void setAlbumTitle(Albuns *album, const char *title);
-void setAlbumArtistsId(Albuns *album, const char *artists_id);
-void setAlbumYear(Albuns *album, const char *year);
-void setAlbumProducers(Albuns *album, const char *producers);
+void setAlbumId(Albuns *album, char *id);
+void setAlbumTitle(Albuns *album, char *title);
+void setAlbumArtistsId(Albuns *album, char *artists_id);
+void setAlbumYear(Albuns *album, char *year);
+void setAlbumProducers(Albuns *album, char *producers);
 
 Albuns *initAlbum();
 void destroyAlbum(Albuns *album);

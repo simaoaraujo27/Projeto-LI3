@@ -1,6 +1,6 @@
 #include "validation.h"
 #include "artists.h"
-
+#include "gestor_albuns.h"
 #include "gestor_artists.h"
 #include "gestor_musics.h"
 #include "gestor_users.h"

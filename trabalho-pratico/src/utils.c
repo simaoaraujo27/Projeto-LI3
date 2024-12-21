@@ -1,9 +1,16 @@
 #include "utils.h"
 #include "artists.h"
+#include <ctype.h>
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+void colocaTudoMinusculo(char *word) {
+  for (int i = 0; i < (int)strlen(word); i++) {
+    word[i] = tolower(word[i]);
+  }
+}
 
 // Função para remover aspas (") no início e no final de uma string
 void remove_quotes(char *str) {
@@ -49,8 +56,7 @@ void removeFstLast(char *str) {
   for (int i = 0; i < len - 1; i++) {
     str[i] = str[i + 1];
   }
-  str[len - 2] =
-      '\0'; // Adiciona o \0, removendo o último caractere
+  str[len - 2] = '\0'; // Adiciona o \0, removendo o último caractere
 }
 
 // Função para remover o espaço e as aspas da string de "liked musics"

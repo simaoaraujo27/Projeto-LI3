@@ -3,6 +3,8 @@
 
 #include <glib.h>
 
+void colocaTudoMinusculo(char *word);
+
 void remove_quotes(char *str);
 
 int primeiraOcorr(char *line, char carac);

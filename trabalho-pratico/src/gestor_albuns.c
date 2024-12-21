@@ -1,5 +1,7 @@
 #include "gestor_albuns.h"
 #include "albuns.h"
+#include "utils.h"
+#include <assert.h>
 #include <glib.h>
 #include <stdio.h>
 
@@ -91,7 +93,7 @@ int GestorAlbuns(gestorAlbuns *gestor, char *albunsPath) {
           continue; // Se falhar, passa à próxima linha
         }
 
-        artist = separateAlbuns(line_copy);
+        album = separateAlbuns(line_copy);
 
         parserAlbum(gestor->albunsTable, album, gestor->errorsFile, line);
 
@@ -108,4 +110,12 @@ int GestorAlbuns(gestorAlbuns *gestor, char *albunsPath) {
   }
   free(albunsPath); // Liberta a memoria do path dos albuns
   return 1;
+}
+
+gboolean lookUpAlbunsHashTable(gestorAlbuns *gestorAlbuns, char *key,
+                               gpointer *value, gpointer *orig_key) {
+  // Procura o artist na hashtable usando a chave fornecida (key)
+  gboolean found = g_hash_table_lookup_extended(gestorAlbuns->albunsTable, key,
+                                                orig_key, value);
+  return found;
 }

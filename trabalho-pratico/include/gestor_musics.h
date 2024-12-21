@@ -1,6 +1,7 @@
 #ifndef _GESTOR_MUSICS_H_
 #define _GESTOR_MUSICS_H_
 
+#include "gestor_albuns.h"
 #include "gestor_artists.h"
 #include "musics.h"
 #include <glib.h>
@@ -9,7 +10,7 @@
 typedef struct gestorMusics gestorMusics;
 
 int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
-                 char *musicsPath);
+                 gestorAlbuns *gestorAlbuns, char *musicsPath);
 
 gestorMusics *initGestorMusics(const char *errorsFilePath);
 

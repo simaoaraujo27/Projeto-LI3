@@ -12,5 +12,7 @@ void freeGestorAlbuns(gestorAlbuns *gestor);
 void parserAlbum(GHashTable *albunsTable, Albuns *album, FILE *errorsFile,
                  char *line);
 int GestorAlbuns(gestorAlbuns *gestor, char *albunsPath);
+gboolean lookUpAlbunsHashTable(gestorAlbuns *gestorAlbuns, char *key,
+                               gpointer *value, gpointer *orig_key);
 
 #endif

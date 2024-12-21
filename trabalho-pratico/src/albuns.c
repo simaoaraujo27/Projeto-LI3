@@ -15,38 +15,38 @@ struct albuns {
 };
 
 // Funções get
-const char *getAlbumId(const Albuns *album) { return album->id; }
+char *getAlbumId(Albuns *album) { return album->id; }
 
-const char *getAlbumTitle(const Albuns *album) { return album->title; }
+char *getAlbumTitle(Albuns *album) { return album->title; }
 
-const char *getAlbumArtistsId(const Albuns *album) { return album->artists_id; }
+char *getAlbumArtistsId(Albuns *album) { return album->artists_id; }
 
-const char *getAlbumYear(const Albuns *album) { return album->year; }
+char *getAlbumYear(Albuns *album) { return album->year; }
 
-const char *getAlbumProducers(const Albuns *album) { return album->producers; }
+char *getAlbumProducers(Albuns *album) { return album->producers; }
 
 // Funções set
-void setAlbumId(Albuns *album, const char *id) {
+void setAlbumId(Albuns *album, char *id) {
   free(album->id); // Libera a memória antiga, se necessário
   album->id = strdup(id);
 }
 
-void setAlbumTitle(Albuns *album, const char *title) {
+void setAlbumTitle(Albuns *album, char *title) {
   free(album->title);
   album->title = strdup(title);
 }
 
-void setAlbumArtistsId(Albuns *album, const char *artists_id) {
+void setAlbumArtistsId(Albuns *album, char *artists_id) {
   free(album->artists_id);
   album->artists_id = strdup(artists_id);
 }
 
-void setAlbumYear(Albuns *album, const char *year) {
+void setAlbumYear(Albuns *album, char *year) {
   free(album->year);
   album->year = strdup(year);
 }
 
-void setAlbumProducers(Albuns *album, const char *producers) {
+void setAlbumProducers(Albuns *album, char *producers) {
   free(album->producers);
   album->producers = strdup(producers);
 }

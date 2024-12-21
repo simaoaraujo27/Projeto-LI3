@@ -1,4 +1,5 @@
 #include "gestor_musics.h"
+#include "gestor_albuns.h"
 #include "gestor_artists.h"
 #include "gestores.h"
 #include "query2.h"
@@ -54,9 +55,10 @@ void freeGestorMusics(gestorMusics *gestor) {
 }
 
 void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
-                 Musics *music, GHashTable *musicsTable, FILE *errorsFile) {
+                 Musics *music, GHashTable *musicsTable, FILE *errorsFile,
+                 gestorAlbuns *gestorAlbuns) {
   char *id; // ID da música
-  if (validateMusicsLine(copia, gestorArtist)) {
+  if (validateMusicsLine(copia, gestorArtist, gestorAlbuns)) {
     // Se a linha for válida, separa os campos e cria um objeto Musics
     music = separateMusics(line);
 
@@ -71,7 +73,7 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
 
 // Função para processar o ficheiro de músicas usando a estrutura gestorMusics
 int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
-                 char *musicsPath) {
+                 gestorAlbuns *gestorAlbuns, char *musicsPath) {
   // Abre o arquivo de musicas e carrega os dados
   FILE *fp = fopen(musicsPath, "r");
   if (fp) {
@@ -87,7 +89,7 @@ int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
       // Cria uma cópia da linha para validação
       char *copia = strdup(line);
       parserMusic(copia, gestorArtist, line, music, gestorMusic->musicsTable,
-                  gestorMusic->errorsFile);
+                  gestorMusic->errorsFile, gestorAlbuns);
       free(copia); // Liberta a memória alocada para a cópia da linha
     }
 

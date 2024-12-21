@@ -34,7 +34,7 @@ int GestorParsers(Gestores *gestor, char *path) {
     return 0;
 
   if (!GestorMusics(pegarGestorMusic(gestor), pegarGestorArtist(gestor),
-                    musicsPath))
+                    pegarGestorAlbum(gestor), musicsPath))
     return 0;
 
   if (!GestorUsers(pegarGestorUser(gestor), pegarGestorMusic(gestor),
@@ -43,7 +43,6 @@ int GestorParsers(Gestores *gestor, char *path) {
 
   if (!GestorAlbuns(pegarGestorAlbum(gestor), albunsPath))
     return 0;
-
 
   free(artistsPath);
   free(musicsPath);
