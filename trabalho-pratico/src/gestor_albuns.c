@@ -12,7 +12,7 @@ struct gestorAlbuns {
 };
 
 // Função para inicializar a estrutura gestorAlbuns
-gestorAlbuns *initGestorAlbuns(const char *errorsFilePath) {
+gestorAlbuns *initGestorAlbuns(char *errorsFilePath) {
 
   GHashTable *albunsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyAlbum);
@@ -47,24 +47,26 @@ void freeGestorAlbuns(gestorAlbuns *gestor) {
 }
 
 void parserAlbum(GHashTable *albunsTable, Albuns *album, FILE *errorsFile,
-                 char *line) {
+                 char *line, char *copia, gestorArtists *gestorArtists) {
   // TODO: ADICIONAR O IF DA VALIDAÇÃO QUANDO ESTIVER FEITO
   // ESTA LINHA SEGUINTE SÃO SÓ PARA NÃO CRASHAR
-  if (errorsFile && line) {
+  if (validateAlbumsLine(copia, gestorArtists)) {
+    // Obtém o ID do album e remove aspas
+    char *id = getAlbumId(album);
+    remove_quotes(id);
+
+    // Verifica se o album já está presente na hashtable
+    Albuns *existingAlbum = g_hash_table_lookup(albunsTable, id);
+    if (existingAlbum != NULL) {
+      destroyAlbum(existingAlbum);
+    }
+
+    // Insere o novo album na tabela hash
+    g_hash_table_insert(albunsTable, id, album);
+  } else {
+    // Escreve a linha inválida no ficheiro de erros
+    fprintf(errorsFile, "%s", line);
   }
-
-  // Obtém o ID do album e remove aspas
-  char *id = getAlbumId(album);
-  remove_quotes(id);
-
-  // Verifica se o album já está presente na hashtable
-  Albuns *existingAlbum = g_hash_table_lookup(albunsTable, id);
-  if (existingAlbum != NULL) {
-    destroyAlbum(existingAlbum);
-  }
-
-  // Insere o novo album na tabela hash
-  g_hash_table_insert(albunsTable, id, album);
 }
 /* else {
   // Regista a linha no ficheiro de erros se não for válida
@@ -75,7 +77,8 @@ void parserAlbum(GHashTable *albunsTable, Albuns *album, FILE *errorsFile,
 
 // Função para processar o ficheiro de álbuns utilizando a estrutura
 // gestorAlbuns
-int GestorAlbuns(gestorAlbuns *gestor, char *albunsPath) {
+int GestorAlbuns(gestorAlbuns *gestor, char *albunsPath,
+                 gestorArtists *gestorArtists) {
   // Abre o arquivo de albuns e carrega os dados
   FILE *fp = fopen(albunsPath, "r");
 
@@ -98,9 +101,9 @@ int GestorAlbuns(gestorAlbuns *gestor, char *albunsPath) {
         }
 
         album = separateAlbuns(line_copy);
-
-        parserAlbum(gestor->albunsTable, album, gestor->errorsFile, line);
-
+        char *copia = strdup(line);
+        parserAlbum(gestor->albunsTable, album, gestor->errorsFile, line, copia,
+                    gestorArtists);
         free(line_copy);
       }
     }

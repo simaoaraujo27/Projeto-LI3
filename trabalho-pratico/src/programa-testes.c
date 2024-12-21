@@ -68,9 +68,6 @@ int main(int argc, char **argv) {
   int totalTestesQ1 = 0;
   int totalTestesQ2 = 0;
   int totalTestesQ3 = 0;
-  int totalTestesQ4 = 0;
-  int totalTestesQ5 = 0;
-  int totalTestesQ6 = 0;
   int totalTestes = 0;
 
   int ch;
@@ -88,12 +85,6 @@ int main(int argc, char **argv) {
         totalTestesQ2++;
       else if (primeiro_char == '3')
         totalTestesQ3++;
-      else if (primeiro_char == '4')
-        totalTestesQ4++;
-      else if (primeiro_char == '5')
-        totalTestesQ5++;
-      else if (primeiro_char == '6')
-        totalTestesQ6++;
 
       totalTestes++;
 
@@ -112,8 +103,7 @@ int main(int argc, char **argv) {
   int lenPasta = strlen(pasta);
 
   // Contadores para os testes corretos de cada tipo de consulta
-  int corretasQ1 = 0, corretasQ2 = 0, corretasQ3 = 0, corretasQ4 = 0,
-      corretasQ5 = 0, corretasQ6 = 0;
+  int corretasQ1 = 0, corretasQ2 = 0, corretasQ3 = 0;
 
   // Loop para verificar os resultados dos testes
   for (int i = 1; i <= totalTestes; i++) {

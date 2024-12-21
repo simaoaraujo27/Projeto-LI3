@@ -1,5 +1,6 @@
 #include "gestor_history.h"
 #include "history.h"
+#include "validation.h"
 #include <assert.h>
 #include <glib.h>
 #include <stdio.h>
@@ -45,24 +46,26 @@ void freeGestorHistory(gestorHistory *gestor) {
 }
 
 void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
-                   char *line) {
+                   char *line, char *copia) {
   // TODO: ADICIONAR O IF DA VALIDAÇÃO QUANDO ESTIVER FEITO
   // ESTE IF É SÓ PARA NÃO DAR ERRO PORQUE AINDA FALTA A VALIDAÇÃO
-  if (errorsFile && line) {
+  if (validateHistoryLine(copia)) {
+    // Obtém o ID do history e remove aspas
+    char *id = getHistoryId(history);
+    remove_quotes(id);
+
+    // Verifica se o history já está presente na hashtable
+    History *existingHistory = g_hash_table_lookup(historyTable, id);
+    if (existingHistory != NULL) {
+      destroyHistory(existingHistory);
+    }
+
+    // Insere o novo history na tabela hash
+    g_hash_table_insert(historyTable, id, history);
+  } else {
+    // Escreve a linha inválida no ficheiro de erros
+    fprintf(errorsFile, "%s", line);
   }
-
-  // Obtém o ID do history e remove aspas
-  char *id = getHistoryId(history);
-  remove_quotes(id);
-
-  // Verifica se o history já está presente na hashtable
-  History *existingHistory = g_hash_table_lookup(historyTable, id);
-  if (existingHistory != NULL) {
-    destroyHistory(existingHistory);
-  }
-
-  // Insere o novo history na tabela hash
-  g_hash_table_insert(historyTable, id, history);
 }
 /* else {
   // Regista a linha no ficheiro de erros se não for válida
@@ -96,9 +99,10 @@ int GestorHistory(gestorHistory *gestor, char *historyPath) {
         }
 
         history = separateHistory(line_copy);
-
-        parserHistory(gestor->historyTable, history, gestor->errorsFile, line);
-
+        char *copia = strdup(line);
+        parserHistory(gestor->historyTable, history, gestor->errorsFile, line,
+                      copia);
+        free(copia);
         free(line_copy);
       }
     }

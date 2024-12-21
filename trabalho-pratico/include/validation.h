@@ -17,5 +17,7 @@ bool validateUsersLine(char *line, gestorMusics *gestorMusics);
 bool validateArtistLine(char *idConstituent, char *type);
 bool validateMusicsLine(char *line, gestorArtists *gestorArtists,
                         gestorAlbuns *gestorAlbuns);
+bool validateAlbumsLine(char *line, gestorArtists *gestorArtists);
+bool validateHistoryLine(char *line);
 
 #endif

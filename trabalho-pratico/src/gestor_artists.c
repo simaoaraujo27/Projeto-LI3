@@ -85,7 +85,7 @@ void parserArtist(GHashTable *ArtistsTable, Artists *artist, FILE *errorsFile,
 // gestorArtists
 int GestorArtists(gestorArtists *gestor, char *artistsPath) {
   // Abre o arquivo de artistas e carrega os dados
-  FILE *fp = fopen(artistsPath, "r");
+  FILE *fp = fopen(artistsPath, "r"); 
 
   if (fp) {
 

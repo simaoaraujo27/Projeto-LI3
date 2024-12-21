@@ -16,7 +16,8 @@
 
 bool validatePlataformHistory(char *plataform) {
   colocaTudoMinusculo(plataform);
-  return (!strcmp(plataform, "mobile") || !strcmp(plataform, "desktop"));
+  return (strcmp(plataform, "mobile") == 0 ||
+          strcmp(plataform, "desktop") == 0);
 }
 
 // Função para validar uma data no formato aaaa/mm/dd
@@ -337,4 +338,70 @@ bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
   free(liked_musics_id);
 
   return true;
+}
+
+bool validateArtistsIdAlbums(char *artists_id, gestorArtists *gestorArtists) {
+  remove_quotes(artists_id); // Remove as aspas
+  removeFstLast(artists_id); // Remove o primeiro e último caracteres
+  int lentghArtistsId =
+      (int)strlen(artists_id); // Obtém o comprimento da string
+  char *key = NULL;
+  gpointer orig_key;
+  gpointer value;
+
+  // Processa os IDs dos artistas
+  while (lentghArtistsId > 0) {
+    if (lentghArtistsId == (int)strlen(artists_id)) {
+      artists_id = artists_id + 1;
+    } else
+      artists_id = artists_id + 3;
+    key = strdup(strsep(&artists_id, "'")); // Separa o ID do artista
+    key[8] = '\0';                          // Limita o ID a 8 caracteres
+    gboolean found =
+        lookUpArtistsHashTable(gestorArtists, key, &value, &orig_key);
+    if (!found) { // Se o artista não for encontrado, retorna false
+      free(key);
+      return false;
+    }
+    lentghArtistsId -= 12; // Ajusta o comprimento restante da string
+  }
+
+  free(key);
+  return true;
+}
+
+bool validateAlbumsLine(char *line, gestorArtists *gestorArtists) {
+  char *id = strdup(strsep(&line, ";"));
+  char *title = strdup(strsep(&line, ";"));
+  char *artists_id = strdup(strsep(&line, ";"));
+  char *year = strdup(strsep(&line, ";"));
+
+  bool validate = (atoi(year) <= 2024 &&
+                   validateArtistsIdAlbums(artists_id, gestorArtists));
+
+  free(id);
+  free(title);
+  free(artists_id);
+  free(year);
+
+  return validate;
+}
+
+bool validateHistoryLine(char *line) {
+  char *id = strdup(strsep(&line, ";"));
+  char *user_id = strdup(strsep(&line, ";"));
+  char *music_id = strdup(strsep(&line, ";"));
+  char *timestamp = strdup(strsep(&line, ";"));
+  char *duration = strdup(strsep(&line, ";"));
+  char *plataform = strdup(strsep(&line, "\n"));
+  remove_quotes(plataform);
+  bool validate = validatePlataformHistory(plataform);
+  free(id);
+  free(user_id);
+  free(music_id);
+  free(timestamp);
+  free(duration);
+  free(plataform);
+
+  return validate;
 }
