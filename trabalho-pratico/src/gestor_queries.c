@@ -24,27 +24,44 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
     if ((temS && (line[3] == 'U')) || (!temS && (line[2] == 'U'))){
     query1User(pegarGestorUser(gestor), line, i, temS);
     }
-    //else
-    //  query1Artist(pegarGestorArtist(gestor), line, i, temS);
+    else
+      query1Artist(pegarGestorArtist(gestor), line, i, temS);
     end = clock();
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;
     *total_time_query1 += time_spent; // Acumula o tempo para Query 1
-  } else if (line[0] == '2') {
+  } 
+  else if (line[0] == '2') {
     start = clock();
     if (!temAspas(line)) {
+      if(!temS){
       query2(atoi(line + 2), NULL, gestor, i, temS);
+      }else{
+        query2(atoi(line + 3), NULL, gestor, i, temS);
+      }
     } else {
       firstOcorr = primeiraOcorr(line, '"');
+      if(!temS){
       query2(atoi(line + 2), line + firstOcorr, gestor, i, temS);
+      }else{
+      query2(atoi(line + 3), line + firstOcorr, gestor, i, temS);
+      }
     }
     end = clock();
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;
     *total_time_query2 += time_spent; // Acumula o tempo para Query 2
-  } else if (line[0] == '3') {
+  } 
+  else if (line[0] == '3') {
     start = clock();
+    if(!temS){
     minAge = atoi(line + 2);
     firstOcorr = primeiraOcorr(line + 2, ' ');
     maxAge = atoi(line + 2 + firstOcorr);
+    }
+    else{
+    minAge = atoi(line + 3);
+    firstOcorr = primeiraOcorr(line + 3, ' ');
+    maxAge = atoi(line + 3 + firstOcorr);
+    }
     query3(minAge, maxAge, lista, i);
     end = clock();
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;

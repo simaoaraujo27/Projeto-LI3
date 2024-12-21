@@ -1,6 +1,8 @@
 #include "gestor_users.h"
+#include "gestor_artists.h"
 #include "inputResult.h"
 #include "users.h"
+#include "artists.h"
 #include "utils.h"
 #include <ctype.h>
 #include <glib.h>
@@ -10,8 +12,8 @@
 #include <string.h>
 #include "outputResult.h"
 
-// Função para imprimir os dados de um user na consulta 1
-void MakeQuery1(gpointer orig_key, FILE *newFile, int temS) {
+// Função para imprimir os dados de um user
+void MakeQuery1User(gpointer orig_key, FILE *newFile, int temS) {
   // Obtém os dados do user usando os getters
   char *email = getUserEmail(orig_key);
   char *firstName = getUserFirstName(orig_key);
@@ -52,6 +54,7 @@ void MakeQuery1(gpointer orig_key, FILE *newFile, int temS) {
 void query1User(gestorUsers *gestorUser, char *line, int i, int temS) {
   // Remove os dois primeiros caracteres da linha
   line = line + 2;
+  if (temS) line++;
   line[strlen(line) - 1] = '\0'; // Remove o caractere de nova linha no final
 
   FILE *newFile = createFile(i);
@@ -63,16 +66,59 @@ void query1User(gestorUsers *gestorUser, char *line, int i, int temS) {
 
   // Se o user for encontrado, imprime os seus dados no arquivo
   if (found) {
-    MakeQuery1(orig_key, newFile, temS);
+    MakeQuery1User(orig_key, newFile, temS);
   } else {
     writeFile(newFile, "\n");
   }
 }
-/*
+
+// Função para imprimir os dados de um artist
+void MakeQuery1Artist(gpointer orig_key, FILE *newFile, int temS) {
+  // Obtém os dados do user usando os getters
+  char *name = getArtistName(orig_key);
+  char *type = getArtistTypeStr(orig_key);
+  char *country = getArtistCountry(orig_key);
+  //char *num_albuns_individual = "0";
+  //char *total_recipe = "1000";
+  // Calcula o tamanho total da string a ser concatenada, incluindo
+  // delimitadores
+  int total_len = strlen(name) + strlen(type) + strlen(country) +
+                  3; // 5 para os ';' ou '=' e o '\0'
+  char *new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
+
+  if (temS){
+    // Formata a string concatenada com os dados do user, separando-os por '='
+  snprintf(new_str, total_len + 1, "%s=%s=%s\n", name, type, country);
+  }
+  else{
+  // Formata a string concatenada com os dados do user, separando-os por ';'
+  snprintf(new_str, total_len + 1, "%s;%s;%s\n", name, type, country);
+  }
+  writeFile(newFile, new_str);
+
+  // Liberta a memória alocada para as strings
+  free(name);
+  //free(type);
+  free(country);
+  free(new_str);
+}
+
 void query1Artist(gestorArtists *gestorArtist, char *line, int i, int temS) {
    line = line + 2;
+   if (temS) line++;
   line[strlen(line) - 1] = '\0'; // Remove o caractere de nova linha no final
 
   FILE *newFile = createFile(i);
-  writeFile(newFile, "\n");
-}*/
+  gpointer value;
+  gpointer orig_key;
+
+  gboolean found = lookUpArtistsHashTable(gestorArtist, line, &value, &orig_key);
+
+  // Se o user for encontrado, imprime os seus dados no arquivo
+  if (found) {
+    //MakeQuery1Artist(orig_key, newFile, temS);
+  } else {
+    writeFile(newFile, "\n");
+  }
+}
+

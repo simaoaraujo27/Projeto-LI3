@@ -28,6 +28,7 @@ int getArtistRecipePerStream(gpointer artist);
 char *getArtistIdConstituent(gpointer artist);
 char *getArtistCountry(gpointer artist);
 enum tipoArtista getArtistType(gpointer artist);
+char* getArtistTypeStr(gpointer artist);
 int getArtistDiscografia(gpointer artist);
 
 void increment_artist_discografia(gpointer value, int duracao,

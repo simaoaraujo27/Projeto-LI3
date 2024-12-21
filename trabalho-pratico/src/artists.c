@@ -191,6 +191,10 @@ enum tipoArtista getArtistType(gpointer artist) {
   return ((struct artists *)artist)->tipo;
 }
 
+char* getArtistTypeStr(gpointer artist) {
+  return (((struct artists *)artist)->tipo == Grupo ? "group" : "individual");
+}
+
 int getArtistDiscografia(gpointer artist) {
   return ((struct artists *)artist)->discografia;
 }
