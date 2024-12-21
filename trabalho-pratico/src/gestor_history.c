@@ -1,8 +1,8 @@
 #include "gestor_history.h"
 #include "history.h"
+#include <assert.h>
 #include <glib.h>
 #include <stdio.h>
-#include <assert.h>
 
 struct gestorHistory {
   FILE *errorsFile;         // Ficheiro para registo de erros
@@ -48,7 +48,8 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
                    char *line) {
   // TODO: ADICIONAR O IF DA VALIDAÇÃO QUANDO ESTIVER FEITO
   // ESTE IF É SÓ PARA NÃO DAR ERRO PORQUE AINDA FALTA A VALIDAÇÃO
-  if (errorsFile && line) {}
+  if (errorsFile && line) {
+  }
 
   // Obtém o ID do history e remove aspas
   char *id = getHistoryId(history);
@@ -103,7 +104,6 @@ int GestorHistory(gestorHistory *gestor, char *historyPath) {
     }
     // Liberta a linha utilizada pelo getline
     free(line);
-
     fclose(fp);
   } else {
     perror("Error opening history file");

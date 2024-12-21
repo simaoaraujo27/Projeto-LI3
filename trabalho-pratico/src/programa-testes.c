@@ -1,6 +1,21 @@
 #include "compare_files.h"
 #define MAX_PATH_SIZE 1024
 
+/*
+TODO:
+    // Compara os arquivos de resultados e verifica se são iguais
+    if (compareFiles(fp1, fp2, totalTestesQ1, totalTestesQ2, totalTestesQ3,
+                     i)) {
+      // Conta os testes corretos de acordo com o tipo de consulta
+      if (i <= totalTestesQ1)
+        corretasQ1++;
+      else if (i <= (totalTestesQ1 + totalTestesQ2))
+        corretasQ2++;
+      else
+        corretasQ3++;
+    }
+*/
+
 int main(int argc, char **argv) {
   struct timespec start, end;
   double elapsed;
@@ -53,6 +68,9 @@ int main(int argc, char **argv) {
   int totalTestesQ1 = 0;
   int totalTestesQ2 = 0;
   int totalTestesQ3 = 0;
+  int totalTestesQ4 = 0;
+  int totalTestesQ5 = 0;
+  int totalTestesQ6 = 0;
   int totalTestes = 0;
 
   int ch;
@@ -65,13 +83,19 @@ int main(int argc, char **argv) {
       char primeiro_char = (char)ch;
 
       if (primeiro_char == '1')
-        totalTestesQ1++; // Conta os testes do tipo 1
+        totalTestesQ1++;
       else if (primeiro_char == '2')
-        totalTestesQ2++; // Conta os testes do tipo 2
+        totalTestesQ2++;
       else if (primeiro_char == '3')
-        totalTestesQ3++; // Conta os testes do tipo 3
+        totalTestesQ3++;
+      else if (primeiro_char == '4')
+        totalTestesQ4++;
+      else if (primeiro_char == '5')
+        totalTestesQ5++;
+      else if (primeiro_char == '6')
+        totalTestesQ6++;
 
-      totalTestes++; // Conta o total de testes
+      totalTestes++;
 
       nova_linha = 0;
     }
@@ -88,7 +112,8 @@ int main(int argc, char **argv) {
   int lenPasta = strlen(pasta);
 
   // Contadores para os testes corretos de cada tipo de consulta
-  int corretasQ1 = 0, corretasQ2 = 0, corretasQ3 = 0;
+  int corretasQ1 = 0, corretasQ2 = 0, corretasQ3 = 0, corretasQ4 = 0,
+      corretasQ5 = 0, corretasQ6 = 0;
 
   // Loop para verificar os resultados dos testes
   for (int i = 1; i <= totalTestes; i++) {

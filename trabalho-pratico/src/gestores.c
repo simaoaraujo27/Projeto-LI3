@@ -21,7 +21,7 @@ struct gestores {
 Gestores *initgestor(int *flag) {
 
   // Aloca memória para a estrutura
-  Gestores *gestor = malloc(sizeof(Gestores));
+  Gestores *gestor = malloc(sizeof(struct gestores));
   if (!gestor)
     return NULL;
 

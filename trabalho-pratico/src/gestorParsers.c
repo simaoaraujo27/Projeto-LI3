@@ -21,14 +21,14 @@ int GestorParsers(Gestores *gestor, char *path) {
   char *musicsPath = malloc(MAX_PATH_SIZE * sizeof(char));
   char *usersPath = malloc(MAX_PATH_SIZE * sizeof(char));
   char *albunsPath = malloc(MAX_PATH_SIZE * sizeof(char));
-  // char *historyPath = malloc(MAX_PATH_SIZE * sizeof(char));
+  char *historyPath = malloc(MAX_PATH_SIZE * sizeof(char));
 
   // Constroi os paths completos para os arquivos CSV
   snprintf(artistsPath, MAX_PATH_SIZE, "%s/%s", path, "artists.csv");
   snprintf(musicsPath, MAX_PATH_SIZE, "%s/%s", path, "musics.csv");
   snprintf(usersPath, MAX_PATH_SIZE, "%s/%s", path, "users.csv");
-  snprintf(usersPath, MAX_PATH_SIZE, "%s/%s", path, "albums.csv");
-  // snprintf(usersPath, MAX_PATH_SIZE, "%s/%s", path, "history.csv");
+  snprintf(albunsPath, MAX_PATH_SIZE, "%s/%s", path, "albums.csv");
+  snprintf(historyPath, MAX_PATH_SIZE, "%s/%s", path, "history.csv");
 
   if (!GestorArtists(pegarGestorArtist(gestor), artistsPath))
     return 0;
@@ -44,10 +44,8 @@ int GestorParsers(Gestores *gestor, char *path) {
   if (!GestorAlbuns(pegarGestorAlbum(gestor), albunsPath))
     return 0;
 
-  free(artistsPath);
-  free(musicsPath);
-  free(usersPath);
-  free(albunsPath);
-  // free(historyPath);
+  /*   if (!GestorHistory(pegarGestorHistory(gestor), historyPath))
+      return 0; */
+
   return 1;
 }

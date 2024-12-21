@@ -15,15 +15,15 @@ struct albuns {
 };
 
 // Funções get
-char *getAlbumId(Albuns *album) { return album->id; }
+char *getAlbumId(Albuns *album) { return strdup(album->id); }
 
-char *getAlbumTitle(Albuns *album) { return album->title; }
+char *getAlbumTitle(Albuns *album) { return strdup(album->title); }
 
-char *getAlbumArtistsId(Albuns *album) { return album->artists_id; }
+char *getAlbumArtistsId(Albuns *album) { return strdup(album->artists_id); }
 
-char *getAlbumYear(Albuns *album) { return album->year; }
+char *getAlbumYear(Albuns *album) { return strdup(album->year); }
 
-char *getAlbumProducers(Albuns *album) { return album->producers; }
+char *getAlbumProducers(Albuns *album) { return strdup(album->producers); }
 
 // Funções set
 void setAlbumId(Albuns *album, char *id) {

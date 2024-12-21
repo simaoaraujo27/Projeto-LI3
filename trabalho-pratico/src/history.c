@@ -18,17 +18,17 @@ struct history {
 };
 
 // Funções get
-char *getHistoryId(History *hist) { return hist->id; }
+char *getHistoryId(History *hist) { return strdup(hist->id); }
 
-char *getHistoryUserId(History *hist) { return hist->user_id; }
+char *getHistoryUserId(History *hist) { return strdup(hist->user_id); }
 
-char *getHistoryMusicId(History *hist) { return hist->music_id; }
+char *getHistoryMusicId(History *hist) { return strdup(hist->music_id); }
 
-char *getHistoryTimestamp(History *hist) { return hist->timestamp; }
+char *getHistoryTimestamp(History *hist) { return strdup(hist->timestamp); }
 
-char *getHistoryDuration(History *hist) { return hist->duration; }
+char *getHistoryDuration(History *hist) { return strdup(hist->duration); }
 
-char *getHistoryPlatform(History *hist) { return hist->platform; }
+char *getHistoryPlatform(History *hist) { return strdup(hist->platform); }
 
 // Funções set
 void setHistoryId(History *hist, char *id) {
