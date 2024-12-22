@@ -60,4 +60,10 @@ char *pegarArtistType(Artists *artist);
 
 int pegarArtistDiscografia(Artists *artist);
 
+float ReceitaParticipacao(int numeroDeParticipacoesEmMusicaColetivas,
+                          float reproducoes[], float ratePerStream[],
+                          float constituintes[]);
+float ReceitaArtista(float reproducoes, float ratePerStreamArtista);
+float ReceitaArtistaIndividual(float receitaArtista, float receitaParticipacao);
+
 #endif

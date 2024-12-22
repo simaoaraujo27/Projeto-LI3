@@ -221,3 +221,23 @@ void destroyArtist(Artists *a) {
     free(a);
   }
 }
+
+float ReceitaParticipacao(int numeroDeParticipacoesEmMusicaColetivas,
+                          float reproducoes[], float ratePerStream[],
+                          float constituintes[]) {
+  float receitaParticipaçao = 0;
+  for (int i = 0; i < numeroDeParticipacoesEmMusicaColetivas; i++) {
+    receitaParticipaçao +=
+        ((reproducoes[i] * ratePerStream[i]) / constituintes[i]);
+  }
+  return receitaParticipaçao;
+}
+
+float ReceitaArtista(float reproducoes, float ratePerStreamArtista) {
+  return reproducoes * ratePerStreamArtista;
+}
+
+float ReceitaArtistaIndividual(float receitaArtista,
+                               float receitaParticipacao) {
+  return receitaArtista + receitaParticipacao;
+}

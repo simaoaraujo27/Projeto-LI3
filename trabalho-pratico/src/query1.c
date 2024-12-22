@@ -70,6 +70,19 @@ void query1User(gestorUsers *gestorUser, char *line, int i, int temS) {
   }
 }
 
+void floatParaString(float numero, char **buffer) {
+  // Aloca memória para o buffer (supondo 20 caracteres suficientes para o
+  // número formatado)
+  *buffer = (char *)malloc(20 * sizeof(char));
+  if (*buffer == NULL) {
+    printf("Erro ao alocar memória!\n");
+    return;
+  }
+
+  // Converte o float para string com duas casas decimais
+  snprintf(*buffer, 20, "%.2f", numero);
+}
+
 // Função para imprimir os dados de um artist
 void MakeQuery1Artist(gpointer orig_key, FILE *newFile, int temS) {
   // Obtém os dados do user usando os getters
@@ -79,22 +92,35 @@ void MakeQuery1Artist(gpointer orig_key, FILE *newFile, int temS) {
   char *country = getArtistCountry(orig_key);
   int num_albuns_individual = getArtistNumAlbunsIndividual(orig_key);
   char *num_albuns_individual_str = intToString(num_albuns_individual);
+
+  float reproducoesMusicasDoArtistaSolo = 0;
+  float ratePerStreamArtista = 0;
+  int numeroDeParticipacoesEmMusicaColetivas = 0;
+  float reproducoes[1] = {0.};
+  float ratePerStream[1] = {0.};
+  float constituintes[1] = {0.};
+  float receitaArtista = ReceitaArtistaIndividual(
+      ReceitaArtista(reproducoesMusicasDoArtistaSolo, ratePerStreamArtista),
+      ReceitaParticipacao(numeroDeParticipacoesEmMusicaColetivas, reproducoes,
+                          ratePerStream, constituintes));
+  char *buffer;
+  floatParaString(receitaArtista, &buffer);
   // char *total_recipe = "1000";
   //  Calcula o tamanho total da string a ser concatenada, incluindo
   //  delimitadores
   int total_len = strlen(name) + strlen(type) + strlen(country) +
-                  strlen(num_albuns_individual_str) +
+                  strlen(num_albuns_individual_str) + 26 +
                   4; // 5 para os ';' ou '=' e o '\0'
   char *new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
 
   if (temS) {
     // Formata a string concatenada com os dados do user, separando-os por '='
-    snprintf(new_str, total_len + 1, "%s=%s=%s=%s\n", name, type, country,
-             num_albuns_individual_str);
+    snprintf(new_str, total_len + 1, "%s=%s=%s=%s=%s\n", name, type, country,
+             num_albuns_individual_str, buffer);
   } else {
     // Formata a string concatenada com os dados do user, separando-os por ';'
-    snprintf(new_str, total_len + 1, "%s;%s;%s;%s\n", name, type, country,
-             num_albuns_individual_str);
+    snprintf(new_str, total_len + 1, "%s;%s;%s;%s;%s\n", name, type, country,
+             num_albuns_individual_str, buffer);
   }
   writeFile(newFile, new_str);
 
@@ -104,6 +130,7 @@ void MakeQuery1Artist(gpointer orig_key, FILE *newFile, int temS) {
   free(country);
   free(num_albuns_individual_str);
   free(new_str);
+  free(buffer);
 }
 
 void query1Artist(gestorArtists *gestorArtist, char *line, int i, int temS) {
