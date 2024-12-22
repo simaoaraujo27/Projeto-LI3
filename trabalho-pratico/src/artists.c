@@ -160,7 +160,6 @@ void increment_artist_discografia(gpointer value, int duracao,
   }
 }
 
-
 // Funções para obter os valores dos campos de um artista
 char *pegarArtistId(Artists *artist) { return strdup(artist->id); }
 
@@ -200,7 +199,7 @@ enum tipoArtista getArtistType(gpointer artist) {
   return ((struct artists *)artist)->tipo;
 }
 
-char* getArtistTypeStr(gpointer artist) {
+char *getArtistTypeStr(gpointer artist) {
   return (((struct artists *)artist)->tipo == Grupo ? "group" : "individual");
 }
 
@@ -208,8 +207,8 @@ int getArtistDiscografia(gpointer artist) {
   return ((struct artists *)artist)->discografia;
 }
 
-int getArtistNumAlbunsIndividual(gpointer artist) {
-  return ((struct artists *)artist)->num_albuns_individual;
+int getArtistNumAlbunsIndividual(Artists *artist) {
+  return artist->num_albuns_individual;
 }
 
 // Função para libertar a memória alocada para um artista
