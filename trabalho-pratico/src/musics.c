@@ -30,6 +30,10 @@ void setMusicTitle(Musics *m, char *title) { m->title = title; }
 // Função para definir o(s) id(s) do(s) artista(s) de uma música
 void setMusicArtistId(Musics *m, char *artist_id) { m->artist_id = artist_id; }
 
+void setMusicAlbumId(Musics *m, char *album_id){
+  m->album_id = album_id;
+}
+
 // Função para definir a duração de uma música em segundos
 void setMusicDurationSeconds(Musics *m, int durationSeconds) {
   m->durationSeconds = durationSeconds;
@@ -54,6 +58,7 @@ Musics *separateMusics(char *line) {
   setMusicId(music, strdup(strsep(&line, ";")));
   setMusicTitle(music, strdup(strsep(&line, ";")));
   setMusicArtistId(music, strdup(strsep(&line, ";")));
+  setMusicAlbumId(music, strdup(strsep(&line, ";")));
 
   char *duration_str = strdup(strsep(&line, ";"));
   setMusicGenre(music, strdup(strsep(&line, ";")));
@@ -90,6 +95,8 @@ char *pegarMusicTitle(Musics *m) { return strdup(m->title); }
 
 char *pegarMusicArtistId(Musics *m) { return strdup(m->artist_id); }
 
+char *pegarMusicAlbumId(Musics *m) { return strdup(m->album_id); }
+
 int pegarMusicDuration(Musics *m) { return (m->durationSeconds); }
 
 char *pegarMusicGenre(Musics *m) { return strdup(m->genre); }
@@ -110,6 +117,11 @@ char *getMusicTitle(gpointer music) {
 char *getMusicArtistId(gpointer music) {
   struct musics *m = (struct musics *)music;
   return strdup(m->artist_id);
+}
+
+char *getMusicAlbumId(gpointer music) {
+  struct musics *m = (struct musics *)music;
+  return strdup(m->album_id);
 }
 
 int getMusicDuration(gpointer music) {
@@ -133,6 +145,7 @@ void destroyMusic(Musics *music) {
     free(music->id);        // Liberta memória do id
     free(music->title);     // Liberta memória do título
     free(music->artist_id); // Liberta memória do identificador do artista
+    free(music->album_id);  // Liberta memória do album_id
     free(music->genre);     // Liberta memória do género
 
     free(music); // Liberta a estrutura Musics em si

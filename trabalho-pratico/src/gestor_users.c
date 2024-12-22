@@ -59,7 +59,6 @@ void parserUser(char *line, gestorMusics *gestorMusic, FILE *errorsFile,
         separateUsers(line); // Se a linha for válida, separa os dados do user
 
     username = getUserUsername(user); // Obtém o nome do user
-
     // Insere o user na hashtable usando o username como chave
     g_hash_table_insert(usersTable, username, user);
   } else {

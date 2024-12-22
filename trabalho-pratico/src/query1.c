@@ -56,14 +56,12 @@ void query1User(gestorUsers *gestorUser, char *line, int i, int temS) {
   line = line + 2;
   if (temS) line++;
   line[strlen(line) - 1] = '\0'; // Remove o caractere de nova linha no final
-
   FILE *newFile = createFile(i);
 
   gpointer value;
   gpointer orig_key;
 
   gboolean found = lookUpUsersHashTable(gestorUser, line, &value, &orig_key);
-
   // Se o user for encontrado, imprime os seus dados no arquivo
   if (found) {
     MakeQuery1User(orig_key, newFile, temS);
@@ -116,6 +114,7 @@ void query1Artist(gestorArtists *gestorArtist, char *line, int i, int temS) {
 
   // Se o user for encontrado, imprime os seus dados no arquivo
   if (found) {
+    writeFile(newFile, "\n");
     //MakeQuery1Artist(orig_key, newFile, temS);
   } else {
     writeFile(newFile, "\n");
