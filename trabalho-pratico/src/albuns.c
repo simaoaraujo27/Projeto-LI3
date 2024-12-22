@@ -1,5 +1,6 @@
 #include "albuns.h"
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -74,14 +75,28 @@ void destroyAlbum(Albuns *album) {
   free(album->producers);
 }
 
+int numeroArtistas(char *album_id){
+  int nvirgulas = 0;
+  for (int i = 0; album_id[i] != '\0'; i++){
+    nvirgulas += (album_id[i] == ',');
+  }
+  return nvirgulas + 1;
+}
+
 // Função que separa dados de um álbum a partir de uma linha do CSV
-Albuns *separateAlbuns(char *line) {
+Albuns *separateAlbuns(char *line, gestorArtists *gestorArtists) {
   Albuns *album = initAlbum();
   setAlbumId(album, strdup(strsep(&line, ";")));
   setAlbumTitle(album, strdup(strsep(&line, ";")));
   setAlbumArtistsId(album, strdup(strsep(&line, ";")));
   setAlbumYear(album, strdup(strsep(&line, ";")));
   setAlbumProducers(album, strdup(strsep(&line, ";")));
+  char *artists = strdup(album->artists_id);
+  if(numeroArtistas(artists) == 1){
+    artists[11] = '\0';
+    incrementArtistsNumAlbuns(artists + 3, gestorArtists);
+  }
 
+  free(artists);
   return album;
 }

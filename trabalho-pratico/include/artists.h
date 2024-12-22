@@ -20,6 +20,7 @@ void setArtistIdConstituent(Artists *a, char *id_constituent);
 void setArtistCountry(Artists *a, char *country);
 void setArtistTipo(Artists *a, enum tipoArtista tipo);
 void setArtistDiscografia(Artists *a, int discografia);
+void setArtistNumAlbunsIndividual(Artists *a, int num_albuns_individual);
 
 char *getArtistId(gpointer artist);
 char *getArtistName(gpointer artist);
@@ -30,6 +31,7 @@ char *getArtistCountry(gpointer artist);
 enum tipoArtista getArtistType(gpointer artist);
 char* getArtistTypeStr(gpointer artist);
 int getArtistDiscografia(gpointer artist);
+int getArtistNumAlbunsIndividual(gpointer artist);
 
 void increment_artist_discografia(gpointer value, int duracao,
                                   GList **listaResposta, int numeroArtistas,

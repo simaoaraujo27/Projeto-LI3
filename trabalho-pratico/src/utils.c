@@ -143,3 +143,14 @@ int comparaStrings(char *str1, char *str2) {
     return 1; // Retorna 1 se as strings tiverem tamanhos diferentes
   return 0;   // Retorna 0 se as strings forem iguais
 }
+
+char* intToString(int number) {
+    // Aloca memória suficiente para armazenar a string (máximo 12 caracteres para int)
+    char* result = (char*)malloc(12 * sizeof(char));
+    if (result == NULL) {
+        return NULL; // Retorna NULL se não conseguiu alocar memória
+    }
+    // Converte o número inteiro em string
+    sprintf(result, "%d", number);
+    return result;
+}

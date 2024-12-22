@@ -3,6 +3,8 @@
 
 typedef struct albuns Albuns;
 
+#include "gestor_artists.h"
+
 char *getAlbumId(Albuns *album);
 char *getAlbumTitle(Albuns *album);
 char *getAlbumArtistsId(Albuns *album);
@@ -18,6 +20,6 @@ void setAlbumProducers(Albuns *album, char *producers);
 Albuns *initAlbum();
 void destroyAlbum(Albuns *album);
 
-Albuns *separateAlbuns(char *line);
+Albuns *separateAlbuns(char *line, gestorArtists *gestorArtists);
 
 #endif

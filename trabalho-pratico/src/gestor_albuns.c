@@ -55,11 +55,6 @@ void parserAlbum(GHashTable *albunsTable, Albuns *album, FILE *errorsFile,
     char *id = getAlbumId(album);
     remove_quotes(id);
 
-    // Verifica se o album já está presente na hashtable
-    Albuns *existingAlbum = g_hash_table_lookup(albunsTable, id);
-    if (existingAlbum != NULL) {
-      destroyAlbum(existingAlbum);
-    }
 
     // Insere o novo album na tabela hash
     g_hash_table_insert(albunsTable, id, album);
@@ -100,7 +95,7 @@ int GestorAlbuns(gestorAlbuns *gestor, char *albunsPath,
           continue; // Se falhar, passa à próxima linha
         }
 
-        album = separateAlbuns(line_copy);
+        album = separateAlbuns(line_copy, gestorArtists);
         char *copia = strdup(line);
         parserAlbum(gestor->albunsTable, album, gestor->errorsFile, line, copia,
                     gestorArtists);

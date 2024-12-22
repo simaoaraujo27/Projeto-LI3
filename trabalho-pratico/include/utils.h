@@ -23,4 +23,6 @@ void removeForLikedMusics(char *str);
 
 int comparaStrings(char *str1, char *str2);
 
+char* intToString(int number);
+
 #endif

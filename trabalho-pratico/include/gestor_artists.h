@@ -16,6 +16,8 @@ int GestorArtists(gestorArtists *gestor, char *artistsPath);
 gboolean lookUpArtistsHashTable(gestorArtists *gestorArtist, char *line,
                                 gpointer *value, gpointer *orig_key);
 
+void incrementArtistsNumAlbuns(char *artistId, gestorArtists *gestorArtist);
+
 void colocaZero(gestorArtists *GestorArtists);
 
 #endif // _GESTORARTISTS_H_

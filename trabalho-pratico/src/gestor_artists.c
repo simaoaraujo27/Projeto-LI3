@@ -85,7 +85,7 @@ void parserArtist(GHashTable *ArtistsTable, Artists *artist, FILE *errorsFile,
 // gestorArtists
 int GestorArtists(gestorArtists *gestor, char *artistsPath) {
   // Abre o arquivo de artistas e carrega os dados
-  FILE *fp = fopen(artistsPath, "r"); 
+  FILE *fp = fopen(artistsPath, "r");
 
   if (fp) {
 
@@ -139,6 +139,20 @@ gboolean lookUpArtistsHashTable(gestorArtists *gestorArtist, char *key,
   gboolean found = g_hash_table_lookup_extended(gestorArtist->artistsTable, key,
                                                 orig_key, value);
   return found;
+}
+
+void incrementArtistsNumAlbuns(char *artistId, gestorArtists *gestorArtist) {
+  gpointer value;
+  gpointer orig_key;
+  int num = 0;
+  gboolean found =
+      lookUpArtistsHashTable(gestorArtist, artistId, &value, &orig_key);
+  if(found){
+  num = getArtistNumAlbunsIndividual(orig_key);
+  num++;
+  Artists *artist = (Artists *)value;
+  setArtistNumAlbunsIndividual(artist, num);
+  }
 }
 
 // Inicializa a discografia de todos os artistas a zero

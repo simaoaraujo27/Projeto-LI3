@@ -15,6 +15,7 @@ struct artists {
   char *country;         // Nacionalidade do artista
   enum tipoArtista tipo; // Tipo de artista (individual ou grupo)
   int discografia;       // Número de músicas ou discos associados ao artista
+  int num_albuns_individual;
 };
 
 // Funções para definir campos específicos da estrutura "Artists"
@@ -32,6 +33,10 @@ void setArtistTipo(Artists *a, enum tipoArtista tipo) { a->tipo = tipo; }
 
 void setArtistDiscografia(Artists *a, int discografia) {
   a->discografia = discografia;
+}
+
+void setArtistNumAlbunsIndividual(Artists *a, int num_albuns_individual) {
+  a->num_albuns_individual = num_albuns_individual;
 }
 
 // Função que separa os dados de um artista a partir de uma linha do CSV
@@ -64,6 +69,8 @@ Artists *separateArtists(char *line) {
 
   // Inicializa a discografia com zero
   setArtistDiscografia(artist, 0);
+
+  setArtistNumAlbunsIndividual(artist, 0);
 
   // Liberta memória das variáveis temporárias
   free(id);
@@ -153,6 +160,7 @@ void increment_artist_discografia(gpointer value, int duracao,
   }
 }
 
+
 // Funções para obter os valores dos campos de um artista
 char *pegarArtistId(Artists *artist) { return strdup(artist->id); }
 
@@ -176,7 +184,8 @@ char *getArtistId(gpointer artist) {
 }
 
 char *getArtistName(gpointer artist) {
-  return strdup(((struct artists *)artist)->name);
+  struct artists *a = (struct artists *)artist;
+  return strdup(a->name);
 }
 
 char *getArtistIdConstituent(gpointer artist) {
@@ -197,6 +206,10 @@ char* getArtistTypeStr(gpointer artist) {
 
 int getArtistDiscografia(gpointer artist) {
   return ((struct artists *)artist)->discografia;
+}
+
+int getArtistNumAlbunsIndividual(gpointer artist) {
+  return ((struct artists *)artist)->num_albuns_individual;
 }
 
 // Função para libertar a memória alocada para um artista
