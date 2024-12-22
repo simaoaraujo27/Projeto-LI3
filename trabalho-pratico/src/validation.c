@@ -180,7 +180,6 @@ bool validateMusicsArtistsAndAlbuns(char *albuns_id, char *artists_id,
   removeFstLast(artists_id); // Remove o primeiro e último caracteres
   int lentghArtistsId =
       (int)strlen(artists_id); // Obtém o comprimento da string
-  int lentghAlbunsId = (int)strlen(albuns_id);
   char *key = NULL;
   gpointer orig_key;
   gpointer value;
@@ -201,23 +200,14 @@ bool validateMusicsArtistsAndAlbuns(char *albuns_id, char *artists_id,
     }
     lentghArtistsId -= 12; // Ajusta o comprimento restante da string
   }
-  // Processa os IDs dos álbuns
-  while (lentghAlbunsId > 0) {
-    if (lentghAlbunsId == (int)strlen(albuns_id)) {
-      albuns_id = albuns_id + 1;
-    } else
-      albuns_id = albuns_id + 3;
-    key = strdup(strsep(&albuns_id, "'")); // Separa o ID do artista
-    key[8] = '\0';                         // Limita o ID a 8 caracteres
-    gboolean found =
-        lookUpAlbunsHashTable(gestorAlbuns, key, &value, &orig_key);
-    if (!found) { // Se o artista não for encontrado, retorna false
-      free(key);
-      return false;
-    }
-    lentghAlbunsId -= 12; // Ajusta o comprimento restante da string
-  }
 
+  removeFstLast(albuns_id);
+  gboolean found =
+      lookUpAlbunsHashTable(gestorAlbuns, albuns_id, &value, &orig_key);
+  if (!found) { // Se o artista não for encontrado, retorna false
+    free(key);
+    return false;
+  }
   free(key);
   return true;
 }
