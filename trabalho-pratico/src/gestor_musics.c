@@ -54,6 +54,31 @@ void freeGestorMusics(gestorMusics *gestor) {
   }
 }
 
+void colocaIdMusicNosArtists(char *IdComponents, gestorArtists *gestorArtists) {
+  removeFstLast(IdComponents);
+  removeFstLast(IdComponents);
+  int l = (int)strlen(IdComponents);
+  char *key = NULL;
+  gpointer value;
+  gpointer orig_key;
+  /* int solo = 0;
+  if (l - 12 <= 0)
+    solo = 1; */
+  // Processa os IDs das músicas
+  while (l > 0) {
+    if (l == (int)strlen(IdComponents)) {
+      IdComponents = IdComponents + 1;
+    } else
+      IdComponents = IdComponents + 3;
+    key = strdup(strsep(&IdComponents, "'")); // Separa o ID da música
+    key[8] = '\0';                            // Limita o ID a 8 caracteres
+    lookUpArtistsHashTable(gestorArtists, key, &value, &orig_key);
+    // ColocaIdMusicInArtist(&orig_key, IdMusic, solo);
+    l -= 12;
+  }
+  free(key);
+}
+
 void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
                  Musics *music, GHashTable *musicsTable, FILE *errorsFile,
                  gestorAlbuns *gestorAlbuns) {
@@ -61,8 +86,8 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
   if (validateMusicsLine(copia, gestorArtist, gestorAlbuns)) {
     // Se a linha for válida, separa os campos e cria um objeto Musics
     music = separateMusics(line);
-
-    // Obtém o ID da música e insere na hashtable usando o ID como chave
+    colocaIdMusicNosArtists(getMusicArtistId(music), gestorArtist);
+    //  Obtém o ID da música e insere na hashtable usando o ID como chave
     id = getMusicId(music);
     g_hash_table_insert(musicsTable, id, music);
   } else {

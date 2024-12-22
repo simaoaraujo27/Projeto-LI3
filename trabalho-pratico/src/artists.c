@@ -16,6 +16,9 @@ struct artists {
   enum tipoArtista tipo; // Tipo de artista (individual ou grupo)
   int discografia;       // Número de músicas ou discos associados ao artista
   int num_albuns_individual;
+  float recipePerStream;
+  char *IdMusicSolo;
+  char *IdMusicGrupo;
 };
 
 // Funções para definir campos específicos da estrutura "Artists"
@@ -39,6 +42,10 @@ void setArtistNumAlbunsIndividual(Artists *a, int num_albuns_individual) {
   a->num_albuns_individual = num_albuns_individual;
 }
 
+void setArtistRecipePerStream(Artists *a, float recipePerStream) {
+  a->recipePerStream = recipePerStream;
+}
+
 // Função que separa os dados de um artista a partir de uma linha do CSV
 Artists *separateArtists(char *line) {
   // Aloca memória para um novo artista
@@ -53,8 +60,11 @@ Artists *separateArtists(char *line) {
   setArtistName(artist, strdup(strsep(&line, ";")));
 
   // Ignora alguns campos não utilizados atualmente
-  char *id = strdup(strsep(&line, ";"));
-  char *name = strdup(strsep(&line, ";"));
+  char *description = strdup(strsep(&line, ";"));
+
+  char *recipePerStreamStr = strdup(strsep(&line, ";"));
+  float recipePerStream = atof(recipePerStreamStr);
+  setArtistRecipePerStream(artist, recipePerStream);
 
   setArtistIdConstituent(artist, strdup(strsep(&line, ";")));
   setArtistCountry(artist, strdup(strsep(&line, ";")));
@@ -73,8 +83,8 @@ Artists *separateArtists(char *line) {
   setArtistNumAlbunsIndividual(artist, 0);
 
   // Liberta memória das variáveis temporárias
-  free(id);
-  free(name);
+  free(description);
+  free(recipePerStreamStr);
   free(linhaTipo);
 
   return artist;
@@ -145,6 +155,14 @@ void procuraArt(Artists *artist, GList **listaResposta) {
   }
 }
 
+void ColocaIdMusicInArtist(gpointer value, char *IdMusic, int solo) {
+  Artists *artist = (Artists *)value;
+  if (solo)
+    strcat(artist->IdMusicSolo, IdMusic);
+  else
+    strcat(artist->IdMusicGrupo, IdMusic);
+}
+
 void putArtistsDiscografyZero(Artists *artist) { artist->discografia = 0; }
 
 // Incrementa a discografia de um artista se ele corresponder ao país
@@ -209,6 +227,10 @@ int getArtistDiscografia(gpointer artist) {
 
 int getArtistNumAlbunsIndividual(Artists *artist) {
   return artist->num_albuns_individual;
+}
+
+float getArtistRecipePerStream(gpointer artist) {
+  return ((struct artists *)artist)->recipePerStream;
 }
 
 // Função para libertar a memória alocada para um artista

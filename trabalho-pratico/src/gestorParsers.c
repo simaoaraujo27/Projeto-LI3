@@ -45,7 +45,8 @@ int GestorParsers(Gestores *gestor, char *path) {
                    usersPath))
     return 0;
 
-  if (!GestorHistory(pegarGestorHistory(gestor), historyPath))
+  if (!GestorHistory(pegarGestorHistory(gestor), pegarGestorMusic(gestor),
+                     historyPath))
     return 0;
 
   return 1;

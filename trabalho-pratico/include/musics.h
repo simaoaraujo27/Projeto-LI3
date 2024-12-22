@@ -6,17 +6,15 @@
 
 typedef struct musics Musics;
 
-void setMusicId (Musics *m, char *id);
-void setMusicTitle (Musics *m, char *title);
-void setMusicArtistId (Musics *m, char *artist_id);
-void setMusicDurationSeconds (Musics *m, int durationSeconds);
-void setMusicGenre (Musics *m, char *genre);
-void setMusicYear (Musics *m, int year);
-
+void setMusicId(Musics *m, char *id);
+void setMusicTitle(Musics *m, char *title);
+void setMusicArtistId(Musics *m, char *artist_id);
+void setMusicDurationSeconds(Musics *m, int durationSeconds);
+void setMusicGenre(Musics *m, char *genre);
+void setMusicYear(Musics *m, int year);
 
 Musics *separateMusics(char *line);
 bool validateMusic(Musics *music);
-
 
 char *pegarMusicId(Musics *m);
 char *pegarMusicTitle(Musics *m);
@@ -35,5 +33,7 @@ int getMusicYear(gpointer music);
 char *getMusicLyrics(gpointer music);
 
 void destroyMusic(Musics *music);
+
+void incrementReproduction(gpointer value);
 
 #endif

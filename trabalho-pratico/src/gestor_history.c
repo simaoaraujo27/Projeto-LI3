@@ -72,11 +72,12 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
   fprintf(errorsFile, "%s", line);
   destroyArtist(artist); // Liberta a memória do album inválido
 
-} */
+}  */
 
 // Função para processar o ficheiro de history utilizando a estrutura
 // gestorHistory
-int GestorHistory(gestorHistory *gestor, char *historyPath) {
+int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
+                  char *historyPath) {
   // Abre o arquivo de history e carrega os dados
   FILE *fp = fopen(historyPath, "r");
 
@@ -99,6 +100,13 @@ int GestorHistory(gestorHistory *gestor, char *historyPath) {
         }
 
         history = separateHistory(line_copy);
+
+        char *currentMusic = getHistoryMusicId(history);
+        gpointer orig_key;
+        gpointer value;
+        lookUpMusicsHashTable(gestorMusic, currentMusic, &value, &orig_key);
+        incrementReproduction(&value);
+
         char *copia = strdup(line);
         parserHistory(gestor->historyTable, history, gestor->errorsFile, line,
                       copia);

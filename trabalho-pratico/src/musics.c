@@ -16,6 +16,7 @@ struct musics {
   int durationSeconds; // tempo de duração em segundos
   char *genre;         // género da música
   int year;            // ano de lançamento
+  int reproducoes;
 };
 
 // Função para definir o id de uma música
@@ -30,9 +31,7 @@ void setMusicTitle(Musics *m, char *title) { m->title = title; }
 // Função para definir o(s) id(s) do(s) artista(s) de uma música
 void setMusicArtistId(Musics *m, char *artist_id) { m->artist_id = artist_id; }
 
-void setMusicAlbumId(Musics *m, char *album_id){
-  m->album_id = album_id;
-}
+void setMusicAlbumId(Musics *m, char *album_id) { m->album_id = album_id; }
 
 // Função para definir a duração de uma música em segundos
 void setMusicDurationSeconds(Musics *m, int durationSeconds) {
@@ -77,6 +76,9 @@ Musics *separateMusics(char *line) {
     setMusicDurationSeconds(music,
                             -1); // Caso a validação falhe, define como -1
   }
+
+  music->reproducoes = 0;
+
   free(duration_str); // Liberta a memória alocada para a duração
 
   return music; // Retorna a estrutura Musics preenchida
@@ -150,4 +152,9 @@ void destroyMusic(Musics *music) {
 
     free(music); // Liberta a estrutura Musics em si
   }
+}
+
+void incrementReproduction(gpointer value) {
+  Musics *music = (Musics *)value;
+  music->reproducoes++;
 }

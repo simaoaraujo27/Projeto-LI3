@@ -94,33 +94,34 @@ void MakeQuery1Artist(gpointer orig_key, FILE *newFile, int temS) {
   char *num_albuns_individual_str = intToString(num_albuns_individual);
 
   float reproducoesMusicasDoArtistaSolo = 0;
-  float ratePerStreamArtista = 0;
+  float ratePerStreamArtista = getArtistRecipePerStream(orig_key);
   int numeroDeParticipacoesEmMusicaColetivas = 0;
   float reproducoes[1] = {0.};
   float ratePerStream[1] = {0.};
   float constituintes[1] = {0.};
+
   float receitaArtista = ReceitaArtistaIndividual(
       ReceitaArtista(reproducoesMusicasDoArtistaSolo, ratePerStreamArtista),
       ReceitaParticipacao(numeroDeParticipacoesEmMusicaColetivas, reproducoes,
                           ratePerStream, constituintes));
-  char *buffer;
-  floatParaString(receitaArtista, &buffer);
+  char *receitArtista;
+  floatParaString(receitaArtista, &receitArtista);
   // char *total_recipe = "1000";
   //  Calcula o tamanho total da string a ser concatenada, incluindo
   //  delimitadores
   int total_len = strlen(name) + strlen(type) + strlen(country) +
-                  strlen(num_albuns_individual_str) + 26 +
-                  4; // 5 para os ';' ou '=' e o '\0'
+                  strlen(num_albuns_individual_str) + strlen(receitArtista) +
+                  5; // 5 para os ';' ou '=' e o '\0'
   char *new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
 
   if (temS) {
     // Formata a string concatenada com os dados do user, separando-os por '='
     snprintf(new_str, total_len + 1, "%s=%s=%s=%s=%s\n", name, type, country,
-             num_albuns_individual_str, buffer);
+             num_albuns_individual_str, receitArtista);
   } else {
     // Formata a string concatenada com os dados do user, separando-os por ';'
     snprintf(new_str, total_len + 1, "%s;%s;%s;%s;%s\n", name, type, country,
-             num_albuns_individual_str, buffer);
+             num_albuns_individual_str, receitArtista);
   }
   writeFile(newFile, new_str);
 
@@ -130,7 +131,7 @@ void MakeQuery1Artist(gpointer orig_key, FILE *newFile, int temS) {
   free(country);
   free(num_albuns_individual_str);
   free(new_str);
-  free(buffer);
+  free(receitArtista);
 }
 
 void query1Artist(gestorArtists *gestorArtist, char *line, int i, int temS) {

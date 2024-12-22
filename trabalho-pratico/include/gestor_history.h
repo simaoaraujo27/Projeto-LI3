@@ -3,6 +3,7 @@
 
 typedef struct gestorHistory gestorHistory;
 
+#include "gestor_musics.h"
 #include "history.h"
 #include "utils.h"
 #include <glib.h>
@@ -13,6 +14,7 @@ void freeGestorHistory(gestorHistory *gestor);
 
 void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
                    char *line, char *copia);
-int GestorHistory(gestorHistory *gestor, char *historyPath);
+int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
+                  char *historyPath);
 
 #endif

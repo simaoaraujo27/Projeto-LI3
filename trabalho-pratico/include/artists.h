@@ -8,14 +8,17 @@
 enum tipoArtista;
 
 typedef struct artists Artists;
+;
 
 Artists *separateArtists(char *line);
 bool validateArtist(Artists *artist);
 
+void ColocaIdMusicInArtist(gpointer value, char *IdMusic, int solo);
+
 void setArtistId(Artists *a, char *id);
 void setArtistName(Artists *a, char *name);
 void setArtistDescription(Artists *a, char *description);
-void setArtistRecipePerStream(Artists *a, int recipe_per_stream);
+void setArtistRecipePerStream(Artists *a, float recipe_per_stream);
 void setArtistIdConstituent(Artists *a, char *id_constituent);
 void setArtistCountry(Artists *a, char *country);
 void setArtistTipo(Artists *a, enum tipoArtista tipo);
@@ -25,13 +28,13 @@ void setArtistNumAlbunsIndividual(Artists *a, int num_albuns_individual);
 char *getArtistId(gpointer artist);
 char *getArtistName(gpointer artist);
 char *getArtistDescription(gpointer artist);
-int getArtistRecipePerStream(gpointer artist);
 char *getArtistIdConstituent(gpointer artist);
 char *getArtistCountry(gpointer artist);
 enum tipoArtista getArtistType(gpointer artist);
 char *getArtistTypeStr(gpointer artist);
 int getArtistDiscografia(gpointer artist);
 int getArtistNumAlbunsIndividual(Artists *artist);
+float getArtistRecipePerStream(gpointer artist);
 
 void increment_artist_discografia(gpointer value, int duracao,
                                   GList **listaResposta, int numeroArtistas,
