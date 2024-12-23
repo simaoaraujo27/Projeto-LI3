@@ -1,6 +1,7 @@
 #include "query3.h"
 #include "gestor_musics.h"
 #include "gestor_users.h"
+#include "inputResult.h"
 #include "gestores.h"
 #include "utils.h"
 #include <stdio.h>
@@ -53,20 +54,13 @@ NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, Gestores *gestor) {
 }
 
 // Função principal para a query 3
-void query3(int minAge, int maxAge, NodoMusica *lista, int i) {
+void query3(int minAge, int maxAge, NodoMusica *lista, int i, int temS) {
   NodoMusica *l = lista;
   GList *generos_lista =
       NULL; // Lista para armazenar os géneros e as suas contagens de likes
 
   // Criar o arquivo para escrever
-  FILE *newFile;
-  char *path = "./resultados/commandx_output.txt"; // Path base para o arquivo
-  char *new =
-      malloc(sizeof(char) *
-             (strlen(path) + 10)); // Aloca memória para o nome do arquivo
-  snprintf(new, strlen(path) + 10, "./resultados/command%d_output.txt",
-           i);               // Formata o nome do arquivo
-  newFile = fopen(new, "w"); // Abre o arquivo para escrita
+  FILE *newFile = createFile(i);
 
   // Itera sobre a lista de músicas
   while (l != NULL) {
@@ -97,8 +91,13 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i) {
     GeneroLikes *genero_likes = iter->data;
     if (genero_likes->count != 0) {
       remove_quotes(genero_likes->genero); // Remove as aspas do género
+      if(temS){
+        fprintf(newFile, "%s=%d\n", genero_likes->genero,
+              genero_likes->count); // Escreve no arquivo
+      }else{
       fprintf(newFile, "%s;%d\n", genero_likes->genero,
               genero_likes->count); // Escreve no arquivo
+      }
       tudoAZero = 0; // Se houver pelo menos um like, a flag é alterada
     }
     free(genero_likes->genero); // Liberta a memória alocada para o género
@@ -112,6 +111,5 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i) {
 
   // Liberta a lista de géneros e fecha o arquivo
   g_list_free(generos_lista);
-  free(new);
   fclose(newFile);
 }

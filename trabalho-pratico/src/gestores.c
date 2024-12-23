@@ -105,6 +105,6 @@ void destroyGestor(Gestores *gestor) {
   freeGestorMusics(gestor->gestorMusics);
   freeGestorUsers(gestor->gestorUsers);
   freeGestorAlbuns(gestor->gestorAlbuns);
-  free(gestor->gestorHistory);
+  freeGestorHistory(gestor->gestorHistory);
   free(gestor);
 }

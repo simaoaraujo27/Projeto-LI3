@@ -11,7 +11,7 @@ typedef struct generoLikes GeneroLikes;
 
 gint comparar_likes(gconstpointer a, gconstpointer b);
 
-void query3(int minAge, int maxAge, NodoMusica *lista, int i);
+void query3(int minAge, int maxAge, NodoMusica *lista, int i, int temS);
 
 NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, Gestores *gestor);
 

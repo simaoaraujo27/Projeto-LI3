@@ -62,7 +62,7 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
     firstOcorr = primeiraOcorr(line + 3, ' ');
     maxAge = atoi(line + 3 + firstOcorr);
     }
-    query3(minAge, maxAge, lista, i);
+    query3(minAge, maxAge, lista, i, temS);
     end = clock();
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;
     *total_time_query3 += time_spent; // Acumula o tempo para Query 3
