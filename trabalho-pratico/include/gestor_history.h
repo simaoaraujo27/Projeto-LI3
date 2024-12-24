@@ -13,8 +13,8 @@ gestorHistory *initGestorHistory(const char *errorsFilePath);
 void freeGestorHistory(gestorHistory *gestor);
 
 void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
-                   char *line, char *copia);
-int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
+                   char *line, char *copia, gestorMusics *gestorMusics, gestorArtists *gestorArtists);
+int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic, gestorArtists *gestorArtists,
                   char *historyPath);
 
 #endif

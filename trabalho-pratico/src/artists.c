@@ -17,8 +17,8 @@ struct artists {
   int discografia;       // Número de músicas ou discos associados ao artista
   int num_albuns_individual;
   float recipePerStream;
-  char *IdMusicSolo;
-  char *IdMusicGrupo;
+  float receitaTotal;
+  int tamanhoGrupo;
 };
 
 // Funções para definir campos específicos da estrutura "Artists"
@@ -44,6 +44,18 @@ void setArtistNumAlbunsIndividual(Artists *a, int num_albuns_individual) {
 
 void setArtistRecipePerStream(Artists *a, float recipePerStream) {
   a->recipePerStream = recipePerStream;
+}
+/*
+void setArtistReceitaTotalZero(Artists *a) {
+  a->receitaTotal = 0.00;
+}*/
+
+void setArtistReceitaTotal(Artists *a, float receitaTotal) {
+  a->receitaTotal = receitaTotal;
+}
+
+void setArtistTamanhoGrupo(Artists *a, int tamanho) {
+  a->tamanhoGrupo = tamanho;
 }
 
 // Função que separa os dados de um artista a partir de uma linha do CSV
@@ -81,6 +93,15 @@ Artists *separateArtists(char *line) {
   setArtistDiscografia(artist, 0);
 
   setArtistNumAlbunsIndividual(artist, 0);
+
+  setArtistReceitaTotal(artist, 0);
+
+  char *idConstituintes = strdup(artist->id_constituent);
+  remove_quotes(idConstituintes);
+  removeFstLast(idConstituintes);
+  int tamanho = (strlen(idConstituintes) + 2) / 12;
+
+  setArtistTamanhoGrupo(artist, tamanho);
 
   // Liberta memória das variáveis temporárias
   free(description);
@@ -155,13 +176,6 @@ void procuraArt(Artists *artist, GList **listaResposta) {
   }
 }
 
-void ColocaIdMusicInArtist(gpointer value, char *IdMusic, int solo) {
-  Artists *artist = (Artists *)value;
-  if (solo)
-    strcat(artist->IdMusicSolo, IdMusic);
-  else
-    strcat(artist->IdMusicGrupo, IdMusic);
-}
 
 void putArtistsDiscografyZero(Artists *artist) { artist->discografia = 0; }
 
@@ -231,6 +245,14 @@ int getArtistNumAlbunsIndividual(Artists *artist) {
 
 float getArtistRecipePerStream(gpointer artist) {
   return ((struct artists *)artist)->recipePerStream;
+}
+
+float getArtistReceitaTotal(gpointer artist) {
+  return ((struct artists *)artist)->receitaTotal;
+}
+
+int getArtistTamanhoGrupo(gpointer artist) {
+  return ((struct artists *)artist)->tamanhoGrupo;
 }
 
 // Função para libertar a memória alocada para um artista

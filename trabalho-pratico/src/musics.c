@@ -153,8 +153,3 @@ void destroyMusic(Musics *music) {
     free(music); // Liberta a estrutura Musics em si
   }
 }
-
-void incrementReproduction(gpointer value) {
-  Musics *music = (Musics *)value;
-  music->reproducoes++;
-}

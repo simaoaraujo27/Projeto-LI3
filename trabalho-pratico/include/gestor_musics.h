@@ -29,5 +29,8 @@ gboolean lookUpMusicsHashTable(gestorMusics *gestormusic, char *line,
 void processAllMusics(gestorMusics *gestorMusics, int numeroArtistas,
                       char *country, GList **listaResposta,
                       gestorArtists *gestorArtists);
+
+void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
+                       gestorArtists *gestorArtists);
                       
 #endif

@@ -1,4 +1,5 @@
 #include "gestor_history.h"
+#include "gestor_musics.h"
 #include "history.h"
 #include "validation.h"
 #include <assert.h>
@@ -46,7 +47,7 @@ void freeGestorHistory(gestorHistory *gestor) {
 }
 
 void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
-                   char *line, char *copia) {
+                   char *line, char *copia, gestorMusics *gestorMusics, gestorArtists *gestorArtists) {
   // TODO: ADICIONAR O IF DA VALIDAÇÃO QUANDO ESTIVER FEITO
   // ESTE IF É SÓ PARA NÃO DAR ERRO PORQUE AINDA FALTA A VALIDAÇÃO
   if (validateHistoryLine(copia)) {
@@ -54,14 +55,12 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
     char *id = getHistoryId(history);
     remove_quotes(id);
 
-    // Verifica se o history já está presente na hashtable
-    History *existingHistory = g_hash_table_lookup(historyTable, id);
-    if (existingHistory != NULL) {
-      destroyHistory(existingHistory);
-    }
 
     // Insere o novo history na tabela hash
     g_hash_table_insert(historyTable, id, history);
+
+    char *musicId = getHistoryMusicId(history);
+    incrementMusicRep(musicId, gestorMusics, gestorArtists);
   } else {
     // Escreve a linha inválida no ficheiro de erros
     fprintf(errorsFile, "%s", line);
@@ -76,7 +75,7 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
 
 // Função para processar o ficheiro de history utilizando a estrutura
 // gestorHistory
-int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
+int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic, gestorArtists *gestorArtists,
                   char *historyPath) {
   // Abre o arquivo de history e carrega os dados
   FILE *fp = fopen(historyPath, "r");
@@ -105,11 +104,10 @@ int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
         gpointer orig_key;
         gpointer value;
         lookUpMusicsHashTable(gestorMusic, currentMusic, &value, &orig_key);
-        incrementReproduction(&value);
 
         char *copia = strdup(line);
         parserHistory(gestor->historyTable, history, gestor->errorsFile, line,
-                      copia);
+                      copia, gestorMusic, gestorArtists);
         free(copia);
         free(line_copy);
       }

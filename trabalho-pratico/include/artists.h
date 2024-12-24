@@ -24,6 +24,7 @@ void setArtistCountry(Artists *a, char *country);
 void setArtistTipo(Artists *a, enum tipoArtista tipo);
 void setArtistDiscografia(Artists *a, int discografia);
 void setArtistNumAlbunsIndividual(Artists *a, int num_albuns_individual);
+void setArtistReceitaTotal(Artists *a, float receitaTotal);
 
 char *getArtistId(gpointer artist);
 char *getArtistName(gpointer artist);
@@ -35,6 +36,8 @@ char *getArtistTypeStr(gpointer artist);
 int getArtistDiscografia(gpointer artist);
 int getArtistNumAlbunsIndividual(Artists *artist);
 float getArtistRecipePerStream(gpointer artist);
+float getArtistReceitaTotal(gpointer artist);
+int getArtistTamanhoGrupo(gpointer artist);
 
 void increment_artist_discografia(gpointer value, int duracao,
                                   GList **listaResposta, int numeroArtistas,

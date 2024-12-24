@@ -175,3 +175,74 @@ void processAllMusics(gestorMusics *gestorMusics, int numeroArtistas,
     free(artistsId);
   }
 }
+
+void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
+                       gestorArtists *gestorArtists) {
+  gpointer value0;
+  gpointer orig_key0;
+
+  remove_quotes(musicId);
+  gboolean found1 =
+      lookUpMusicsHashTable(gestorMusics, musicId, &value0, &orig_key0);
+
+  if (found1) {
+
+    char *artistId = getMusicArtistId(orig_key0);
+    remove_quotes(artistId);
+    removeFstLast(artistId);
+
+    int componentesArtistId = (strlen(artistId) + 2) / 12;
+    int lentghArtistId = (int)strlen(artistId);
+
+    char *currentArtist = NULL;
+    gpointer orig_key;
+    gpointer value;
+    gpointer orig_key1;
+    gpointer value1;
+
+    while (lentghArtistId > 0) {
+      if (lentghArtistId == (int)strlen(artistId)) {
+        artistId = artistId + 1;
+      } else
+        artistId = artistId + 3;
+      currentArtist = strdup(strsep(&artistId, "'")); // Separa o ID do artista
+      currentArtist[8] = '\0'; // Limita o ID a 8 caracteres
+      gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
+                                              &orig_key, &value);
+      if (found) {
+        Artists *artist = (Artists *)value;
+        char *type = getArtistTypeStr(artist);
+        float recipe_Per_Stream = getArtistRecipePerStream(artist);
+
+        float receitaTotal = recipe_Per_Stream / componentesArtistId;
+        //float receitaAntiga = getArtistReceitaTotal(artist);
+        //setArtistReceitaTotal(artist, receitaTotal + receitaAntiga);
+
+        if (strcmp(type, "group") == 0) {
+
+          int NumComponentesBanda = getArtistTamanhoGrupo(artist);
+          char *idComponentes = getArtistIdConstituent(artist);
+          int TamanhoIdComponentes = (int)strlen(idComponentes);
+
+          while (TamanhoIdComponentes > 0) {
+            if (TamanhoIdComponentes == (int)strlen(idComponentes)) {
+              idComponentes = idComponentes + 1;
+            } else
+              idComponentes = idComponentes + 3;
+            char *currentComponent = strdup(strsep(&idComponentes, "'"));
+            currentComponent[8] = '\0'; // Limita o ID a 8 caracteres
+            lookUpArtistsHashTable(gestorArtists, currentComponent, &orig_key1,
+                                   &value1);
+
+            Artists *Component = (Artists *)value1;
+            float receitaAntigaComp = getArtistReceitaTotal(Component);
+            setArtistReceitaTotal(Component,receitaAntigaComp +
+                                  (receitaTotal / NumComponentesBanda));
+            TamanhoIdComponentes -= 12;
+          }
+        }
+    }
+    lentghArtistId -= 12; // Ajusta o comprimento restante da string
+    }
+  }
+}
