@@ -3,6 +3,8 @@
 
 #include <glib.h>
 
+float arredondarParaDuasCasas(float numero);
+
 void colocaTudoMinusculo(char *word);
 
 void remove_quotes(char *str);
@@ -23,6 +25,6 @@ void removeForLikedMusics(char *str);
 
 int comparaStrings(char *str1, char *str2);
 
-char* intToString(int number);
+char *intToString(int number);
 
 #endif

@@ -54,31 +54,6 @@ void freeGestorMusics(gestorMusics *gestor) {
   }
 }
 
-void colocaIdMusicNosArtists(char *IdComponents, gestorArtists *gestorArtists) {
-  removeFstLast(IdComponents);
-  removeFstLast(IdComponents);
-  int l = (int)strlen(IdComponents);
-  char *key = NULL;
-  gpointer value;
-  gpointer orig_key;
-  /* int solo = 0;
-  if (l - 12 <= 0)
-    solo = 1; */
-  // Processa os IDs das músicas
-  while (l > 0) {
-    if (l == (int)strlen(IdComponents)) {
-      IdComponents = IdComponents + 1;
-    } else
-      IdComponents = IdComponents + 3;
-    key = strdup(strsep(&IdComponents, "'")); // Separa o ID da música
-    key[8] = '\0';                            // Limita o ID a 8 caracteres
-    lookUpArtistsHashTable(gestorArtists, key, &value, &orig_key);
-    // ColocaIdMusicInArtist(&orig_key, IdMusic, solo);
-    l -= 12;
-  }
-  free(key);
-}
-
 void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
                  Musics *music, GHashTable *musicsTable, FILE *errorsFile,
                  gestorAlbuns *gestorAlbuns) {
@@ -86,7 +61,7 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
   if (validateMusicsLine(copia, gestorArtist, gestorAlbuns)) {
     // Se a linha for válida, separa os campos e cria um objeto Musics
     music = separateMusics(line);
-    colocaIdMusicNosArtists(getMusicArtistId(music), gestorArtist);
+
     //  Obtém o ID da música e insere na hashtable usando o ID como chave
     id = getMusicId(music);
     g_hash_table_insert(musicsTable, id, music);
@@ -191,8 +166,8 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
     remove_quotes(artistId);
     removeFstLast(artistId);
 
-    int componentesArtistId = (strlen(artistId) + 2) / 12;
-    int lentghArtistId = (int)strlen(artistId);
+    int componentesArtistId = (strlen(artistId) + 2) / 12; // esta certo
+    int lentghArtistId = (int)strlen(artistId);            // esta certo
 
     char *currentArtist = NULL;
     gpointer orig_key;
@@ -211,12 +186,16 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
                                               &orig_key, &value);
       if (found) {
         Artists *artist = (Artists *)value;
-        char *type = getArtistTypeStr(artist);
-        float recipe_Per_Stream = getArtistRecipePerStream(artist);
+        char *type = pegarArtistType(
+            artist); // no ficheiro das musicas accho que nao tem nenhum que o
+                     // artist_id tenha type group
+        float recipe_Per_Stream =
+            getArtistRecipePerStream(orig_key); // esta certo
 
-        float receitaTotal = recipe_Per_Stream / componentesArtistId;
-        //float receitaAntiga = getArtistReceitaTotal(artist);
-        //setArtistReceitaTotal(artist, receitaTotal + receitaAntiga);
+        float receitaTotal = recipe_Per_Stream / (float)componentesArtistId;
+        float receitaAntiga = getArtistReceitaTotal(orig_key);
+        float receitaAtualizada = receitaAntiga + receitaTotal;
+        setArtistReceitaTotal(value, receitaAtualizada);
 
         if (strcmp(type, "group") == 0) {
 
@@ -236,13 +215,14 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
 
             Artists *Component = (Artists *)value1;
             float receitaAntigaComp = getArtistReceitaTotal(Component);
-            setArtistReceitaTotal(Component,receitaAntigaComp +
-                                  (receitaTotal / NumComponentesBanda));
+            setArtistReceitaTotal(Component,
+                                  receitaAntigaComp +
+                                      (receitaTotal / NumComponentesBanda));
             TamanhoIdComponentes -= 12;
           }
         }
-    }
-    lentghArtistId -= 12; // Ajusta o comprimento restante da string
+      }
+      lentghArtistId -= 12; // Ajusta o comprimento restante da string
     }
   }
 }

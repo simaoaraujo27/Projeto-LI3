@@ -24,7 +24,7 @@ void setArtistCountry(Artists *a, char *country);
 void setArtistTipo(Artists *a, enum tipoArtista tipo);
 void setArtistDiscografia(Artists *a, int discografia);
 void setArtistNumAlbunsIndividual(Artists *a, int num_albuns_individual);
-void setArtistReceitaTotal(Artists *a, float receitaTotal);
+void setArtistReceitaTotal(gpointer artist, float receitaTotal);
 
 char *getArtistId(gpointer artist);
 char *getArtistName(gpointer artist);

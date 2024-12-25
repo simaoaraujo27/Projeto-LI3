@@ -2,9 +2,14 @@
 #include "artists.h"
 #include <ctype.h>
 #include <glib.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+float arredondarParaDuasCasas(float numero) {
+  return roundf(numero * 100) / 100;
+}
 
 void colocaTudoMinusculo(char *word) {
   for (int i = 0; i < (int)strlen(word); i++) {
@@ -144,13 +149,14 @@ int comparaStrings(char *str1, char *str2) {
   return 0;   // Retorna 0 se as strings forem iguais
 }
 
-char* intToString(int number) {
-    // Aloca memória suficiente para armazenar a string (máximo 12 caracteres para int)
-    char* result = (char*)malloc(12 * sizeof(char));
-    if (result == NULL) {
-        return NULL; // Retorna NULL se não conseguiu alocar memória
-    }
-    // Converte o número inteiro em string
-    sprintf(result, "%d", number);
-    return result;
+char *intToString(int number) {
+  // Aloca memória suficiente para armazenar a string (máximo 12 caracteres para
+  // int)
+  char *result = (char *)malloc(12 * sizeof(char));
+  if (result == NULL) {
+    return NULL; // Retorna NULL se não conseguiu alocar memória
+  }
+  // Converte o número inteiro em string
+  sprintf(result, "%d", number);
+  return result;
 }

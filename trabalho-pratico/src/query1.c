@@ -96,10 +96,10 @@ void MakeQuery1Artist(gpointer orig_key, FILE *newFile, int temS) {
   char *num_albuns_individual_str = intToString(num_albuns_individual);
 
   float receitaTotal = getArtistReceitaTotal(orig_key);
-  char* receitaTotalStr;
+
+  char *receitaTotalStr;
   floatParaString(receitaTotal, &receitaTotalStr);
 
- 
   //  Calcula o tamanho total da string a ser concatenada, incluindo
   //  delimitadores
   int total_len = strlen(name) + strlen(type) + strlen(country) +

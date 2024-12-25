@@ -30,6 +30,7 @@ int GestorParsers(Gestores *gestor, char *path) {
   snprintf(albunsPath, MAX_PATH_SIZE, "%s/%s", path, "albums.csv");
   snprintf(historyPath, MAX_PATH_SIZE, "%s/%s", path, "history.csv");
 
+
   if (!GestorArtists(pegarGestorArtist(gestor), artistsPath))
     return 0;
 
@@ -45,8 +46,8 @@ int GestorParsers(Gestores *gestor, char *path) {
                    usersPath))
     return 0;
 
-  if (!GestorHistory(pegarGestorHistory(gestor), pegarGestorMusic(gestor), pegarGestorArtist(gestor),
-                     historyPath))
+  if (!GestorHistory(pegarGestorHistory(gestor), pegarGestorMusic(gestor),
+                     pegarGestorArtist(gestor), historyPath))
     return 0;
 
   return 1;

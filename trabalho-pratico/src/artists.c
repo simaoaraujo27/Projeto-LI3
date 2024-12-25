@@ -50,7 +50,8 @@ void setArtistReceitaTotalZero(Artists *a) {
   a->receitaTotal = 0.00;
 }*/
 
-void setArtistReceitaTotal(Artists *a, float receitaTotal) {
+void setArtistReceitaTotal(gpointer artist, float receitaTotal) {
+  struct artists *a = (struct artists *)artist;
   a->receitaTotal = receitaTotal;
 }
 
@@ -75,7 +76,16 @@ Artists *separateArtists(char *line) {
   char *description = strdup(strsep(&line, ";"));
 
   char *recipePerStreamStr = strdup(strsep(&line, ";"));
-  float recipePerStream = atof(recipePerStreamStr);
+  remove_quotes(recipePerStreamStr);
+  printf("%s\n", recipePerStreamStr);
+  char *endptr; // Ponteiro para verificar caracteres restantes
+  float recipePerStream = strtof(recipePerStreamStr, &endptr);
+
+  // Verifica se a conversão foi bem-sucedida
+  if (*endptr != '\0') {
+    printf("Erro: string contém caracteres inválidos: %s\n", endptr);
+    recipePerStream = 0.0;
+  }
   setArtistRecipePerStream(artist, recipePerStream);
 
   setArtistIdConstituent(artist, strdup(strsep(&line, ";")));
@@ -84,10 +94,11 @@ Artists *separateArtists(char *line) {
   // Determina se o artista é um grupo ou individual
   char *linhaTipo = strdup(strsep(&line, "\n"));
   remove_quotes(linhaTipo); // Remove aspas da string
-  if (!strcmp(linhaTipo, "individual"))
+  if (strcmp(linhaTipo, "individual") == 0)
     setArtistTipo(artist, Individual);
-  else
+  else {
     setArtistTipo(artist, Grupo);
+  }
 
   // Inicializa a discografia com zero
   setArtistDiscografia(artist, 0);
@@ -176,7 +187,6 @@ void procuraArt(Artists *artist, GList **listaResposta) {
   }
 }
 
-
 void putArtistsDiscografyZero(Artists *artist) { artist->discografia = 0; }
 
 // Incrementa a discografia de um artista se ele corresponder ao país
@@ -204,7 +214,8 @@ char *pegarArtistIdConstituent(Artists *artist) {
 char *pegarArtistCountry(Artists *artist) { return strdup(artist->country); }
 
 char *pegarArtistType(Artists *artist) {
-  return strdup(artist->tipo == Grupo ? "group" : "individual");
+  return strdup(artist->tipo == Grupo ? "group"
+                                      : "individual"); // a funçao esta certa
 }
 
 int pegarArtistDiscografia(Artists *artist) { return artist->discografia; }
@@ -232,7 +243,11 @@ enum tipoArtista getArtistType(gpointer artist) {
 }
 
 char *getArtistTypeStr(gpointer artist) {
-  return (((struct artists *)artist)->tipo == Grupo ? "group" : "individual");
+  Artists *a = (Artists *)artist;
+  if (a->tipo == Grupo) {
+    return "group";
+  } else
+    return "individual";
 }
 
 int getArtistDiscografia(gpointer artist) {

@@ -66,12 +66,6 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
     fprintf(errorsFile, "%s", line);
   }
 }
-/* else {
-  // Regista a linha no ficheiro de erros se não for válida
-  fprintf(errorsFile, "%s", line);
-  destroyArtist(artist); // Liberta a memória do album inválido
-
-}  */
 
 // Função para processar o ficheiro de history utilizando a estrutura
 // gestorHistory
