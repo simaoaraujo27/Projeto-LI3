@@ -166,8 +166,7 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
     remove_quotes(artistId);
     removeFstLast(artistId);
 
-    int componentesArtistId = (strlen(artistId) + 2) / 12; // esta certo
-    int lentghArtistId = (int)strlen(artistId);            // esta certo
+    int lentghArtistId = (int)strlen(artistId); // esta certo
 
     char *currentArtist = NULL;
     gpointer orig_key;
@@ -186,14 +185,14 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
                                               &orig_key, &value);
       if (found) {
         char *type = getArtistTypeStr(
-            orig_key); // no ficheiro das musicas accho que nao tem nenhum que o
+            orig_key); // no ficheiro das musicas acho que nao tem nenhum que o
                        // artist_id tenha type group
         // printf("%s\n", type);
 
         float recipe_Per_Stream =
             getArtistRecipePerStream(orig_key); // esta certo
 
-        float receitaTotal = recipe_Per_Stream / (float)componentesArtistId;
+        float receitaTotal = recipe_Per_Stream;
         arredondarParaSeisCasas(receitaTotal);
         // printf("receitaTotal: %f\n", receitaTotal);
 
@@ -205,7 +204,7 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
 
         setArtistReceitaTotal(orig_key, receitaAtualizada);
         // printf("recitaTotal supostamente atualizada no artista: %f\n",
-        //  getArtistReceitaTotal(orig_key));
+        // getArtistReceitaTotal(orig_key));
 
         if (strcmp(type, "group") == 0) {
 

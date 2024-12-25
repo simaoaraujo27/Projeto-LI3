@@ -38,6 +38,10 @@ void setArtistDiscografia(Artists *a, int discografia) {
   a->discografia = discografia;
 }
 
+void alterarArtistNumAlbunsIndividual(gpointer a, int num_albuns_individual) {
+  ((struct artists *)a)->num_albuns_individual = num_albuns_individual;
+}
+
 void setArtistNumAlbunsIndividual(Artists *a, int num_albuns_individual) {
   a->num_albuns_individual = num_albuns_individual;
 }
@@ -76,7 +80,6 @@ Artists *separateArtists(char *line) {
 
   char *recipePerStreamStr = strdup(strsep(&line, ";"));
   remove_quotes(recipePerStreamStr);
-  printf("%s\n", recipePerStreamStr);
   char *endptr; // Ponteiro para verificar caracteres restantes
   float recipePerStream = strtof(recipePerStreamStr, &endptr);
 
@@ -103,6 +106,7 @@ Artists *separateArtists(char *line) {
   setArtistDiscografia(artist, 0);
 
   setArtistNumAlbunsIndividual(artist, 0);
+  printf("%d\n", artist->num_albuns_individual);
 
   setArtistReceitaTotal(artist, 0);
 
@@ -253,8 +257,8 @@ int getArtistDiscografia(gpointer artist) {
   return ((struct artists *)artist)->discografia;
 }
 
-int getArtistNumAlbunsIndividual(Artists *artist) {
-  return artist->num_albuns_individual;
+int getArtistNumAlbunsIndividual(gpointer artist) {
+  return ((struct artists *)artist)->num_albuns_individual;
 }
 
 float getArtistRecipePerStream(gpointer artist) {

@@ -146,12 +146,11 @@ void incrementArtistsNumAlbuns(char *artistId, gestorArtists *gestorArtist) {
   gpointer orig_key;
   int num = 0;
   gboolean found =
-      lookUpArtistsHashTable(gestorArtist, artistId, &value, &orig_key);
-  if (found) {
-    Artists *artist = (Artists *)value;
-    num = getArtistNumAlbunsIndividual(artist);
+      lookUpArtistsHashTable(gestorArtist, artistId, &orig_key, &value);
+  if (found) { // encontra sempre
+    num = getArtistNumAlbunsIndividual(orig_key);
     num++;
-    setArtistNumAlbunsIndividual(artist, num);
+    alterarArtistNumAlbunsIndividual(orig_key, num);
   }
 }
 

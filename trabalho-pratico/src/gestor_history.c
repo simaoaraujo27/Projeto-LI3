@@ -61,6 +61,7 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
 
     char *musicId = getHistoryMusicId(history);
     incrementMusicRep(musicId, gestorMusics, gestorArtists);
+
   } else {
     // Escreve a linha inválida no ficheiro de erros
     fprintf(errorsFile, "%s", line);

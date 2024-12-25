@@ -1,6 +1,5 @@
 #include "albuns.h"
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -75,9 +74,9 @@ void destroyAlbum(Albuns *album) {
   free(album->producers);
 }
 
-int numeroArtistas(char *album_id){
+int numeroArtistas(char *album_id) {
   int nvirgulas = 0;
-  for (int i = 0; album_id[i] != '\0'; i++){
+  for (int i = 0; album_id[i] != '\0'; i++) {
     nvirgulas += (album_id[i] == ',');
   }
   return nvirgulas + 1;
@@ -92,7 +91,7 @@ Albuns *separateAlbuns(char *line, gestorArtists *gestorArtists) {
   setAlbumYear(album, strdup(strsep(&line, ";")));
   setAlbumProducers(album, strdup(strsep(&line, ";")));
   char *artists = strdup(album->artists_id);
-  if(numeroArtistas(artists) == 1){
+  if (numeroArtistas(artists) == 1) {
     artists[11] = '\0';
     incrementArtistsNumAlbuns(artists + 3, gestorArtists);
   }
