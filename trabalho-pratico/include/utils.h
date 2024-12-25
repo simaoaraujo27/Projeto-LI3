@@ -3,7 +3,7 @@
 
 #include <glib.h>
 
-float arredondarParaDuasCasas(float numero);
+float arredondarParaSeisCasas(float numero);
 
 void colocaTudoMinusculo(char *word);
 

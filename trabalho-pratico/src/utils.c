@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-float arredondarParaDuasCasas(float numero) {
-  return roundf(numero * 100) / 100;
+float arredondarParaSeisCasas(float numero) {
+  return roundf(numero * 1000000) / 1000000;
 }
 
 void colocaTudoMinusculo(char *word) {
