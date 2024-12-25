@@ -195,16 +195,16 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
 
         float receitaTotal = recipe_Per_Stream / (float)componentesArtistId;
 
-        printf("receitaTotal: %.2f\n\n", receitaTotal);
+        printf("receitaTotal: %f\n\n", receitaTotal);
 
         float receitaAntiga = getArtistReceitaTotal(orig_key);
-        printf("receitaAntiga: %.2f\n\n", getArtistReceitaTotal(orig_key));
+        printf("receitaAntiga: %f\n\n", getArtistReceitaTotal(orig_key));
 
         float receitaAtualizada = receitaAntiga + receitaTotal;
-        printf("recitaAtualizada: %.2f\n\n", receitaAtualizada);
+        printf("recitaAtualizada: %f\n\n", receitaAtualizada);
 
         setArtistReceitaTotal(orig_key, receitaAtualizada);
-        printf("recitaTotal supostamente atualizada no artista: %.2f\n\n\n",
+        printf("recitaTotal supostamente atualizada no artista: %f\n\n\n",
                getArtistReceitaTotal(orig_key));
 
         if (strcmp(type, "group") == 0) {
@@ -230,10 +230,9 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
                                    &value1);
 
             float receitaAntigaComp = getArtistReceitaTotal(orig_key1);
-            setArtistReceitaTotal(
-                orig_key1,
-                arredondarParaDuasCasas(receitaAntigaComp +
-                                        (receitaTotal / NumComponentesBanda)));
+            setArtistReceitaTotal(orig_key1,
+                                  receitaAntigaComp +
+                                      (receitaTotal / NumComponentesBanda));
             TamanhoIdComponentes -= 12;
           }
         }
