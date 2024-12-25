@@ -1,5 +1,5 @@
 #include "albuns.h"
-
+#include "utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -91,11 +91,22 @@ Albuns *separateAlbuns(char *line, gestorArtists *gestorArtists) {
   setAlbumYear(album, strdup(strsep(&line, ";")));
   setAlbumProducers(album, strdup(strsep(&line, ";")));
   char *artists = strdup(album->artists_id);
-  if (numeroArtistas(artists) == 1) {
-    artists[11] = '\0';
-    incrementArtistsNumAlbuns(artists + 3, gestorArtists);
+  remove_quotes(artists);
+  removeFstLast(artists);
+  int tamanho = strlen(artists);
+  while (tamanho > 0) {
+    if (tamanho == (int)strlen(artists)) {
+      artists = artists + 1;
+    } else
+      artists = artists + 3;
+
+    char *currentArtist =
+        strdup(strsep(&artists, "'")); // Separa o ID do artista
+    currentArtist[8] = '\0';           // Limita o ID a 8 caracteres
+    incrementArtistsNumAlbuns(currentArtist, gestorArtists);
+
+    tamanho -= 12;
   }
 
-  free(artists);
   return album;
 }

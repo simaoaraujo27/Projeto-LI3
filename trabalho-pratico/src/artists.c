@@ -106,7 +106,6 @@ Artists *separateArtists(char *line) {
   setArtistDiscografia(artist, 0);
 
   setArtistNumAlbunsIndividual(artist, 0);
-  printf("%d\n", artist->num_albuns_individual);
 
   setArtistReceitaTotal(artist, 0);
 
