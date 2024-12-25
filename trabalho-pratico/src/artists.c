@@ -51,8 +51,7 @@ void setArtistReceitaTotalZero(Artists *a) {
 }*/
 
 void setArtistReceitaTotal(gpointer artist, float receitaTotal) {
-  struct artists *a = (struct artists *)artist;
-  a->receitaTotal = receitaTotal;
+  ((struct artists *)artist)->receitaTotal = receitaTotal;
 }
 
 void setArtistTamanhoGrupo(Artists *a, int tamanho) {

@@ -13,8 +13,6 @@ typedef struct artists Artists;
 Artists *separateArtists(char *line);
 bool validateArtist(Artists *artist);
 
-void ColocaIdMusicInArtist(gpointer value, char *IdMusic, int solo);
-
 void setArtistId(Artists *a, char *id);
 void setArtistName(Artists *a, char *name);
 void setArtistDescription(Artists *a, char *description);
@@ -28,7 +26,6 @@ void setArtistReceitaTotal(gpointer artist, float receitaTotal);
 
 char *getArtistId(gpointer artist);
 char *getArtistName(gpointer artist);
-char *getArtistDescription(gpointer artist);
 char *getArtistIdConstituent(gpointer artist);
 char *getArtistCountry(gpointer artist);
 enum tipoArtista getArtistType(gpointer artist);

@@ -47,14 +47,14 @@ void freeGestorHistory(gestorHistory *gestor) {
 }
 
 void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
-                   char *line, char *copia, gestorMusics *gestorMusics, gestorArtists *gestorArtists) {
+                   char *line, char *copia, gestorMusics *gestorMusics,
+                   gestorArtists *gestorArtists) {
   // TODO: ADICIONAR O IF DA VALIDAÇÃO QUANDO ESTIVER FEITO
   // ESTE IF É SÓ PARA NÃO DAR ERRO PORQUE AINDA FALTA A VALIDAÇÃO
   if (validateHistoryLine(copia)) {
     // Obtém o ID do history e remove aspas
     char *id = getHistoryId(history);
     remove_quotes(id);
-
 
     // Insere o novo history na tabela hash
     g_hash_table_insert(historyTable, id, history);
@@ -69,8 +69,8 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
 
 // Função para processar o ficheiro de history utilizando a estrutura
 // gestorHistory
-int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic, gestorArtists *gestorArtists,
-                  char *historyPath) {
+int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
+                  gestorArtists *gestorArtists, char *historyPath) {
   // Abre o arquivo de history e carrega os dados
   FILE *fp = fopen(historyPath, "r");
 

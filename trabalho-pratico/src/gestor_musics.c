@@ -185,22 +185,38 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
       gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
                                               &orig_key, &value);
       if (found) {
-        Artists *artist = (Artists *)value;
-        char *type = pegarArtistType(
-            artist); // no ficheiro das musicas accho que nao tem nenhum que o
-                     // artist_id tenha type group
+        char *type = getArtistTypeStr(
+            orig_key); // no ficheiro das musicas accho que nao tem nenhum que o
+                       // artist_id tenha type group
+        printf("%s\n", type);
+
         float recipe_Per_Stream =
             getArtistRecipePerStream(orig_key); // esta certo
 
         float receitaTotal = recipe_Per_Stream / (float)componentesArtistId;
+
+        printf("receitaTotal: %.2f\n\n", receitaTotal);
+
         float receitaAntiga = getArtistReceitaTotal(orig_key);
+        printf("receitaAntiga: %.2f\n\n", getArtistReceitaTotal(orig_key));
+
         float receitaAtualizada = receitaAntiga + receitaTotal;
-        setArtistReceitaTotal(value, receitaAtualizada);
+        printf("recitaAtualizada: %.2f\n\n", receitaAtualizada);
+
+        setArtistReceitaTotal(orig_key, receitaAtualizada);
+        printf("recitaTotal supostamente atualizada no artista: %.2f\n\n\n",
+               getArtistReceitaTotal(orig_key));
 
         if (strcmp(type, "group") == 0) {
 
-          int NumComponentesBanda = getArtistTamanhoGrupo(artist);
-          char *idComponentes = getArtistIdConstituent(artist);
+          int NumComponentesBanda = getArtistTamanhoGrupo(orig_key);
+          printf("NumComponentesBanda: %d\n\n", NumComponentesBanda);
+
+          char *idComponentes = getArtistIdConstituent(orig_key);
+
+          remove_quotes(idComponentes);
+          removeFstLast(idComponentes);
+          printf("%s\n", idComponentes);
           int TamanhoIdComponentes = (int)strlen(idComponentes);
 
           while (TamanhoIdComponentes > 0) {
@@ -213,11 +229,11 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
             lookUpArtistsHashTable(gestorArtists, currentComponent, &orig_key1,
                                    &value1);
 
-            Artists *Component = (Artists *)value1;
-            float receitaAntigaComp = getArtistReceitaTotal(Component);
-            setArtistReceitaTotal(Component,
-                                  receitaAntigaComp +
-                                      (receitaTotal / NumComponentesBanda));
+            float receitaAntigaComp = getArtistReceitaTotal(orig_key1);
+            setArtistReceitaTotal(
+                orig_key1,
+                arredondarParaDuasCasas(receitaAntigaComp +
+                                        (receitaTotal / NumComponentesBanda)));
             TamanhoIdComponentes -= 12;
           }
         }
