@@ -101,7 +101,6 @@ int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
     perror("Error opening musics file");
     return 0;
   }
-  free(musicsPath); // Liberta a memória do path das musicas
   return 1;
 }
 
@@ -163,6 +162,7 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
   if (found1) {
 
     char *artistId = getMusicArtistId(orig_key0);
+    char *artistIdOriginal = artistId;
     remove_quotes(artistId);
     removeFstLast(artistId);
 
@@ -203,6 +203,7 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
           int NumComponentesBanda = getArtistTamanhoGrupo(orig_key);
 
           char *idComponentes = getArtistIdConstituent(orig_key);
+          char *idComponentesOriginal = idComponentes;
 
           remove_quotes(idComponentes);
           removeFstLast(idComponentes);
@@ -226,10 +227,14 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
             TamanhoIdComponentes -= 12;
             free(currentComponent);
           }
+          free(idComponentesOriginal);
         }
       }
       lentghArtistId -= 12; // Ajusta o comprimento restante da string
+      free(currentArtist);
+      currentArtist = NULL;
     }
 
+    free(artistIdOriginal);
   }
 }

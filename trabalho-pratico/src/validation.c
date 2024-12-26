@@ -214,7 +214,7 @@ bool validateMusicsArtistsAndAlbuns(char *albuns_id, char *artists_id,
     return false;
   }
 
-  if (key == NULL) {
+  if (key != NULL) {
     free(key);
     key = NULL;
   }

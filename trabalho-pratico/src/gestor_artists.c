@@ -124,7 +124,6 @@ int GestorArtists(gestorArtists *gestor, char *artistsPath) {
     perror("Error opening artists file");
     return 0;
   }
-  free(artistsPath); // Liberta a memoria do path dos artistas
   return 1;
 }
 

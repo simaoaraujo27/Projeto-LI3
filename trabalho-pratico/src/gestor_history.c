@@ -61,6 +61,7 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
 
     char *musicId = getHistoryMusicId(history);
     incrementMusicRep(musicId, gestorMusics, gestorArtists);
+    free(musicId);
 
   } else {
     // Escreve a linha inválida no ficheiro de erros
@@ -105,6 +106,7 @@ int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
                       copia, gestorMusic, gestorArtists);
         free(copia);
         free(line_copy);
+        free(currentMusic);
       }
     }
     // Liberta a linha utilizada pelo getline
@@ -114,6 +116,5 @@ int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
     perror("Error opening history file");
     return 0;
   }
-  free(historyPath); // Liberta a memoria do path do history
   return 1;
 }

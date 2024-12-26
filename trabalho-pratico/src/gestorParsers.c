@@ -14,16 +14,6 @@
 // Define o tamanho máximo para os paths dos arquivos
 #define MAX_PATH_SIZE 1024
 
-void libertaGestores(gestorArtists *gestorArtists, gestorMusics *gestorMusics,
-                     gestorUsers *gestorUsers, gestorAlbuns *gestorAlbuns,
-                     gestorHistory *gestorHistory) {
-  freeGestorArtists(gestorArtists);
-  freeGestorMusics(gestorMusics);
-  freeGestorUsers(gestorUsers);
-  freeGestorAlbuns(gestorAlbuns);
-  freeGestorHistory(gestorHistory);
-}
-
 void libertaPaths(char *p1, char *p2, char *p3, char *p4, char *p5) {
   free(p1);
   free(p2);
@@ -55,48 +45,31 @@ int GestorParsers(Gestores *gestor, char *path) {
   gestorHistory *gestorHistory = pegarGestorHistory(gestor);
 
   if (!GestorArtists(gestorArtists, artistsPath)) {
-    libertaGestores(gestorArtists, gestorMusics, gestorUsers, gestorAlbuns,
-                    gestorHistory);
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
-    free(path);
     return 0;
   }
 
   if (!GestorAlbuns(gestorAlbuns, albunsPath, gestorArtists)) {
-    libertaGestores(gestorArtists, gestorMusics, gestorUsers, gestorAlbuns,
-                    gestorHistory);
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
-    free(path);
     return 0;
   }
 
   if (!GestorMusics(gestorMusics, gestorArtists, gestorAlbuns, musicsPath)) {
-    libertaGestores(gestorArtists, gestorMusics, gestorUsers, gestorAlbuns,
-                    gestorHistory);
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
-    free(path);
     return 0;
   }
 
   if (!GestorUsers(gestorUsers, gestorMusics, usersPath)) {
-    libertaGestores(gestorArtists, gestorMusics, gestorUsers, gestorAlbuns,
-                    gestorHistory);
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
-    free(path);
     return 0;
   }
 
   if (!GestorHistory(gestorHistory, gestorMusics, gestorArtists, historyPath)) {
-    libertaGestores(gestorArtists, gestorMusics, gestorUsers, gestorAlbuns,
-                    gestorHistory);
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
-    free(path);
     return 0;
   }
 
-  // libertaGestores(gestorArtists, gestorMusics, gestorUsers, gestorAlbuns,
-  // gestorHistory); libertaPaths(artistsPath, musicsPath, usersPath,
-  // albunsPath, historyPath);
+  libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
   return 1;
 }
 

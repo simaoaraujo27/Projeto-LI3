@@ -67,11 +67,14 @@ Albuns *initAlbum() {
 }
 
 void destroyAlbum(Albuns *album) {
-  free(album->id);
-  free(album->title);
-  free(album->artists_id);
-  free(album->year);
-  free(album->producers);
+  if (album) {
+    free(album->id);
+    free(album->title);
+    free(album->artists_id);
+    free(album->year);
+    free(album->producers);
+    free(album);
+  }
 }
 
 int numeroArtistas(char *album_id) {
@@ -101,6 +104,7 @@ Albuns *separateAlbuns(char *line, gestorArtists *gestorArtists) {
   setAlbumProducers(album, token);
   free(token);
   char *artists = strdup(album->artists_id);
+  char *originalArtists = artists;
   remove_quotes(artists);
   removeFstLast(artists);
   int tamanho = strlen(artists);
@@ -116,7 +120,9 @@ Albuns *separateAlbuns(char *line, gestorArtists *gestorArtists) {
     incrementArtistsNumAlbuns(currentArtist, gestorArtists);
 
     tamanho -= 12;
+    free(currentArtist);
   }
+  free(originalArtists);
 
   return album;
 }

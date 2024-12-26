@@ -99,6 +99,7 @@ int GestorAlbuns(gestorAlbuns *gestor, char *albunsPath,
         char *copia = strdup(line);
         parserAlbum(gestor->albunsTable, album, gestor->errorsFile, line, copia,
                     gestorArtists);
+        free(copia);
         free(line_copy);
       }
     }
@@ -110,7 +111,6 @@ int GestorAlbuns(gestorAlbuns *gestor, char *albunsPath,
     perror("Error opening albuns file");
     return 0;
   }
-  free(albunsPath); // Liberta a memoria do path dos albuns
   return 1;
 }
 

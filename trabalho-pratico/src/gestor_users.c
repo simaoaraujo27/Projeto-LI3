@@ -92,7 +92,6 @@ int GestorUsers(gestorUsers *gestorUser, gestorMusics *gestorMusic,
     perror("Error opening users file");
     return 0;
   }
-  free(usersPath); // Liberta a memória do path dos users
   return 1;
 }
 
