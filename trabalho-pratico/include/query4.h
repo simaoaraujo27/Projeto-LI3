@@ -8,4 +8,6 @@ void armazenarValores(char *musicId, int duration,
                       gestorMusics *gestorMusics, gestorArtists *gestorArtists,
                       GArray *Tops10);
 
+void query4(gestorArtists *gestorArtists);
+
 #endif

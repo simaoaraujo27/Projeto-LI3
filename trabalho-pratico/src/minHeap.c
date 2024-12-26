@@ -29,6 +29,10 @@ int getHeapNodeDuration(HeapNode *heapNode) { return heapNode->duration; }
 // Função para obter o nó raiz da heap (menor elemento)
 HeapNode *getMinHeapFstHeapNode(MinHeap *minHeap) { return &minHeap->data[0]; }
 
+HeapNode *getMinHeapHeapNode(MinHeap *minHeap, int i) {
+  return &minHeap->data[i];
+}
+
 // Função para criar uma nova min-heap
 MinHeap *createMinHeap() {
   MinHeap *heap = (MinHeap *)malloc(sizeof(MinHeap));
@@ -75,10 +79,25 @@ void heapify(MinHeap *heap, int i) {
   }
 }
 
+int elemMinHeap(char *currentArtist, HeapNode data[], int tamanho) {
+  for (int i = 0; i < tamanho; i++) {
+    if (strcmp(data[i].artist_id, currentArtist) == 0) {
+      return i;
+    }
+  }
+  return -1;  
+}
+
 // Função para inserir um elemento na min-heap
 void insertMinHeap(MinHeap *heap, int totalDuration, int durationMinNode,
                    HeapNode *minNode, char *currentArtist) {
+  int indice = elemMinHeap(currentArtist, heap->data, heap->size);
   // Verificar se a heap está cheia
+  if (indice != -1) {
+    heap->data[indice].duration = totalDuration;
+    return;
+  }
+
   if (heap->size == 10) {
     // Substituir o maior elemento (raiz) se o novo for menor
     if ((durationMinNode < totalDuration) ||

@@ -27,6 +27,8 @@ int getHeapNodeDuration(HeapNode *heapNode);
 
 HeapNode *getMinHeapFstHeapNode(MinHeap *minHeap);
 
+HeapNode *getMinHeapHeapNode(MinHeap *minHeap, int i);
+
 // Função para criar uma nova min-heap
 MinHeap *createMinHeap();
 

@@ -63,6 +63,20 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
 
     char *musicId = getHistoryMusicId(history);
     incrementMusicRep(musicId, gestorMusics, gestorArtists);
+
+
+//--- para a query4
+    remove_quotes(musicId);
+    char *timeStamp = getHistoryTimestamp(history);
+    remove_quotes(timeStamp);
+    int dias = calcularDiasAte_9_9_2024(timeStamp);
+    char *durationStr = getHistoryDuration(history);
+    remove_quotes(durationStr);
+    int durationSeg = converterParaSegundos(durationStr);
+
+    armazenarValores(musicId, durationSeg, dias, gestorMusics, gestorArtists,
+                     getGArrayTops10(gestorArtists));
+
     free(musicId);
 
   } else {
@@ -97,18 +111,6 @@ int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
         }
 
         history = separateHistory(line_copy);
-
-        char *musicId = getHistoryMusicId(history);
-        remove_quotes(musicId);
-        char *timeStamp = getHistoryTimestamp(history);
-        remove_quotes(timeStamp);
-        int dias = calcularDiasAte_9_9_2024(timeStamp);
-        char *durationStr = getHistoryDuration(history);
-        remove_quotes(durationStr);
-        int durationSeg = converterParaSegundos(durationStr);
-
-        armazenarValores(musicId, durationSeg, dias, gestorMusic, gestorArtists,
-                         getGArrayTops10(gestorArtists));
 
         char *currentMusic = getHistoryMusicId(history);
         gpointer orig_key;

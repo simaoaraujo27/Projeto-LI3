@@ -20,6 +20,7 @@ struct artists {
   float receitaTotal;
   int tamanhoGrupo;
   GArray *durationPerWeek;
+  int vezesNoTop10;
 };
 
 // Funções para definir campos específicos da estrutura "Artists"
@@ -63,7 +64,7 @@ void setArtistTamanhoGrupo(Artists *a, int tamanho) {
   a->tamanhoGrupo = tamanho;
 }
 
-int incrementArtistDurationPerWeek(gpointer *a, int duration, int semana) {
+int incrementArtistDurationPerWeek(gpointer a, int duration, int semana) {
   int tamanho = ((struct artists *)a)->durationPerWeek->len;
   if (semana > tamanho) {
     g_array_set_size(((struct artists *)a)->durationPerWeek,
@@ -78,6 +79,11 @@ int incrementArtistDurationPerWeek(gpointer *a, int duration, int semana) {
   int newDuration =
       g_array_index(((struct artists *)a)->durationPerWeek, int, semana);
   return newDuration;
+}
+
+int incrementArtistVezesNoTop10(gpointer a) {
+  ((struct artists *)a)->vezesNoTop10++;
+  return ((struct artists *)a)->vezesNoTop10;
 }
 
 // Função que separa os dados de um artista a partir de uma linha do CSV
@@ -136,6 +142,8 @@ Artists *separateArtists(char *line) {
 
   GArray *durationPerWeek = g_array_new(FALSE, TRUE, sizeof(int));
   artist->durationPerWeek = durationPerWeek;
+
+  artist->vezesNoTop10 = 0;
 
   // Liberta memória das variáveis temporárias
   free(description);

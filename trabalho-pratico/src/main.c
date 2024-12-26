@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
   // Processa as queries lidas do arquivo
   while (getline(&line, &len, fp) != -1) {
     gestorQueries(line, gestor, lista, i, &total_time_query1,
-                  &total_time_query2, &total_time_query3);
+                  &total_time_query2, &total_time_query3);              
     i++;
   }
   fclose(fp);

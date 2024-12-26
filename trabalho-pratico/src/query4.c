@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* se o artista ja esta na minHeap trocar so o valor */
+
 void armazenarValores(char *musicId, int duration,
                       int timeStamp /* esta em dias ate ao dia 9 / 9 / 2024 */,
                       gestorMusics *gestorMusics, gestorArtists *gestorArtists,
@@ -45,7 +47,7 @@ void armazenarValores(char *musicId, int duration,
                                               &orig_key, &value);
       if (found) {
         int totalDuration =
-            incrementArtistDurationPerWeek(orig_key, duration, semana);
+            incrementArtistDurationPerWeek(orig_key, duration, semana);/* nao esta a somar */
         int tamanhoTops10 = Tops10->len;
         if (semana >= tamanhoTops10) {
           g_array_set_size(getGArrayTops10(gestorArtists), (guint)(semana + 1));
@@ -69,6 +71,36 @@ void armazenarValores(char *musicId, int duration,
       lentghArtistId -= 12;
     }
   }
+}
+
+void query4(gestorArtists *gestorArtists) { /* tem de percorrer o GArray e
+                                               aumentar em 1 num contador */
+  GArray *Tops10 = getGArrayTops10(gestorArtists);
+
+  int tamanhoTops10 = Tops10->len;
+  gpointer orig_key;
+  gpointer value;
+  int maisVezesNoTop10 = 0;
+  char *artistMaisVezesNoTop10 = NULL;
+  for (int i = 0; i < tamanhoTops10; i++) {
+    MinHeap *heap = g_array_index(Tops10, MinHeap *, i);
+    if (heap != NULL) {
+      for (int j = 0; j < getMinHeapSize(heap); j++) {
+        HeapNode *node = getMinHeapHeapNode(heap, j);
+        char *currentArtist = getHeapNodeArtistId(node);
+        gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
+                                                &orig_key, &value);
+        if (found) {
+          int vezesAtuais = incrementArtistVezesNoTop10(orig_key);
+          if (vezesAtuais > maisVezesNoTop10) {
+            maisVezesNoTop10 = vezesAtuais;
+            artistMaisVezesNoTop10 = strdup(currentArtist);
+          }
+        }
+      }
+    }
+  }
+  printf("%s %d\n", artistMaisVezesNoTop10, maisVezesNoTop10);
 }
 
 /*
