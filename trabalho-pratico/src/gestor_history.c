@@ -1,6 +1,8 @@
 #include "gestor_history.h"
+#include "gestor_artists.h"
 #include "gestor_musics.h"
 #include "history.h"
+#include "query4.h"
 #include "validation.h"
 #include <assert.h>
 #include <glib.h>
@@ -95,6 +97,18 @@ int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
         }
 
         history = separateHistory(line_copy);
+
+        char *musicId = getHistoryMusicId(history);
+        remove_quotes(musicId);
+        char *timeStamp = getHistoryTimestamp(history);
+        remove_quotes(timeStamp);
+        int dias = calcularDiasAte_9_9_2024(timeStamp);
+        char *durationStr = getHistoryDuration(history);
+        remove_quotes(durationStr);
+        int durationSeg = converterParaSegundos(durationStr);
+
+        armazenarValores(musicId, durationSeg, dias, gestorMusic, gestorArtists,
+                         getGArrayTops10(gestorArtists));
 
         char *currentMusic = getHistoryMusicId(history);
         gpointer orig_key;

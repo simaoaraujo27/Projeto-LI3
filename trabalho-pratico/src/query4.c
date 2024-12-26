@@ -1,81 +1,75 @@
 #include "query4.h"
+#include "gestor_musics.h"
+#include "minHeap.h"
+#include "utils.h"
+#include <assert.h>
+#include <ctype.h>
+#include <glib.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// Estrutura a ser armazenada na min-heap
-typedef struct {
-    char* artist_id;  // ID do artista
-    int duration;     // Duração em segundos
-} HeapNode;
+void armazenarValores(char *musicId, int duration,
+                      int timeStamp /* esta em dias ate ao dia 9 / 9 / 2024 */,
+                      gestorMusics *gestorMusics, gestorArtists *gestorArtists,
+                      GArray *Tops10) {
+  gpointer value0;
+  gpointer orig_key0;
+  int semana =
+      timeStamp / 7; // preciso mudar para arrajar ja que uma semana começa no
+                     // domingo enquanto que assim esta a começar numa segunda
 
-// Estrutura da min-heap: a capacidade máxima é 10 uma vez que queremos o top10
-typedef struct {
-    HeapNode* data;   
-    int size;         // Número atual de elementos na heap
-} MinHeap;
+  remove_quotes(musicId);
+  gboolean found1 =
+      lookUpMusicsHashTable(gestorMusics, musicId, &value0, &orig_key0);
 
-MinHeap* create_min_heap() {
-    MinHeap* heap = (MinHeap*)malloc(sizeof(MinHeap));
-    heap->data = (HeapNode*)malloc(sizeof(HeapNode) * 10);
-    heap->size = 0;
-    return heap;
-}
+  if (found1) {
+    char *artistId = getMusicArtistId(orig_key0);
+    remove_quotes(artistId);
+    removeFstLast(artistId);
 
-void swap_nodes(HeapNode* a, HeapNode* b) {
-    HeapNode temp = *a;
-    *a = *b;
-    *b = temp;
-}
+    int lentghArtistId = (int)strlen(artistId);
 
-void insert_min_heap(MinHeap* heap, char* artist_id, int duration) {
-
-    // Adicionar no final e ajustar
-    int i = heap->size++;
-    heap->data[i].artist_id = strdup(artist_id);
-    heap->data[i].duration = duration;
-
-    // Subir o elemento para a posição correta
-    while (i > 0 && heap->data[i].duration < heap->data[(i - 1) / 2].duration) {
-        swap_nodes(&heap->data[i], &heap->data[(i - 1) / 2]);
-        i = (i - 1) / 2;
+    char *currentArtist = NULL;
+    gpointer orig_key;
+    gpointer value;
+    while (lentghArtistId > 0) {
+      if (lentghArtistId == (int)strlen(artistId)) {
+        artistId = artistId + 1;
+      } else
+        artistId = artistId + 3;
+      currentArtist = strdup(strsep(&artistId, "'")); // Separa o ID do artista
+      currentArtist[8] = '\0'; // Limita o ID a 8 caracteres
+      gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
+                                              &orig_key, &value);
+      if (found) {
+        int totalDuration =
+            incrementArtistDurationPerWeek(orig_key, duration, semana);
+        int tamanhoTops10 = Tops10->len;
+        if (semana >= tamanhoTops10) {
+          g_array_set_size(getGArrayTops10(gestorArtists), (guint)(semana + 1));
+          for (int i = tamanhoTops10; i < (int)Tops10->len; i++) {
+            g_array_index(Tops10, MinHeap *, i) =
+                NULL; // Inicializa cada posição com NULL
+          }
+          tamanhoTops10 = Tops10->len;
+        }
+        MinHeap *heap = g_array_index(Tops10, MinHeap *, semana);
+        if (heap != NULL) {
+          HeapNode *minNode = getMinHeapFstHeapNode(heap);
+          int durationMinNode = getHeapNodeDuration(minNode);
+          insertMinHeap(heap, totalDuration, durationMinNode, minNode,
+                        currentArtist);
+        } else {
+          heap = createMinHeap();
+          insertMinHeap(heap, totalDuration, 0, NULL, currentArtist);
+        }
+      }
+      lentghArtistId -= 12;
     }
+  }
 }
-
-void heapify(MinHeap* heap, int i) {
-    int smallest = i;
-    int left = 2 * i + 1;
-    int right = 2 * i + 2;
-
-    if (left < heap->size && heap->data[left].duration < heap->data[smallest].duration)
-        smallest = left;
-
-    if (right < heap->size && heap->data[right].duration < heap->data[smallest].duration)
-        smallest = right;
-
-    if (smallest != i) {
-        swap_nodes(&heap->data[i], &heap->data[smallest]);
-        heapify(heap, smallest);
-    }
-}
-
-HeapNode extract_min(MinHeap* heap) {
-
-    HeapNode root = heap->data[0];
-    heap->data[0] = heap->data[--heap->size];
-    heapify(heap, 0);
-
-    return root;
-}
-
-void free_min_heap(MinHeap* heap) {
-    for (int i = 0; i < heap->size; i++) {
-        free(heap->data[i].artist_id); // Liberar a memória do ID do artista
-    }
-    free(heap->data);
-    free(heap);
-}
-
 
 /*
 enquanto é feito o parser de history:
@@ -84,12 +78,13 @@ enquanto é feito o parser de history:
   - ver a duration
   - ver o timestamp (data)
 
-atraves do timestamp: 
-distancia em dias entre a data limite (9 de setembro) e a data que queremos calcular
-e depois dividir por 7 -> da o indice da semana a ver no array dinamico
+atraves do timestamp:
+distancia em dias entre a data limite (9 de setembro) e a data que queremos
+calcular e depois dividir por 7 -> da o indice da semana a ver no array
+dinamico
 
-array dinamico de minheaps de structs -> cada struct tem o artist_id e a duracao total nessa semana
-cada posicao do array corresponde a uma semana; 
-a minheap é atraves da duracão (o menor fica no inicio) e tem tamanho 10
+array dinamico de minheaps de structs -> cada struct tem o artist_id e a
+duracao total nessa semana cada posicao do array corresponde a uma semana; a
+minheap é atraves da duracão (o menor fica no inicio) e tem tamanho 10
 
 */

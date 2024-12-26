@@ -3,6 +3,10 @@
 
 #include <glib.h>
 
+int converterParaSegundos(char *tempo);
+
+int calcularDiasAte_9_9_2024(char *data);
+
 float arredondarParaSeisCasas(float numero);
 
 void colocaTudoMinusculo(char *word);

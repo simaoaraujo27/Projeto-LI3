@@ -13,6 +13,8 @@ typedef struct artists Artists;
 Artists *separateArtists(char *line);
 bool validateArtist(Artists *artist);
 
+int incrementArtistDurationPerWeek(gpointer *a, int duration, int semana);
+
 void alterarArtistNumAlbunsIndividual(gpointer a, int num_albuns_individual);
 void setArtistId(Artists *a, char *id);
 void setArtistName(Artists *a, char *name);

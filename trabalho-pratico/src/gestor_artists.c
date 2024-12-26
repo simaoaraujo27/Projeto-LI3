@@ -1,8 +1,10 @@
 #include "gestor_artists.h"
 #include "artists.h"
+#include "minHeap.h"
 #include "utils.h"
 #include "validation.h"
 #include <assert.h>
+#include <glib.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -11,10 +13,9 @@
 struct gestorArtists {
   FILE *errorsFile;         // Ficheiro para registo de erros
   GHashTable *artistsTable; // Hashtable para armazenar os artistas
+  GArray *Tops10;           // tops 10 artistas por semana
 };
 
-// Função para inicializar a estrutura gestorArtists
-// Abre o ficheiro de erros e atribui a hashtable fornecida
 gestorArtists *initGestorArtists(const char *errorsFilePath) {
 
   // Inicializa a hashtable para os artistas
@@ -32,12 +33,20 @@ gestorArtists *initGestorArtists(const char *errorsFilePath) {
     free(gestor);
     return NULL;
   }
+  GArray *Tops10 = g_array_new(FALSE, FALSE, sizeof(MinHeap *));
+  g_array_set_size(Tops10,
+                   100); // Define o tamanho inicial do GArray para 100 posições
+  for (int i = 0; i < (int)Tops10->len; i++) {
+    g_array_index(Tops10, MinHeap *, i) =
+        NULL; // Inicializa cada posição com NULL
+  }
+
+  gestor->Tops10 = Tops10;
 
   // Atribui a tabela hash fornecida
   gestor->artistsTable = artistsTable;
   return gestor;
 }
-
 // Função para libertar os recursos da estrutura gestorArtists
 void freeGestorArtists(gestorArtists *gestor) {
   if (gestor) {
@@ -130,6 +139,10 @@ int GestorArtists(gestorArtists *gestor, char *artistsPath) {
 // Função para obter a hashtable de artistas da estrutura gestorArtists
 GHashTable *getArtistTable(gestorArtists *gestorArtist) {
   return gestorArtist->artistsTable;
+}
+
+GArray *getGArrayTops10(gestorArtists *gestorArtists) {
+  return gestorArtists->Tops10;
 }
 
 gboolean lookUpArtistsHashTable(gestorArtists *gestorArtist, char *key,

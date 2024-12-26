@@ -9,6 +9,8 @@ gestorArtists *initGestorArtists(const char *errorsFilePath);
 
 GHashTable *getArtistTable(gestorArtists *gestorArtist);
 
+GArray *getGArrayTops10(gestorArtists *gestorArtists);
+
 void freeGestorArtists(gestorArtists *gestor);
 
 int GestorArtists(gestorArtists *gestor, char *artistsPath);

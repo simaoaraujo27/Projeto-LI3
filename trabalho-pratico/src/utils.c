@@ -7,6 +7,75 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Função para converter "HH:MM:SS" em segundos
+int converterParaSegundos(char *tempo) {
+  int horas, minutos, segundos;
+
+  // Dividir a string em horas, minutos e segundos
+  if (sscanf(tempo, "%d:%d:%d", &horas, &minutos, &segundos) != 3) {
+    fprintf(stderr, "Erro: Formato de tempo inválido.\n");
+    return -1;
+  }
+
+  // Calcular o total de segundos
+  return horas * 3600 + minutos * 60 + segundos;
+}
+
+// Função para calcular se um ano é bissexto
+int isLeapYear(int year) {
+  return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+}
+
+// Função para calcular o número de dias em um mês
+int daysInMonth(int year, int month) {
+  int daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+  if (month == 2 && isLeapYear(year)) {
+    return 29;
+  }
+  return daysPerMonth[month - 1];
+}
+
+// Função para calcular a diferença de dias entre duas datas
+int calcularDiferencaDias(char *data1, char *data2) {
+  int year1, month1, day1;
+  int year2, month2, day2;
+
+  // Parse as duas datas
+  if (sscanf(data1, "%d/%d/%d", &year1, &month1, &day1) != 3 ||
+      sscanf(data2, "%d/%d/%d", &year2, &month2, &day2) != 3) {
+    fprintf(stderr, "Erro ao analisar as datas.\n");
+    return -1;
+  }
+
+  // Converter ambas as datas para o formato "dias desde o início do calendário"
+  int totalDays1 = 0, totalDays2 = 0;
+
+  for (int y = 0; y < year1; y++) {
+    totalDays1 += isLeapYear(y) ? 366 : 365;
+  }
+  for (int m = 1; m < month1; m++) {
+    totalDays1 += daysInMonth(year1, m);
+  }
+  totalDays1 += day1;
+
+  for (int y = 0; y < year2; y++) {
+    totalDays2 += isLeapYear(y) ? 366 : 365;
+  }
+  for (int m = 1; m < month2; m++) {
+    totalDays2 += daysInMonth(year2, m);
+  }
+  totalDays2 += day2;
+
+  // Retornar a diferença absoluta de dias
+  return abs(totalDays2 - totalDays1);
+}
+
+// Função para calcular os dias restantes até 9/9/2024
+int calcularDiasAte_9_9_2024(char *data) {
+  char *data_limite = "2024/09/09";
+  return calcularDiferencaDias(data, data_limite);
+}
+
 float arredondarParaSeisCasas(float numero) {
   return roundf(numero * 1000000) / 1000000;
 }
