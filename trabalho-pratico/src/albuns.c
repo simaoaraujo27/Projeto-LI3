@@ -85,11 +85,21 @@ int numeroArtistas(char *album_id) {
 // Função que separa dados de um álbum a partir de uma linha do CSV
 Albuns *separateAlbuns(char *line, gestorArtists *gestorArtists) {
   Albuns *album = initAlbum();
-  setAlbumId(album, strdup(strsep(&line, ";")));
-  setAlbumTitle(album, strdup(strsep(&line, ";")));
-  setAlbumArtistsId(album, strdup(strsep(&line, ";")));
-  setAlbumYear(album, strdup(strsep(&line, ";")));
-  setAlbumProducers(album, strdup(strsep(&line, ";")));
+  char *token = strdup(strsep(&line, ";"));
+  setAlbumId(album, token);
+  free(token);
+  token = strdup(strsep(&line, ";"));
+  setAlbumTitle(album, token);
+  free(token);
+  token = strdup(strsep(&line, ";"));
+  setAlbumArtistsId(album, token);
+  free(token);
+  token = strdup(strsep(&line, ";"));
+  setAlbumYear(album, token);
+  free(token);
+  token = strdup(strsep(&line, ";"));
+  setAlbumProducers(album, token);
+  free(token);
   char *artists = strdup(album->artists_id);
   remove_quotes(artists);
   removeFstLast(artists);

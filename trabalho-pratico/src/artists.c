@@ -120,6 +120,7 @@ Artists *separateArtists(char *line) {
   free(description);
   free(recipePerStreamStr);
   free(linhaTipo);
+  free(idConstituintes);
 
   return artist;
 }

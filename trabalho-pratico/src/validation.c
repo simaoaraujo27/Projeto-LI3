@@ -190,6 +190,11 @@ bool validateMusicsArtistsAndAlbuns(char *albuns_id, char *artists_id,
       artists_id = artists_id + 1;
     } else
       artists_id = artists_id + 3;
+
+    if (key != NULL) {
+      free(key);
+      key = NULL;
+    }
     key = strdup(strsep(&artists_id, "'")); // Separa o ID do artista
     key[8] = '\0';                          // Limita o ID a 8 caracteres
     gboolean found =
@@ -208,7 +213,12 @@ bool validateMusicsArtistsAndAlbuns(char *albuns_id, char *artists_id,
     free(key);
     return false;
   }
-  free(key);
+
+  if (key == NULL) {
+    free(key);
+    key = NULL;
+  }
+
   return true;
 }
 
@@ -236,10 +246,12 @@ bool validateMusicsLine(char *line, gestorArtists *gestorArtists,
   free(id); // Liberta a memória
   free(title);
   free(artists_id);
+  free(albuns_id);
   free(durationSeconds);
   free(genre);
   free(year);
   free(artist_id_copia);
+  free(albuns_id_copia);
 
   return isValid;
 }
@@ -345,6 +357,12 @@ bool validateArtistsIdAlbums(char *artists_id, gestorArtists *gestorArtists) {
       artists_id = artists_id + 1;
     } else
       artists_id = artists_id + 3;
+
+    if (key != NULL) {
+      free(key);
+      key = NULL;
+    }
+
     key = strdup(strsep(&artists_id, "'")); // Separa o ID do artista
     key[8] = '\0';                          // Limita o ID a 8 caracteres
     gboolean found =
@@ -356,7 +374,10 @@ bool validateArtistsIdAlbums(char *artists_id, gestorArtists *gestorArtists) {
     lentghArtistsId -= 12; // Ajusta o comprimento restante da string
   }
 
-  free(key);
+  if (key != NULL) {
+    free(key);
+    key = NULL;
+  }
   return true;
 }
 

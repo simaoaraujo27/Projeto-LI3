@@ -14,6 +14,24 @@
 // Define o tamanho máximo para os paths dos arquivos
 #define MAX_PATH_SIZE 1024
 
+void libertaGestores(gestorArtists *gestorArtists, gestorMusics *gestorMusics,
+                     gestorUsers *gestorUsers, gestorAlbuns *gestorAlbuns,
+                     gestorHistory *gestorHistory) {
+  freeGestorArtists(gestorArtists);
+  freeGestorMusics(gestorMusics);
+  freeGestorUsers(gestorUsers);
+  freeGestorAlbuns(gestorAlbuns);
+  freeGestorHistory(gestorHistory);
+}
+
+void libertaPaths(char *p1, char *p2, char *p3, char *p4, char *p5) {
+  free(p1);
+  free(p2);
+  free(p3);
+  free(p4);
+  free(p5);
+}
+
 int GestorParsers(Gestores *gestor, char *path) {
 
   // Aloca memória para os paths completos dos arquivos
@@ -30,25 +48,59 @@ int GestorParsers(Gestores *gestor, char *path) {
   snprintf(albunsPath, MAX_PATH_SIZE, "%s/%s", path, "albums.csv");
   snprintf(historyPath, MAX_PATH_SIZE, "%s/%s", path, "history.csv");
 
+  gestorArtists *gestorArtists = pegarGestorArtist(gestor);
+  gestorMusics *gestorMusics = pegarGestorMusic(gestor);
+  gestorUsers *gestorUsers = pegarGestorUser(gestor);
+  gestorAlbuns *gestorAlbuns = pegarGestorAlbum(gestor);
+  gestorHistory *gestorHistory = pegarGestorHistory(gestor);
 
-  if (!GestorArtists(pegarGestorArtist(gestor), artistsPath))
+  if (!GestorArtists(gestorArtists, artistsPath)) {
+    libertaGestores(gestorArtists, gestorMusics, gestorUsers, gestorAlbuns,
+                    gestorHistory);
+    libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
+    free(path);
     return 0;
+  }
 
-  if (!GestorAlbuns(pegarGestorAlbum(gestor), albunsPath,
-                    pegarGestorArtist(gestor)))
+  if (!GestorAlbuns(gestorAlbuns, albunsPath, gestorArtists)) {
+    libertaGestores(gestorArtists, gestorMusics, gestorUsers, gestorAlbuns,
+                    gestorHistory);
+    libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
+    free(path);
     return 0;
+  }
 
-  if (!GestorMusics(pegarGestorMusic(gestor), pegarGestorArtist(gestor),
-                    pegarGestorAlbum(gestor), musicsPath))
+  if (!GestorMusics(gestorMusics, gestorArtists, gestorAlbuns, musicsPath)) {
+    libertaGestores(gestorArtists, gestorMusics, gestorUsers, gestorAlbuns,
+                    gestorHistory);
+    libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
+    free(path);
     return 0;
+  }
 
-  if (!GestorUsers(pegarGestorUser(gestor), pegarGestorMusic(gestor),
-                   usersPath))
+  if (!GestorUsers(gestorUsers, gestorMusics, usersPath)) {
+    libertaGestores(gestorArtists, gestorMusics, gestorUsers, gestorAlbuns,
+                    gestorHistory);
+    libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
+    free(path);
     return 0;
+  }
 
-  if (!GestorHistory(pegarGestorHistory(gestor), pegarGestorMusic(gestor),
-                     pegarGestorArtist(gestor), historyPath))
+  if (!GestorHistory(gestorHistory, gestorMusics, gestorArtists, historyPath)) {
+    libertaGestores(gestorArtists, gestorMusics, gestorUsers, gestorAlbuns,
+                    gestorHistory);
+    libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
+    free(path);
     return 0;
+  }
 
+  // libertaGestores(gestorArtists, gestorMusics, gestorUsers, gestorAlbuns,
+  // gestorHistory); libertaPaths(artistsPath, musicsPath, usersPath,
+  // albunsPath, historyPath);
   return 1;
 }
+
+/*
+TÃO AQUI OS LEAKS TODOS!!
+
+*/

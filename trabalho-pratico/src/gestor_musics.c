@@ -184,38 +184,28 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
       gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
                                               &orig_key, &value);
       if (found) {
-        char *type = getArtistTypeStr(
-            orig_key); // no ficheiro das musicas acho que nao tem nenhum que o
-                       // artist_id tenha type group
-        // printf("%s\n", type);
+        char *type = getArtistTypeStr(orig_key);
 
         float recipe_Per_Stream =
             getArtistRecipePerStream(orig_key); // esta certo
 
         float receitaTotal = recipe_Per_Stream;
         arredondarParaSeisCasas(receitaTotal);
-        // printf("receitaTotal: %f\n", receitaTotal);
 
         float receitaAntiga = getArtistReceitaTotal(orig_key);
-        // printf("receitaAntiga: %f\n", getArtistReceitaTotal(orig_key));
 
         float receitaAtualizada = receitaAntiga + receitaTotal;
-        // printf("recitaAtualizada: %f\n", receitaAtualizada);
 
         setArtistReceitaTotal(orig_key, receitaAtualizada);
-        // printf("recitaTotal supostamente atualizada no artista: %f\n",
-        // getArtistReceitaTotal(orig_key));
 
         if (strcmp(type, "group") == 0) {
 
           int NumComponentesBanda = getArtistTamanhoGrupo(orig_key);
-          //    printf("NumComponentesBanda: %d\n\n", NumComponentesBanda);
 
           char *idComponentes = getArtistIdConstituent(orig_key);
 
           remove_quotes(idComponentes);
           removeFstLast(idComponentes);
-          // printf("%s\n", idComponentes);
           int TamanhoIdComponentes = (int)strlen(idComponentes);
 
           while (TamanhoIdComponentes > 0) {
@@ -234,10 +224,12 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
                 arredondarParaSeisCasas(receitaAntigaComp +
                                         (receitaTotal / NumComponentesBanda)));
             TamanhoIdComponentes -= 12;
+            free(currentComponent);
           }
         }
       }
       lentghArtistId -= 12; // Ajusta o comprimento restante da string
     }
+
   }
 }

@@ -90,12 +90,25 @@ void destroyHistory(History *hist) {
 // Função que separa dados do history a partir de uma linha do CSV
 History *separateHistory(char *line) {
   History *history = initHistory();
-  setHistoryId(history, strdup(strsep(&line, ";")));
-  setHistoryUserId(history, strdup(strsep(&line, ";")));
-  setHistoryMusicId(history, strdup(strsep(&line, ";")));
-  setHistoryTimestamp(history, strdup(strsep(&line, ";")));
-  setHistoryDuration(history, strdup(strsep(&line, ";")));
-  setHistoryPlatform(history, strdup(strsep(&line, ";")));
+  char *token = strdup(strsep(&line, ";"));
+  setHistoryId(history, token);
+  free(token);
+  token = strdup(strsep(&line, ";"));
+  setHistoryUserId(history, token);
+  free(token);
+  token = strdup(strsep(&line, ";"));
+  setHistoryMusicId(history, token);
+  free(token);
+  token = strdup(strsep(&line, ";"));
+  setHistoryTimestamp(history, token);
+  free(token);
+  token = strdup(strsep(&line, ";"));
+  setHistoryDuration(history, token);
+  free(token);
+  token = strdup(strsep(&line, ";"));
+  setHistoryPlatform(history, token);
+  free(token);
+  token = strdup(strsep(&line, ";"));
 
   return history;
 }
