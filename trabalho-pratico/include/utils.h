@@ -31,4 +31,6 @@ int comparaStrings(char *str1, char *str2);
 
 char *intToString(int number);
 
+void removeZerosAEsquerda(char *username);
+
 #endif

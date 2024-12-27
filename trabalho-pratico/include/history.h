@@ -3,6 +3,7 @@
 
 typedef struct history History;
 
+
 char *getHistoryId(History *hist);
 char *getHistoryUserId(History *hist);
 char *getHistoryMusicId(History *hist);
@@ -21,5 +22,6 @@ History *initHistory();
 void destroyHistory(History *hist);
 
 History *separateHistory(char *line);
+
 
 #endif

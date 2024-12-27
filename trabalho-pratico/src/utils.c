@@ -229,3 +229,21 @@ char *intToString(int number) {
   sprintf(result, "%d", number);
   return result;
 }
+
+void removeZerosAEsquerda(char *username) {
+  // Encontra o primeiro caractere não-zero e remove o 'U'
+  char *primeiroNaoZero = username;
+  primeiroNaoZero++;
+
+  while (*primeiroNaoZero == '0') {
+    primeiroNaoZero++;
+  }
+
+  // Se todos os caracteres eram zeros, deixa apenas um zero
+  if (*primeiroNaoZero == '\0') {
+    strcpy(username, "0");
+  } else {
+    // Copia a substring sem zeros de volta para o início da string
+    strcpy(username, primeiroNaoZero);
+  }
+}

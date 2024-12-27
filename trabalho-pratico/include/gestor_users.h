@@ -25,4 +25,8 @@ GHashTable *getUsersTable(gestorUsers *gestorUser);
 
 void processAllUsers(Gestores *gestor, NodoMusica **lista);
 
+int getNUsers(gestorUsers *gestorUser);
+
+char **insertIdsToArray(gestorUsers *gestorUsers, int numUtilizadores);
+
 #endif

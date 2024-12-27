@@ -15,6 +15,9 @@
 struct gestorMusics {
   FILE *errorsFile;        // Ficheiro para registo de erros
   GHashTable *musicsTable; // Hashtable para armazenar músicas
+  GHashTable *genresTable; // Hashtable para armazenar os diferentes géneros
+                           // (para ser usado na Query 5)
+  int *nGeneros; // Contador do número de géneros (para ser usado na Query 5)
 };
 
 // Função para inicializar a estrutura gestorMusics
@@ -24,6 +27,8 @@ gestorMusics *initGestorMusics(const char *errorsFilePath) {
   // Inicializa a hashtable para musicas
   GHashTable *musicsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyMusic);
+
+  GHashTable *genresTable = g_hash_table_new(g_str_hash, g_str_equal);
 
   // Aloca memória para a estrutura
   gestorMusics *gestorMusic = malloc(sizeof(gestorMusics));
@@ -40,6 +45,10 @@ gestorMusics *initGestorMusics(const char *errorsFilePath) {
 
   // Atribui a hashtable fornecida
   gestorMusic->musicsTable = musicsTable;
+  gestorMusic->genresTable = genresTable;
+
+  gestorMusic->nGeneros = malloc(sizeof(int *));
+  *(gestorMusic->nGeneros) = 0;
   return gestorMusic;
 }
 
@@ -50,14 +59,57 @@ void freeGestorMusics(gestorMusics *gestor) {
       fclose(
           gestor->errorsFile); // Fecha o ficheiro de erros, se estiver aberto
     g_hash_table_destroy(gestor->musicsTable);
+    g_hash_table_destroy(gestor->genresTable);
+    free(gestor->nGeneros);
     free(gestor); // Liberta a memória da estrutura
   }
 }
 
+void addGenre(GHashTable *genresTable, int *nGeneros, char *genre) {
+  if (!g_hash_table_contains(genresTable, genre)) {
+    g_hash_table_insert(genresTable, (gpointer)genre, NULL);
+    (*nGeneros)++;
+  }
+}
+
+char **insertGenreToArray(gestorMusics *gestorMusics, int numGeneros) {
+  // Aloca memória para o array de ponteiros para char
+  char **valuesArray = (char **)malloc(numGeneros * sizeof(char *));
+  if (valuesArray == NULL) {
+    perror("Falha na alocação de memória para o array");
+    exit(1);
+  }
+
+  GHashTableIter iter;
+  g_hash_table_iter_init(&iter, gestorMusics->genresTable);
+
+  gpointer key1;
+  gpointer value1;
+  int i = 0;
+
+  // Itera sobre os elementos da GHashTable e armazena os valores no array
+  while (g_hash_table_iter_next(&iter, &key1, &value1) && i < numGeneros) {
+    // Verifique se value1 é um ponteiro válido para uma string
+    if (key1 != NULL) {
+      valuesArray[i] = "";
+      char *genre = strdup((char *)key1);
+      if (genre == NULL) {
+        perror("Falha na alocação de memória para a string");
+        return NULL;
+      }
+      valuesArray[i++] = genre;
+    }
+  }
+
+  return valuesArray;
+}
+
 void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
                  Musics *music, GHashTable *musicsTable, FILE *errorsFile,
-                 gestorAlbuns *gestorAlbuns) {
-  char *id; // ID da música
+                 gestorAlbuns *gestorAlbuns, GHashTable *genresTable,
+                 int *nGeneros) {
+  char *id;    // ID da música
+  char *genre; // Género da música
   if (validateMusicsLine(copia, gestorArtist, gestorAlbuns)) {
     // Se a linha for válida, separa os campos e cria um objeto Musics
     music = separateMusics(line);
@@ -65,6 +117,9 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
     //  Obtém o ID da música e insere na hashtable usando o ID como chave
     id = getMusicId(music);
     g_hash_table_insert(musicsTable, id, music);
+
+    genre = getMusicGenre(music);
+    addGenre(genresTable, nGeneros, genre);
   } else {
     // Escreve a linha inválida no ficheiro de erros
     fprintf(errorsFile, "%s", line);
@@ -89,7 +144,8 @@ int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
       // Cria uma cópia da linha para validação
       char *copia = strdup(line);
       parserMusic(copia, gestorArtist, line, music, gestorMusic->musicsTable,
-                  gestorMusic->errorsFile, gestorAlbuns);
+                  gestorMusic->errorsFile, gestorAlbuns,
+                  gestorMusic->genresTable, gestorMusic->nGeneros);
       free(copia); // Liberta a memória alocada para a cópia da linha
     }
 
@@ -107,6 +163,11 @@ int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
 // Função para obter a hashtable de músicas da estrutura gestorMusics
 GHashTable *getMusicsTable(gestorMusics *gestorMusic) {
   return gestorMusic->musicsTable;
+}
+
+int getMusicsNGenres(gestorMusics *gestorMusic) {
+  int *i = gestorMusic->nGeneros;
+  return *i;
 }
 
 GHashTableIter iterInitMusicsHashTable(gestorMusics *gestorMusics) {
@@ -237,4 +298,16 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
 
     free(artistIdOriginal);
   }
+}
+
+char *getMusicGenreById(char *musicId, gestorMusics *gestorMusics) {
+  gpointer value;
+  gpointer orig_key;
+  gboolean found =
+      lookUpMusicsHashTable(gestorMusics, musicId, &value, &orig_key);
+  if (found) {
+    char *genre = getMusicGenre(value);
+    return genre;
+  }
+  return NULL;
 }

@@ -51,8 +51,6 @@ void freeGestorHistory(gestorHistory *gestor) {
 void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
                    char *line, char *copia, gestorMusics *gestorMusics,
                    gestorArtists *gestorArtists) {
-  // TODO: ADICIONAR O IF DA VALIDAÇÃO QUANDO ESTIVER FEITO
-  // ESTE IF É SÓ PARA NÃO DAR ERRO PORQUE AINDA FALTA A VALIDAÇÃO
   if (validateHistoryLine(copia)) {
     // Obtém o ID do history e remove aspas
     char *id = getHistoryId(history);
@@ -64,8 +62,7 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
     char *musicId = getHistoryMusicId(history);
     incrementMusicRep(musicId, gestorMusics, gestorArtists);
 
-
-//--- para a query4
+    //--- para a query4
     remove_quotes(musicId);
     char *timeStamp = getHistoryTimestamp(history);
     remove_quotes(timeStamp);
@@ -133,4 +130,28 @@ int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
     return 0;
   }
   return 1;
+}
+
+void preencheMatriz(int **matrizClassificaoMusicas, int numUtilizadores,
+                    int numGeneros, char **idsUtilizadores, char **nomesGeneros,
+                    gestorMusics *gestorMusics, gestorHistory *gestorHistory) {
+
+  GHashTableIter iter;
+  gpointer key1, value1;
+  g_hash_table_iter_init(&iter, gestorHistory->historyTable);
+
+  while (g_hash_table_iter_next(&iter, &key1, &value1)) {
+    History *history = (History *)value1; // Obtém a música atual
+    char *username = getHistoryId(history);
+    char *musicId = getHistoryMusicId(history);
+
+    removeZerosAEsquerda(username);
+    int linha = atoi(username) - 1;
+    if (linha) {}
+    char *genre = getMusicGenreById(musicId, gestorMusics);
+/*     printf("%s\n", genre);
+    matrizClassificaoMusicas[0][0] = 0;
+    idsUtilizadores[numGeneros] = "OLA";
+    nomesGeneros[numUtilizadores - 249000] = "OLA"; */
+  }
 }

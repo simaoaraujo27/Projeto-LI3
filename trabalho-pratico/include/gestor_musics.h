@@ -18,6 +18,10 @@ void freeGestorMusics(gestorMusics *gestor);
 
 GHashTable *getMusicsTable(gestorMusics *gestorMusic);
 
+int getMusicsNGenres(gestorMusics *gestorMusic);
+
+char** insertGenreToArray(gestorMusics *gestorMusics, int numGeneros);
+
 GHashTableIter iterInitMusicsHashTable(gestorMusics *gestorMusics);
 
 gboolean iter_HashTableMusics(gpointer *key1, gpointer *value1,
@@ -32,5 +36,7 @@ void processAllMusics(gestorMusics *gestorMusics, int numeroArtistas,
 
 void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
                        gestorArtists *gestorArtists);
+
+char *getMusicGenreById(char *musicId, gestorMusics *gestorMusics);
                       
 #endif

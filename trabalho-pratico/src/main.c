@@ -50,6 +50,7 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
+
   // Abre o arquivo de texto passado como argumento para executar as queries
   char *txt = argv[2];
   fp = fopen(txt, "r");
@@ -73,7 +74,7 @@ int main(int argc, char **argv) {
   // Processa as queries lidas do arquivo
   while (getline(&line, &len, fp) != -1) {
     gestorQueries(line, gestor, lista, i, &total_time_query1,
-                  &total_time_query2, &total_time_query3);              
+                  &total_time_query2, &total_time_query3);
     i++;
   }
   fclose(fp);

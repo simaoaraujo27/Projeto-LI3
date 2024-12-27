@@ -150,14 +150,14 @@ char *getUserLikedMusicsId(gpointer user) {
 // Função para libertar a memória associada a um user
 void destroyUser(Users *u) {
   if (u) {
-    free(u->username);          
-    free(u->email);             
-    free(u->first_name);        
-    free(u->last_name);         
-    free(u->birth_date);        
-    free(u->country);           
-    free(u->subscription_type); 
-    free(u->liked_musics_id);   
-    free(u);                    
+    free(u->username);
+    free(u->email);
+    free(u->first_name);
+    free(u->last_name);
+    free(u->birth_date);
+    free(u->country);
+    free(u->subscription_type);
+    free(u->liked_musics_id);
+    free(u);
   }
 }

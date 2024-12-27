@@ -13,8 +13,13 @@ gestorHistory *initGestorHistory(const char *errorsFilePath);
 void freeGestorHistory(gestorHistory *gestor);
 
 void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
-                   char *line, char *copia, gestorMusics *gestorMusics, gestorArtists *gestorArtists);
-int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic, gestorArtists *gestorArtists,
-                  char *historyPath);
+                   char *line, char *copia, gestorMusics *gestorMusics,
+                   gestorArtists *gestorArtists);
+int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
+                  gestorArtists *gestorArtists, char *historyPath);
+
+void preencheMatriz(int **matrizClassificaoMusicas, int numUtilizadores,
+                    int numGeneros, char **idsUtilizadores, char **nomesGeneros,
+                    gestorMusics *gestorMusics, gestorHistory *gestorHistory);
 
 #endif

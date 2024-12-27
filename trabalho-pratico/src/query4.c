@@ -46,8 +46,8 @@ void armazenarValores(char *musicId, int duration,
       gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
                                               &orig_key, &value);
       if (found) {
-        int totalDuration =
-            incrementArtistDurationPerWeek(orig_key, duration, semana);/* nao esta a somar */
+        int totalDuration = incrementArtistDurationPerWeek(
+            orig_key, duration, semana); /* nao esta a somar */
         int tamanhoTops10 = Tops10->len;
         if (semana >= tamanhoTops10) {
           g_array_set_size(getGArrayTops10(gestorArtists), (guint)(semana + 1));
