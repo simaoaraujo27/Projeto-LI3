@@ -14,9 +14,26 @@ typedef struct {
   int size; // Número atual de elementos na heap
 } MinHeap;
 
+HeapNode menorHeapNode(MinHeap *heap, int *indice) {
+  HeapNode menor = heap->data[0];
+  for (int i = 0; i < heap->size; i++) {
+    if (heap->data[i].duration < menor.duration) {
+      menor = heap->data[i];
+      *indice = i;
+    }
+  }
+  return menor;
+}
+
 void setHeapNode(HeapNode *heapNode, char *artistId, int duration) {
   heapNode->artist_id = artistId;
   heapNode->duration = duration;
+}
+
+void removeMinHeap(MinHeap *minheap, int indice) {
+  minheap = NULL;
+  if (indice && minheap) {
+  }
 }
 
 int getMinHeapSize(MinHeap *h) { return h->size; }
@@ -85,12 +102,12 @@ int elemMinHeap(char *currentArtist, HeapNode data[], int tamanho) {
       return i;
     }
   }
-  return -1;  
+  return -1;
 }
 
 // Função para inserir um elemento na min-heap
 void insertMinHeap(MinHeap *heap, int totalDuration, int durationMinNode,
-                   HeapNode *minNode, char *currentArtist) {
+                   HeapNode *minNode, char *currentArtist, int indiceMinNode) {
   int indice = elemMinHeap(currentArtist, heap->data, heap->size);
   // Verificar se a heap está cheia
   if (indice != -1) {
@@ -103,25 +120,18 @@ void insertMinHeap(MinHeap *heap, int totalDuration, int durationMinNode,
     if ((durationMinNode < totalDuration) ||
         (durationMinNode == totalDuration &&
          strcmp(currentArtist, getHeapNodeArtistId(minNode)) < 0)) {
-      free(heap->data[0].artist_id); // Liberar o ID do menor elemento
-      heap->data[0].artist_id = strdup(currentArtist);
-      heap->data[0].duration = totalDuration;
-      heapify(heap, 0); // Reorganizar a heap
-
-      return;
+      free(heap->data[indiceMinNode]
+               .artist_id); // Liberar o ID do menor elemento
+      heap->data[indiceMinNode].artist_id = strdup(currentArtist);
+      heap->data[indiceMinNode].duration = totalDuration;
     }
+    return;
   }
 
   // Adicionar no final e ajustar
   int i = heap->size++;
   heap->data[i].artist_id = strdup(currentArtist);
   heap->data[i].duration = totalDuration;
-
-  // Subir o elemento para a posição correta
-  while (i > 0 && heap->data[i].duration < heap->data[(i - 1) / 2].duration) {
-    swapNodes(&heap->data[i], &heap->data[(i - 1) / 2]);
-    i = (i - 1) / 2;
-  }
 }
 
 // Função para remover o menor elemento da heap (extração da raiz)

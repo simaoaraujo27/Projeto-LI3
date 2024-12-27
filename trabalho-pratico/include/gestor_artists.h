@@ -22,4 +22,6 @@ void incrementArtistsNumAlbuns(char *artistId, gestorArtists *gestorArtist);
 
 void colocaZero(gestorArtists *GestorArtists);
 
+void colocaZeroVezesTop10(gestorArtists *GestorArtists);
+
 #endif // _GESTORARTISTS_H_

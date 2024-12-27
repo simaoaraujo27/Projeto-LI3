@@ -7,6 +7,25 @@
 #include <stdlib.h>
 #include <string.h>
 
+int somaHoras(char *hora1, char *hora2, int *dif) {
+  int h1, m1, s1, h2, m2, s2;
+
+  // Converter as strings para horas, minutos e segundos
+  sscanf(hora1, "%d:%d:%d", &h1, &m1, &s1);
+  sscanf(hora2, "%d:%d:%d", &h2, &m2, &s2);
+
+  // Somar as horas, minutos e segundos
+  int totalSegundos = (h1 * 3600 + m1 * 60 + s1) + (h2 * 3600 + m2 * 60 + s2);
+
+  // Verificar se passou de 24 horas (86400 segundos)
+  if (totalSegundos >= 86400) {
+    *dif = 86000 - totalSegundos;
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
 // Função para converter "HH:MM:SS" em segundos
 int converterParaSegundos(char *tempo) {
   int horas, minutos, segundos;

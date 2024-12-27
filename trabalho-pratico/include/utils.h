@@ -3,6 +3,8 @@
 
 #include <glib.h>
 
+int somaHoras(char *hora1, char *hora2, int *dif);
+
 int converterParaSegundos(char *tempo);
 
 int calcularDiasAte_9_9_2024(char *data);

@@ -70,12 +70,25 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
     char *durationStr = getHistoryDuration(history);
     remove_quotes(durationStr);
     int durationSeg = converterParaSegundos(durationStr);
+    int semana1 = 0;
+    int semana2 = 0;
+    if (dias >= 2)
+      semana1 = (dias + 5) / 7;
+    if (dias - 1 >= 2) {
+      semana2 = (dias + 4) / 7;
+    }
+    int dif = 0;
 
-    armazenarValores(musicId, durationSeg, dias, gestorMusics, gestorArtists,
-                     getGArrayTops10(gestorArtists));
+    if (semana1 != semana2 && somaHoras(durationStr, timeStamp + 11, &dif)) {
+      armazenarValores(musicId, durationSeg - dif, dias, gestorMusics,
+                       gestorArtists, getGArrayTops10(gestorArtists));
+      armazenarValores(musicId, dif, dias - 1, gestorMusics, gestorArtists,
+                       getGArrayTops10(gestorArtists));
+    } else
+      armazenarValores(musicId, durationSeg, dias, gestorMusics, gestorArtists,
+                       getGArrayTops10(gestorArtists));
 
     free(musicId);
-
   } else {
     // Escreve a linha inválida no ficheiro de erros
     fprintf(errorsFile, "%s", line);
@@ -129,9 +142,10 @@ int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
     perror("Error opening history file");
     return 0;
   }
+
   return 1;
 }
-
+/*
 void preencheMatriz(int **matrizClassificaoMusicas, int numUtilizadores,
                     int numGeneros, char **idsUtilizadores, char **nomesGeneros,
                     gestorMusics *gestorMusics, gestorHistory *gestorHistory) {
@@ -147,11 +161,13 @@ void preencheMatriz(int **matrizClassificaoMusicas, int numUtilizadores,
 
     removeZerosAEsquerda(username);
     int linha = atoi(username) - 1;
-    if (linha) {}
-    char *genre = getMusicGenreById(musicId, gestorMusics);
+    if (linha) {
+    }
+    char *genre = getMusicGenreById(musicId, gestorMusics); */
 /*     printf("%s\n", genre);
     matrizClassificaoMusicas[0][0] = 0;
     idsUtilizadores[numGeneros] = "OLA";
     nomesGeneros[numUtilizadores - 249000] = "OLA"; */
-  }
+/*   }
 }
+ */

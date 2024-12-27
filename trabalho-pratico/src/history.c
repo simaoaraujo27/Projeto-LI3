@@ -111,5 +111,3 @@ History *separateHistory(char *line) {
 
   return history;
 }
-
-

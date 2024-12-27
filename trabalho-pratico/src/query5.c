@@ -1,4 +1,4 @@
-#include "gestores.h"
+/* #include "gestores.h"
 #include "recomendador.h"
 #include "utils.h"
 #include <stdio.h>
@@ -58,30 +58,30 @@ void query5(Gestores *gestor) {
   }
 
   printf("numUtilizadores: %d\n", numUtilizadores);
-  printf("numGeneros: %d\n", numGeneros);
-  /*   for (int i = 0; i < numUtilizadores; i++) {
-      printf("%s\n", idsUtilizadores[i]);
-    } */
-  for (int i = 0; i < numGeneros; i++) {
-    printf("%s\n", nomesGeneros[i]);
-  }
-  preencheMatriz(matrizClassificacaoMusicas, numUtilizadores, numGeneros,
-                 idsUtilizadores, nomesGeneros, gestorMusics);
-
-  /*   char **recomendacao = recomendaUtilizadores(
-        idUtilizadorAlvo, &matrizClassificacaoMusicas, idsUtilizadores,
-        nomesGeneros, numUtilizadores, numGeneros, numRecomendacoes); */
-  // char **idsUtilizadores = getIdUtilizadores(gestorUsers);
-  // quick_sort(idsUtilizadores);
-
-  // Um array a começar por 0 até o nUsers
-
-  // NOTA: PODE DAR ERRADO POR CAUSA DOS ERRORS
-  // PARA JÁ VOU FAZER COMO SE FOSSE CERTO
-
-  // Arbitrário
-  // int numRecomendacoes = 5;
+  printf("numGeneros: %d\n", numGeneros); */
+/*   for (int i = 0; i < numUtilizadores; i++) {
+    printf("%s\n", idsUtilizadores[i]);
+  } */
+/* for (int i = 0; i < numGeneros; i++) {
+  printf("%s\n", nomesGeneros[i]);
 }
+preencheMatriz(matrizClassificacaoMusicas, numUtilizadores, numGeneros,
+               idsUtilizadores, nomesGeneros, gestorMusics); */
+
+/*   char **recomendacao = recomendaUtilizadores(
+      idUtilizadorAlvo, &matrizClassificacaoMusicas, idsUtilizadores,
+      nomesGeneros, numUtilizadores, numGeneros, numRecomendacoes); */
+// char **idsUtilizadores = getIdUtilizadores(gestorUsers);
+// quick_sort(idsUtilizadores);
+
+// Um array a começar por 0 até o nUsers
+
+// NOTA: PODE DAR ERRADO POR CAUSA DOS ERRORS
+// PARA JÁ VOU FAZER COMO SE FOSSE CERTO
+
+// Arbitrário
+// int numRecomendacoes = 5;
+//}
 
 /*
 O parseUsers tem de vir antes do parseHistory

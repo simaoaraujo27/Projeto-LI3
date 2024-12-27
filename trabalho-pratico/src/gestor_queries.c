@@ -66,8 +66,8 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;
     *total_time_query3 += time_spent; // Acumula o tempo para Query 3
   } else if (line[0] == '4') {
-    // query4(pegarGestorArtist(gestor));
+    query4(pegarGestorArtist(gestor));
   } else if (line[0] == '5') {
-    query5(gestor);
+    // query5(gestor);
   }
 }

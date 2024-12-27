@@ -72,6 +72,9 @@ float ReceitaParticipacao(int numeroDeParticipacoesEmMusicaColetivas,
                           float reproducoes[], float ratePerStream[],
                           float constituintes[]);
 float ReceitaArtista(float reproducoes, float ratePerStreamArtista);
+
+void putArtistsVezesTop10Zero(Artists *artist);
+
 float ReceitaArtistaIndividual(float receitaArtista, float receitaParticipacao);
 
 #endif

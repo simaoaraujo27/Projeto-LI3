@@ -181,3 +181,19 @@ void colocaZero(gestorArtists *GestorArtists) {
     putArtistsDiscografyZero(artist);
   }
 }
+
+// Inicializa a discografia de todos os artistas a zero
+void colocaZeroVezesTop10(gestorArtists *GestorArtists) {
+  GHashTableIter iter;
+  g_hash_table_iter_init(
+      &iter, GestorArtists
+                 ->artistsTable); // Inicializa o iterador da tabela de músicas
+
+  gpointer key1;
+  gpointer value1;
+
+  while (g_hash_table_iter_next(&iter, &key1, &value1)) {
+    Artists *artist = (Artists *)value1;
+    putArtistsVezesTop10Zero(artist);
+  }
+}

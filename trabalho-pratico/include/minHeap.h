@@ -16,6 +16,10 @@ typedef struct minHeap {
   int size;          // Número atual de elementos na heap
 } MinHeap;
 
+void removeMinHeap(MinHeap *minheap, int indice);
+
+HeapNode menorHeapNode(MinHeap *heap, int *indice);
+
 void setHeapNode(HeapNode *heapNode, char *artistId, int duration);
 
 char *getHeapNodeArtistId(HeapNode *HeapNode);
@@ -37,7 +41,7 @@ void swapNodes(HeapNode *a, HeapNode *b);
 
 // Função para inserir um elemento na min-heap
 void insertMinHeap(MinHeap *heap, int totalDuration, int durationMinNode,
-                   HeapNode *minNode, char *currentArtist);
+                   HeapNode *minNode, char *currentArtist, int indiceMinNode);
 
 // Função para reorganizar a heap a partir de um índice
 void heapify(MinHeap *heap, int i);

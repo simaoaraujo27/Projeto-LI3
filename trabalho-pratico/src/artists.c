@@ -221,6 +221,8 @@ void procuraArt(Artists *artist, GList **listaResposta) {
 
 void putArtistsDiscografyZero(Artists *artist) { artist->discografia = 0; }
 
+void putArtistsVezesTop10Zero(Artists *artist) { artist->vezesNoTop10 = 0; }
+
 // Incrementa a discografia de um artista se ele corresponder ao país
 // especificado
 void increment_artist_discografia(gpointer value, int duracao,
