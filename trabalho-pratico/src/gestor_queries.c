@@ -77,7 +77,7 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
     } else
       query4(pegarGestorArtist(gestor), NULL, NULL, i, temS);
   } else if (line[0] == '5') {
-    query5(gestor);
+    // query5(gestor);
   } else if (line[0] == '6') {
     /*
     line += 2;

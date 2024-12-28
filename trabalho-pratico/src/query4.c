@@ -92,6 +92,7 @@ void query4(gestorArtists *gestorArtists, char *DataFim, char *DataInicio,
             int contadorOutputs, int TemS) { /* tem de percorrer o GArray e
 aumentar em 1 num contador */
   GArray *Tops10 = getGArrayTops10(gestorArtists);
+  FILE *newFile = createFile(contadorOutputs);
 
   int semanaInicio = 0, semanaFim = 0;
   if (DataInicio == NULL && DataFim == NULL) {
@@ -101,7 +102,12 @@ aumentar em 1 num contador */
     semanaInicio = (calcularDiasAte_9_9_2024(DataInicio) + 5) / 7;
     semanaFim = (calcularDiasAte_9_9_2024(DataFim) + 5) / 7;
     if (semanaInicio >= (int)Tops10->len)
-      semanaInicio = (int)Tops10->len - 1;
+      semanaInicio = (int)Tops10->len;
+    if (semanaFim >= (int)Tops10->len && semanaInicio >= (int)Tops10->len) {
+      fprintf(newFile, "\n");
+      fclose(newFile);
+      return;
+    }
   }
   /* printf("semanaInicio = %d semanaFim = %d strsemanaFim %s\n", semanaInicio,
          semanaFim, DataFim); */
@@ -143,7 +149,7 @@ aumentar em 1 num contador */
   }
   lookUpArtistsHashTable(gestorArtists, artistMaisVezesNoTop10, &orig_key,
                          &value);
-  FILE *newFile = createFile(contadorOutputs);
+
   printQuery4(newFile, TemS, artistMaisVezesNoTop10, getArtistTypeStr(orig_key),
               maisVezesNoTop10);
   free(artistMaisVezesNoTop10);
