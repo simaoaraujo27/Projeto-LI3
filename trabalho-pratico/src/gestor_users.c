@@ -12,9 +12,9 @@
 struct gestorUsers {
   FILE *errorsFile;       // Arquivo onde erros serão registrados
   GHashTable *usersTable; // Hashtable para armazenar os users
-  int *nUsers;       // Contador do número de users (para ser usado na Query 5)
-  GArray *usernames; // Array dinâmico para armazenar os usernames (para ser
-                     // usado na Query 5)
+  int *nUsers; // Contador do número de users (para ser usado na Query 5)
+  GHashTable *usernames; // Hashtable para armazenar os usernames (para ser
+  // usado na Query 5)
 };
 
 // Função para inicializar a estrutura gestorUsers
@@ -23,6 +23,8 @@ gestorUsers *initGestorUsers(const char *errorsFilePath) {
   // Inicializa a hashtable para users
   GHashTable *usersTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyUser);
+  GHashTable *usernames =
+      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
   gestorUsers *gestorUser = malloc(sizeof(struct gestorUsers));
   if (!gestorUser)
     return NULL;
@@ -41,7 +43,7 @@ gestorUsers *initGestorUsers(const char *errorsFilePath) {
   *(gestorUser->nUsers) = 0;
 
   // Cria o GArray para armazenar os IDs dos users
-  gestorUser->usernames = g_array_new(FALSE, FALSE, sizeof(char *));
+  gestorUser->usernames = usernames;
   return gestorUser;
 }
 
@@ -51,25 +53,14 @@ void freeGestorUsers(gestorUsers *gestorUser) {
     if (gestorUser->errorsFile)
       fclose(gestorUser->errorsFile); // Fecha o arquivo de erros
     g_hash_table_destroy(gestorUser->usersTable);
+    g_hash_table_destroy(gestorUser->usernames);
     free(gestorUser->nUsers);
-    // Liberação de memória
-    for (int i = 0; i < (int)gestorUser->usernames->len; i++) {
-      g_free(g_array_index(gestorUser->usernames, char *,
-                           i)); // Libera as strings armazenadas
-    }
-    g_array_free(gestorUser->usernames, TRUE); // Libera o GArray
     free(gestorUser); // Liberta a memória da estrutura
   }
 }
 
-// Função para adicionar um ID ao GArray
-void addUsernameToArray(GArray *usernames, char *username) {
-  char *usernameCopy = strdup(username);
-  g_array_append_val(usernames, usernameCopy);
-}
-
 void parserUser(char *line, gestorMusics *gestorMusic, FILE *errorsFile,
-                GHashTable *usersTable, int *nUsers, GArray *usernames) {
+                GHashTable *usersTable, int *nUsers, GHashTable *usernames) {
   char *copia = strdup(line); // Faz uma cópia segura da linha
   Users *user;
   char *username;
@@ -81,9 +72,11 @@ void parserUser(char *line, gestorMusics *gestorMusic, FILE *errorsFile,
 
     username = getUserUsername(user); // Obtém o nome do user
     // Insere o user na hashtable usando o username como chave
-    g_hash_table_insert(usersTable, username, user);
+    g_hash_table_insert(usersTable, strdup(username), user);
+    int *userIndex = g_malloc(sizeof(int));
+    *userIndex = *nUsers - 1;
+    g_hash_table_insert(usernames, strdup(username), userIndex);
 
-    addUsernameToArray(usernames, username);
   } else {
     // Se a linha for inválida, escreve no arquivo de erros
     fprintf(errorsFile, "%s", line);
@@ -184,18 +177,28 @@ int getNUsers(gestorUsers *gestorUser) {
   return *i;
 }
 
-GArray *getUsernames(gestorUsers *gestorUser) { return gestorUser->usernames; }
+GHashTable *getUsernames(gestorUsers *gestorUser) {
+  return gestorUser->usernames;
+}
 
 char **insertIdsToArray(gestorUsers *gestorUsers, int numUtilizadores) {
-  char **idsUtilizadores = (char **)malloc(sizeof(char *));
+  char **idsUtilizadores = (char **)malloc(numUtilizadores * sizeof(char *));
   if (idsUtilizadores == NULL) {
     perror("Falha na alocação de memória para o array");
     return NULL;
   }
-
-  for (int i = 0; i < numUtilizadores; i++) {
-    char *value = g_array_index(gestorUsers->usernames, char *, i);
-    idsUtilizadores[i] = (char *)malloc((strlen(value) + 1) * sizeof(char));
+  GHashTableIter iter;
+  gpointer key1, value1;
+  int i = 0;
+  // int *value = NULL;
+  char *key = NULL;
+  g_hash_table_iter_init(&iter, gestorUsers->usernames);
+  while (g_hash_table_iter_next(&iter, &key1, &value1) && i < numUtilizadores) {
+    key = (char *)key1;
+    // value = (int *)value1;
+    // printf("Key: %s | ", key);
+    // printf("Value: %d | ", *value);
+    idsUtilizadores[i] = (char *)malloc((strlen(key) + 1) * sizeof(char));
     if (idsUtilizadores[i] == NULL) {
       perror("Falha na alocação de memória para a string");
       for (int j = 0; j < i; j++) {
@@ -204,9 +207,32 @@ char **insertIdsToArray(gestorUsers *gestorUsers, int numUtilizadores) {
       free(idsUtilizadores);
       return NULL;
     }
-    strcpy(idsUtilizadores[i], strdup(value));
+    idsUtilizadores[i] = strdup(key);
+    // printf("idsUtilizadores: %s\n", idsUtilizadores[i]);
+    i++;
   }
 
+  return idsUtilizadores;
+}
 
-    return idsUtilizadores;
+int procuraIndexHashTable(char *user, gestorUsers *gestorUsers) {
+  gpointer value = NULL;
+  gpointer orig_key = NULL;
+  gboolean found = g_hash_table_lookup_extended(gestorUsers->usernames, user,
+                                                value, orig_key);
+  if (found) {
+    int *index = (int *)value;
+    return *index;
+  }
+
+  return -1;
+}
+
+gboolean pertenceAosUsernames(char *username, gestorUsers *gestorUsers) {
+  gpointer value = NULL;
+  gpointer orig_key = NULL;
+  gboolean found = g_hash_table_lookup_extended(gestorUsers->usernames,
+                                                username, value, orig_key);
+
+  return found;
 }

@@ -1,3 +1,4 @@
+#include "gestor_history.h"
 #include "gestores.h"
 #include "recomendador.h"
 #include "utils.h"
@@ -9,28 +10,33 @@ void query5(Gestores *gestor) {
   gestorUsers *gestorUsers = pegarGestorUser(gestor);
   gestorMusics *gestorMusics = pegarGestorMusic(gestor);
   gestorHistory *gestorHistory = pegarGestorHistory(gestor);
+  if (gestorHistory != NULL) {
+  }
 
-  char *idUtilizadorAlvo = "U0000001";
+  char *idUtilizadorAlvo = "U0164904";
   if (idUtilizadorAlvo) {
   }
 
   int numUtilizadores = getNUsers(gestorUsers);
   if (numUtilizadores) {
   }
-  printf("%d\n", numUtilizadores);
-
   int numGeneros = getMusicsNGenres(gestorMusics);
   if (numGeneros) {
   }
+
   char **nomesGeneros = insertGenreToArray(gestorMusics, numGeneros);
   if (nomesGeneros) {
   }
 
   char **idsUtilizadores = insertIdsToArray(gestorUsers, numUtilizadores);
-
   if (idsUtilizadores) {
   }
-  int numRecomendacoes = 5;
+
+  // for (int i = 0; i < numUtilizadores; i++) {
+  //   printf("%s\n", idsUtilizadores[i]);
+  // }
+
+  int numRecomendacoes = 7;
   if (numRecomendacoes) {
   }
   int **matrizClassificacaoMusicas;
@@ -51,43 +57,58 @@ void query5(Gestores *gestor) {
       free(matrizClassificacaoMusicas);
       return;
     }
+  }
 
-    // Inicializar os valores com 0
+  /*   printf("numUtilizadores: %d\n", numUtilizadores);
+    printf("numGeneros: %d\n", numGeneros);
+    for (int i = 0; i < numUtilizadores; i++) {
+      printf("%s\n", idsUtilizadores[i]);
+    }
+    for (int i = 0; i < numGeneros; i++) {
+      printf("%s\n", nomesGeneros[i]);
+    } */
+
+  for (int i = 0; i < numUtilizadores; i++) {
     for (int j = 0; j < numGeneros; j++) {
       matrizClassificacaoMusicas[i][j] = 0;
     }
   }
-
-/*   printf("numUtilizadores: %d\n", numUtilizadores);
-  printf("numGeneros: %d\n", numGeneros);
-  for (int i = 0; i < numUtilizadores; i++) {
-    printf("%s\n", idsUtilizadores[i]);
-  }
-  for (int i = 0; i < numGeneros; i++) {
-    printf("%s\n", nomesGeneros[i]);
-  } */
+  printf("faz isto!\n");
+  // printf("Num utilizadores: %d\n", numUtilizadores);
   preencheMatriz(matrizClassificacaoMusicas, numUtilizadores, numGeneros,
-                 idsUtilizadores, nomesGeneros, gestorMusics, gestorHistory);
+                 idsUtilizadores, nomesGeneros, gestorMusics, gestorHistory,
+                 gestorUsers);
 
-/*   char **recomendacao = recomendaUtilizadores(
+  /*   for (int i = 0; i < numUtilizadores; i++) {
+      for (int j = 0; j < numGeneros; j++) {
+        printf("%d\n", matrizClassificacaoMusicas[i][i]);
+      }
+    } */
+  /*  */
+
+  char **recomendacao = recomendaUtilizadores(
       idUtilizadorAlvo, matrizClassificacaoMusicas, idsUtilizadores,
       nomesGeneros, numUtilizadores, numGeneros, numRecomendacoes);
-  for (int i = 0; i < numRecomendacoes; i++) {
-    printf("%s\n", recomendacao[i]);
+  if (recomendacao != NULL) {
   }
- */
+  for (int i = 0; i < numRecomendacoes; i++) {
+    printf("REC: %s\n", recomendacao[i]);
+  }
+
   // numRecomendacoes e idUtilizadorAlvo vêm do txt!
-  // char **idsUtilizadores = getIdUtilizadores(gestorUsers);
-  // quick_sort(idsUtilizadores);
-
-  // Um array a começar por 0 até o nUsers
-
-  // NOTA: PODE DAR ERRADO POR CAUSA DOS ERRORS
-  // PARA JÁ VOU FAZER COMO SE FOSSE CERTO
-
-  // Arbitrário
-  // int numRecomendacoes = 5;
 }
+
+/*
+OUTPUT ESPERADO:
+U0080869
+U0104287
+U0145818
+U0046251
+U0050690
+U0059152
+U0075286
+
+*/
 
 /*
 O parseUsers tem de vir antes do parseHistory

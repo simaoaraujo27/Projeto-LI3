@@ -1,6 +1,7 @@
 #include "gestor_history.h"
 #include "gestor_artists.h"
 #include "gestor_musics.h"
+#include "gestor_users.h"
 #include "history.h"
 #include "query4.h"
 #include "validation.h"
@@ -148,18 +149,21 @@ int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
 
 void preencheMatriz(int **matrizClassificaoMusicas, int numUtilizadores,
                     int numGeneros, char **idsUtilizadores, char **nomesGeneros,
-                    gestorMusics *gestorMusics, gestorHistory *gestorHistory) {
+                    gestorMusics *gestorMusics, gestorHistory *gestorHistory,
+                    gestorUsers *gestorUsers) {
+  if (matrizClassificaoMusicas != NULL) {
+  }
 
   GHashTableIter iter;
   gpointer key1, value1;
   g_hash_table_iter_init(&iter, gestorHistory->historyTable);
-  int i = 0;
   int linha, coluna;
 
   while (g_hash_table_iter_next(&iter, &key1, &value1)) {
     History *history = (History *)value1; // Obtém a música atual
     char *username = getHistoryUserId(history);
     char *musicId = getHistoryMusicId(history);
+    linha = procuraIndexHashTable(username, gestorUsers);
     remove_quotes(username);
     remove_quotes(musicId);
     removeZerosAEsquerda(username);
@@ -171,10 +175,9 @@ void preencheMatriz(int **matrizClassificaoMusicas, int numUtilizadores,
     }
 
     coluna = procuraIndexString(nomesGeneros, genre, numGeneros);
-    // Procurar o indice onde aparece no array dos generos
 
-    matrizClassificaoMusicas[linha][coluna] += 1;
-    i++;
+    if (linha != -1 && coluna != -1)
+      matrizClassificaoMusicas[linha][coluna] += 1;
   }
 }
 

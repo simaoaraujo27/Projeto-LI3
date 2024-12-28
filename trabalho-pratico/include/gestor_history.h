@@ -4,6 +4,7 @@
 typedef struct gestorHistory gestorHistory;
 
 #include "gestor_musics.h"
+#include "gestor_users.h"
 #include "history.h"
 #include "utils.h"
 #include <glib.h>
@@ -20,6 +21,6 @@ int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
 
 void preencheMatriz(int **matrizClassificaoMusicas, int numUtilizadores,
                     int numGeneros, char **idsUtilizadores, char **nomesGeneros,
-                    gestorMusics *gestorMusics, gestorHistory *gestorHistory);
+                    gestorMusics *gestorMusics, gestorHistory *gestorHistory, gestorUsers *gestorUsers);
 
 #endif

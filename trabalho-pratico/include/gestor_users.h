@@ -29,4 +29,8 @@ int getNUsers(gestorUsers *gestorUser);
 
 char **insertIdsToArray(gestorUsers *gestorUsers, int numUtilizadores);
 
+int procuraIndexHashTable(char *user, gestorUsers *gestorUsers);
+
+gboolean pertenceAosUsernames(char *username, gestorUsers *gestorUsers);
+
 #endif
