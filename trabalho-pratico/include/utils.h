@@ -35,4 +35,6 @@ char *intToString(int number);
 
 void removeZerosAEsquerda(char *username);
 
+int procuraIndexString(char **lista, char *string, int len);
+
 #endif

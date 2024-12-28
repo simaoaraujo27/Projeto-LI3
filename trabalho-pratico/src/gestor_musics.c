@@ -306,7 +306,7 @@ char *getMusicGenreById(char *musicId, gestorMusics *gestorMusics) {
   gboolean found =
       lookUpMusicsHashTable(gestorMusics, musicId, &value, &orig_key);
   if (found) {
-    char *genre = getMusicGenre(value);
+    char *genre = getMusicGenre(orig_key);
     return genre;
   }
   return NULL;

@@ -145,7 +145,7 @@ int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
 
   return 1;
 }
-/*
+
 void preencheMatriz(int **matrizClassificaoMusicas, int numUtilizadores,
                     int numGeneros, char **idsUtilizadores, char **nomesGeneros,
                     gestorMusics *gestorMusics, gestorHistory *gestorHistory) {
@@ -153,21 +153,32 @@ void preencheMatriz(int **matrizClassificaoMusicas, int numUtilizadores,
   GHashTableIter iter;
   gpointer key1, value1;
   g_hash_table_iter_init(&iter, gestorHistory->historyTable);
+  int i = 0;
+  int linha, coluna;
 
   while (g_hash_table_iter_next(&iter, &key1, &value1)) {
     History *history = (History *)value1; // Obtém a música atual
-    char *username = getHistoryId(history);
+    char *username = getHistoryUserId(history);
     char *musicId = getHistoryMusicId(history);
-
+    remove_quotes(username);
+    remove_quotes(musicId);
     removeZerosAEsquerda(username);
-    int linha = atoi(username) - 1;
+    linha = atoi(username) - 1;
     if (linha) {
     }
-    char *genre = getMusicGenreById(musicId, gestorMusics); */
-/*     printf("%s\n", genre);
-    matrizClassificaoMusicas[0][0] = 0;
-    idsUtilizadores[numGeneros] = "OLA";
-    nomesGeneros[numUtilizadores - 249000] = "OLA"; */
-/*   }
+    char *genre = getMusicGenreById(musicId, gestorMusics);
+    if (genre && numUtilizadores && idsUtilizadores != NULL) {
+    }
+
+    coluna = procuraIndexString(nomesGeneros, genre, numGeneros);
+    // Procurar o indice onde aparece no array dos generos
+
+    matrizClassificaoMusicas[linha][coluna] += 1;
+    i++;
+  }
 }
- */
+
+/*
+Pegar no id do user
+Pegar todas as vezes que ele aparece na ht do history
+*/

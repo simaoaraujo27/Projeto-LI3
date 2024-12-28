@@ -266,3 +266,14 @@ void removeZerosAEsquerda(char *username) {
     strcpy(username, primeiroNaoZero);
   }
 }
+
+// Devolve o index de um elemento da string
+// Devolve -1 se não o encontrar
+int procuraIndexString(char **lista, char *string, int len) {
+  for (int i = 0; i < len; i++) {
+    if (!strcmp(lista[i], string))
+      return i;
+  }
+
+  return -1;
+}

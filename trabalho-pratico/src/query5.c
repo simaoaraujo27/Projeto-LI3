@@ -1,4 +1,4 @@
-/* #include "gestores.h"
+#include "gestores.h"
 #include "recomendador.h"
 #include "utils.h"
 #include <stdio.h>
@@ -8,6 +8,7 @@
 void query5(Gestores *gestor) {
   gestorUsers *gestorUsers = pegarGestorUser(gestor);
   gestorMusics *gestorMusics = pegarGestorMusic(gestor);
+  gestorHistory *gestorHistory = pegarGestorHistory(gestor);
 
   char *idUtilizadorAlvo = "U0000001";
   if (idUtilizadorAlvo) {
@@ -16,6 +17,8 @@ void query5(Gestores *gestor) {
   int numUtilizadores = getNUsers(gestorUsers);
   if (numUtilizadores) {
   }
+  printf("%d\n", numUtilizadores);
+
   int numGeneros = getMusicsNGenres(gestorMusics);
   if (numGeneros) {
   }
@@ -42,8 +45,6 @@ void query5(Gestores *gestor) {
     matrizClassificacaoMusicas[i] = malloc(numGeneros * sizeof(int));
     if (!matrizClassificacaoMusicas[i]) {
       printf("Erro ao alocar memória para as colunas da matriz!\n");
-
-      // Liberar as linhas já alocadas antes de sair
       for (int k = 0; k < i; k++) {
         free(matrizClassificacaoMusicas[k]);
       }
@@ -57,31 +58,36 @@ void query5(Gestores *gestor) {
     }
   }
 
-  printf("numUtilizadores: %d\n", numUtilizadores);
-  printf("numGeneros: %d\n", numGeneros); */
-/*   for (int i = 0; i < numUtilizadores; i++) {
+/*   printf("numUtilizadores: %d\n", numUtilizadores);
+  printf("numGeneros: %d\n", numGeneros);
+  for (int i = 0; i < numUtilizadores; i++) {
     printf("%s\n", idsUtilizadores[i]);
+  }
+  for (int i = 0; i < numGeneros; i++) {
+    printf("%s\n", nomesGeneros[i]);
   } */
-/* for (int i = 0; i < numGeneros; i++) {
-  printf("%s\n", nomesGeneros[i]);
-}
-preencheMatriz(matrizClassificacaoMusicas, numUtilizadores, numGeneros,
-               idsUtilizadores, nomesGeneros, gestorMusics); */
+  preencheMatriz(matrizClassificacaoMusicas, numUtilizadores, numGeneros,
+                 idsUtilizadores, nomesGeneros, gestorMusics, gestorHistory);
 
 /*   char **recomendacao = recomendaUtilizadores(
-      idUtilizadorAlvo, &matrizClassificacaoMusicas, idsUtilizadores,
-      nomesGeneros, numUtilizadores, numGeneros, numRecomendacoes); */
-// char **idsUtilizadores = getIdUtilizadores(gestorUsers);
-// quick_sort(idsUtilizadores);
+      idUtilizadorAlvo, matrizClassificacaoMusicas, idsUtilizadores,
+      nomesGeneros, numUtilizadores, numGeneros, numRecomendacoes);
+  for (int i = 0; i < numRecomendacoes; i++) {
+    printf("%s\n", recomendacao[i]);
+  }
+ */
+  // numRecomendacoes e idUtilizadorAlvo vêm do txt!
+  // char **idsUtilizadores = getIdUtilizadores(gestorUsers);
+  // quick_sort(idsUtilizadores);
 
-// Um array a começar por 0 até o nUsers
+  // Um array a começar por 0 até o nUsers
 
-// NOTA: PODE DAR ERRADO POR CAUSA DOS ERRORS
-// PARA JÁ VOU FAZER COMO SE FOSSE CERTO
+  // NOTA: PODE DAR ERRADO POR CAUSA DOS ERRORS
+  // PARA JÁ VOU FAZER COMO SE FOSSE CERTO
 
-// Arbitrário
-// int numRecomendacoes = 5;
-//}
+  // Arbitrário
+  // int numRecomendacoes = 5;
+}
 
 /*
 O parseUsers tem de vir antes do parseHistory

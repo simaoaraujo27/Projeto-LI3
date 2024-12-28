@@ -204,8 +204,9 @@ char **insertIdsToArray(gestorUsers *gestorUsers, int numUtilizadores) {
       free(idsUtilizadores);
       return NULL;
     }
-    strcpy(idsUtilizadores[i], value);
+    strcpy(idsUtilizadores[i], strdup(value));
   }
 
-  return idsUtilizadores;
+
+    return idsUtilizadores;
 }
