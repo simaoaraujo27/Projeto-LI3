@@ -66,7 +66,16 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;
     *total_time_query3 += time_spent; // Acumula o tempo para Query 3
   } else if (line[0] == '4') {
-    query4(pegarGestorArtist(gestor));
+    if ((temS && line[2] == ' ') || (!temS && line[1] == ' ')) {
+      line += 2;
+      if (temS)
+        line++;
+      char *fim = line + 11;
+      fim[10] = '\0';
+      line[10] = '\0';
+      query4(pegarGestorArtist(gestor), line, fim, i, temS);
+    } else
+      query4(pegarGestorArtist(gestor), NULL, NULL, i, temS);
   } else if (line[0] == '5') {
     // query5(gestor);
   }

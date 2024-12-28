@@ -65,20 +65,27 @@ void setArtistTamanhoGrupo(Artists *a, int tamanho) {
 }
 
 int incrementArtistDurationPerWeek(gpointer a, int duration, int semana) {
-  int tamanho = ((struct artists *)a)->durationPerWeek->len;
-  if (semana > tamanho) {
-    g_array_set_size(((struct artists *)a)->durationPerWeek,
-                     (guint)(semana + 1));
-    for (int i = tamanho; i < (int)((struct artists *)a)->durationPerWeek->len;
-         i++) {
-      g_array_index(((struct artists *)a)->durationPerWeek, int, i) = 0;
+  struct artists *artist = (struct artists *)a;
+  GArray *durationPerWeek = artist->durationPerWeek;
+
+  // Verifica o tamanho atual da duração por semana
+  int tamanho = durationPerWeek->len;
+
+  // Ajusta o tamanho do array se necessário
+  if (semana >= tamanho) {
+    g_array_set_size(durationPerWeek, (guint)(semana + 1)); // Inclui "semana"
+
+    // Inicializa as novas posições com 0
+    for (int i = tamanho; i <= semana; i++) {
+      g_array_index(durationPerWeek, int, i) = 0;
     }
   }
-  g_array_index(((struct artists *)a)->durationPerWeek, int, semana) +=
-      duration;
-  int newDuration =
-      g_array_index(((struct artists *)a)->durationPerWeek, int, semana);
-  return newDuration;
+
+  // Incrementa a duração para a semana específica
+  g_array_index(durationPerWeek, int, semana) += duration;
+
+  // Retorna o novo valor da duração para a semana
+  return g_array_index(durationPerWeek, int, semana);
 }
 
 int incrementArtistVezesNoTop10(gpointer a) {

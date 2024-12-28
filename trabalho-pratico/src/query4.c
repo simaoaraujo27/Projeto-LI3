@@ -1,5 +1,7 @@
 #include "query4.h"
 #include "gestor_musics.h"
+#include "gestor_prints.h"
+#include "inputResult.h"
 #include "minHeap.h"
 #include "utils.h"
 #include <assert.h>
@@ -20,7 +22,7 @@ void armazenarValores(char *musicId, int duration,
   gpointer orig_key0;
   int semana = 0;
   if (timeStamp >= 2)
-    semana = (timeStamp + 5) / 7;
+    semana = (timeStamp + 4) / 7;
   remove_quotes(musicId);
   gboolean found1 =
       lookUpMusicsHashTable(gestorMusics, musicId, &value0, &orig_key0);
@@ -46,58 +48,75 @@ void armazenarValores(char *musicId, int duration,
       gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
                                               &orig_key, &value);
       if (found) {
-        int totalDuration = incrementArtistDurationPerWeek(
-            orig_key, duration, semana); /* nao esta a somar */
+        int totalDuration =
+            incrementArtistDurationPerWeek(orig_key, duration, semana);
         /* if (strcmp("A0003542", currentArtist) == 0)
             printf("%d\n", totalDuration); */
         int tamanhoTops10 = Tops10->len;
         if (semana >= tamanhoTops10) {
-          g_array_set_size(getGArrayTops10(gestorArtists), (guint)(semana + 1));
-          for (int i = tamanhoTops10; i < (int)Tops10->len; i++) {
-            g_array_index(Tops10, MinHeap *, i) =
-                NULL; // Inicializa cada posição com NULL
+          // Ajusta o tamanho do array dinamicamente
+          g_array_set_size(Tops10,
+                           (guint)(semana + 1)); // Inclui a posição `semana`
+
+          // Inicializa novas posições com NULL
+          for (int i = tamanhoTops10; i <= semana; i++) {
+            g_array_index(Tops10, MinHeap *, i) = NULL;
           }
-          tamanhoTops10 = Tops10->len;
+
+          tamanhoTops10 = Tops10->len; // Atualiza o tamanho
         }
+
         MinHeap *heap = g_array_index(Tops10, MinHeap *, semana);
         if (heap != NULL) {
           int indiceMinNode = 0;
           HeapNode minNode = menorHeapNode(heap, &indiceMinNode);
           int durationMinNode = getHeapNodeDuration(&minNode);
-          if (strcmp("A0003542", currentArtist) == 0)
-            printf("duracaoArtista %d   duracaoMinNode %d\n", totalDuration,
-                   durationMinNode);
           insertMinHeap(heap, totalDuration, durationMinNode, &minNode,
                         currentArtist, indiceMinNode);
           g_array_index(Tops10, MinHeap *, semana) = heap;
+          heap = g_array_index(Tops10, MinHeap *, semana);
+          minNode = menorHeapNode(heap, &indiceMinNode);
         } else {
           heap = createMinHeap();
-          int i = 0;
-          insertMinHeap(heap, totalDuration, 0, NULL, currentArtist, i);
+          insertMinHeap(heap, totalDuration, 0, NULL, currentArtist, 0);
           g_array_index(Tops10, MinHeap *, semana) = heap;
         }
       }
       lentghArtistId -= 12;
     }
+    free(currentArtist);
   }
 }
 
-void query4(gestorArtists *gestorArtists) { /* tem de percorrer o GArray e
-                                               aumentar em 1 num contador */
+void query4(gestorArtists *gestorArtists, char *DataFim, char *DataInicio,
+            int contadorOutputs, int TemS) { /* tem de percorrer o GArray e
+aumentar em 1 num contador */
   GArray *Tops10 = getGArrayTops10(gestorArtists);
 
-  int tamanhoTops10 = Tops10->len;
+  int semanaInicio = 0, semanaFim = 0;
+  if (DataInicio == NULL && DataFim == NULL) {
+    semanaInicio = 0;
+    semanaFim = Tops10->len + 1;
+  } else {
+    semanaInicio = (calcularDiasAte_9_9_2024(DataInicio) + 5) / 7;
+    semanaFim = (calcularDiasAte_9_9_2024(DataFim) + 5) / 7;
+  }
+  /* printf("semanaInicio = %d semanaFim = %d strsemanaFim %s\n", semanaInicio,
+         semanaFim, DataFim); */
   gpointer orig_key;
   gpointer value;
   int maisVezesNoTop10 = 0;
   char *artistMaisVezesNoTop10 = NULL;
-  for (int i = 0; i < tamanhoTops10; i++) {
-    int contArtist = 0;
+  for (int i = semanaInicio; i <= semanaFim; i++) {
     MinHeap *heap = g_array_index(Tops10, MinHeap *, i);
     if (heap != NULL) {
       for (int j = 0; j < getMinHeapSize(heap); j++) {
         HeapNode *node = getMinHeapHeapNode(heap, j);
         char *currentArtist = strdup(getHeapNodeArtistId(node));
+        /* if (strcmp(currentArtist, "A0003542") == 0)
+          printf("semana %d %d\n",); */
+        /* if (i == 78)
+          printf("%s %d\n", currentArtist, getHeapNodeDuration(node)); */
         gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
                                                 &orig_key, &value);
         if (found) {
@@ -105,14 +124,22 @@ void query4(gestorArtists *gestorArtists) { /* tem de percorrer o GArray e
           if (vezesAtuais > maisVezesNoTop10) {
             maisVezesNoTop10 = vezesAtuais;
             artistMaisVezesNoTop10 = strdup(currentArtist);
+          } else if (vezesAtuais == maisVezesNoTop10 &&
+                     strcmp(artistMaisVezesNoTop10, currentArtist) > 0) {
+            maisVezesNoTop10 = vezesAtuais;
+            artistMaisVezesNoTop10 = strdup(currentArtist);
           }
         }
+        free(currentArtist);
       }
     }
-    if (contArtist > 1)
-      printf("a\n");
   }
-  printf("%s %d\n", artistMaisVezesNoTop10, maisVezesNoTop10);
+  lookUpArtistsHashTable(gestorArtists, artistMaisVezesNoTop10, &orig_key,
+                         &value);
+  FILE *newFile = createFile(contadorOutputs);
+  printQuery4(newFile, TemS, artistMaisVezesNoTop10, getArtistTypeStr(orig_key),
+              maisVezesNoTop10);
+  free(artistMaisVezesNoTop10);
   colocaZeroVezesTop10(gestorArtists);
 }
 

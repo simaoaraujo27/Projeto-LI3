@@ -20,6 +20,10 @@ HeapNode menorHeapNode(MinHeap *heap, int *indice) {
     if (heap->data[i].duration < menor.duration) {
       menor = heap->data[i];
       *indice = i;
+    } else if (heap->data[i].duration == menor.duration &&
+               strcmp(menor.artist_id, heap->data[i].artist_id) > 0) {
+      menor = heap->data[i];
+      *indice = i;
     }
   }
   return menor;
@@ -109,6 +113,7 @@ int elemMinHeap(char *currentArtist, HeapNode data[], int tamanho) {
 void insertMinHeap(MinHeap *heap, int totalDuration, int durationMinNode,
                    HeapNode *minNode, char *currentArtist, int indiceMinNode) {
   int indice = elemMinHeap(currentArtist, heap->data, heap->size);
+
   // Verificar se a heap está cheia
   if (indice != -1) {
     heap->data[indice].duration = totalDuration;
@@ -120,8 +125,6 @@ void insertMinHeap(MinHeap *heap, int totalDuration, int durationMinNode,
     if ((durationMinNode < totalDuration) ||
         (durationMinNode == totalDuration &&
          strcmp(currentArtist, getHeapNodeArtistId(minNode)) < 0)) {
-      free(heap->data[indiceMinNode]
-               .artist_id); // Liberar o ID do menor elemento
       heap->data[indiceMinNode].artist_id = strdup(currentArtist);
       heap->data[indiceMinNode].duration = totalDuration;
     }

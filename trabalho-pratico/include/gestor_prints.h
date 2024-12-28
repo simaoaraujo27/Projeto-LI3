@@ -6,4 +6,7 @@
 
 void printQuery2(GList **listaResposta, FILE *newFile, int temS);
 
+void printQuery4(FILE *newFile, int temS, char *name, char *type,
+                 int countTop10);
+
 #endif

@@ -47,14 +47,14 @@ void printQuery2(GList **listaResposta, FILE *newFile, int temS) {
     // Remove aspas no nome e país
     remove_quotes(name);
     remove_quotes(country);
-    if(temS){
-    // Formata a string de saída no formato: "name=type=discografia=country"
-    snprintf(new_str, total_len + 1, "%s=%s=%s=%s\n", name, type, discografia,
-             country);
-    }else{
-    // Formata a string de saída no formato: "name;type;discografia;country"
-    snprintf(new_str, total_len + 1, "%s;%s;%s;%s\n", name, type, discografia,
-             country);
+    if (temS) {
+      // Formata a string de saída no formato: "name=type=discografia=country"
+      snprintf(new_str, total_len + 1, "%s=%s=%s=%s\n", name, type, discografia,
+               country);
+    } else {
+      // Formata a string de saída no formato: "name;type;discografia;country"
+      snprintf(new_str, total_len + 1, "%s;%s;%s;%s\n", name, type, discografia,
+               country);
     }
     // Escreve no ficheiro
     fprintf(newFile, "%s", new_str);
@@ -75,6 +75,37 @@ void printQuery2(GList **listaResposta, FILE *newFile, int temS) {
   // Caso a lista esteja vazia, escreve apenas uma linha em branco no ficheiro
   if (i == 0)
     fprintf(newFile, "\n");
+
+  // Fecha o ficheiro após a escrita
+  fclose(newFile);
+}
+
+// Função para imprimir os resultados da query 2 em um ficheiro
+void printQuery4(FILE *newFile, int temS, char *name, char *type,
+                 int countTop10) {
+
+  char *contarTop10 = intToString(countTop10);
+
+  // Calcula o comprimento total da string de saída
+  int total_len = strlen(name) + strlen(type) + 6;
+
+  // Aloca memória para a nova string a ser escrita no ficheiro
+  char *new_str =
+      malloc((total_len + 1) * sizeof(char)); // +1 para o caractere '\0'
+
+  if (temS) {
+    // Formata a string de saída no formato: "name=type=discografia=country"
+    snprintf(new_str, total_len + 1, "%s=%s=%s\n", name, type, contarTop10);
+  } else {
+    // Formata a string de saída no formato: "name;type;discografia;country"
+    snprintf(new_str, total_len + 1, "%s;%s;%s\n", name, type, contarTop10);
+  }
+  // Escreve no ficheiro
+  fprintf(newFile, "%s", new_str);
+
+  // Liberta a memória alocada para cada campo
+  free(contarTop10);
+  free(new_str);
 
   // Fecha o ficheiro após a escrita
   fclose(newFile);

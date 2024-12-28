@@ -73,9 +73,9 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
     int semana1 = 0;
     int semana2 = 0;
     if (dias >= 2)
-      semana1 = (dias + 5) / 7;
+      semana1 = (dias + 4) / 7;
     if (dias - 1 >= 2) {
-      semana2 = (dias + 4) / 7;
+      semana2 = (dias + 5) / 7;
     }
     int dif = 0;
 
