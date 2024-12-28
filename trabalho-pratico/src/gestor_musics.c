@@ -251,7 +251,7 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
             getArtistRecipePerStream(orig_key); // esta certo
 
         float receitaTotal = recipe_Per_Stream;
-        arredondarParaSeisCasas(receitaTotal);
+        arredondarParaSeteCasas(receitaTotal);
 
         float receitaAntiga = getArtistReceitaTotal(orig_key);
 
@@ -283,7 +283,7 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
             float receitaAntigaComp = getArtistReceitaTotal(orig_key1);
             setArtistReceitaTotal(
                 orig_key1,
-                arredondarParaSeisCasas(receitaAntigaComp +
+                arredondarParaSeteCasas(receitaAntigaComp +
                                         (receitaTotal / NumComponentesBanda)));
             TamanhoIdComponentes -= 12;
             free(currentComponent);

@@ -95,8 +95,8 @@ int calcularDiasAte_9_9_2024(char *data) {
   return calcularDiferencaDias(data, data_limite);
 }
 
-float arredondarParaSeisCasas(float numero) {
-  return roundf(numero * 1000000) / 1000000;
+float arredondarParaSeteCasas(float numero) {
+  return roundf(numero * 10000000000) / 10000000000;
 }
 
 void colocaTudoMinusculo(char *word) {

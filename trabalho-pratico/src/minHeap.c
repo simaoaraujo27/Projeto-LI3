@@ -42,7 +42,9 @@ void removeMinHeap(MinHeap *minheap, int indice) {
 
 int getMinHeapSize(MinHeap *h) { return h->size; }
 
-char *getHeapNodeArtistId(HeapNode *HeapNode) { return HeapNode->artist_id; }
+char *getHeapNodeArtistId(HeapNode *HeapNode) {
+  return strdup(HeapNode->artist_id);
+}
 
 // Função para obter a duração de um nó da heap
 int getHeapNodeDuration(HeapNode *heapNode) { return heapNode->duration; }

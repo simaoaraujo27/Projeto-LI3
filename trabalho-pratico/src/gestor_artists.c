@@ -35,7 +35,7 @@ gestorArtists *initGestorArtists(const char *errorsFilePath) {
   }
   GArray *Tops10 = g_array_new(FALSE, FALSE, sizeof(MinHeap *));
   g_array_set_size(Tops10,
-                   100); // Define o tamanho inicial do GArray para 100 posições
+                   329); // Define o tamanho inicial do GArray para 100 posições
   for (int i = 0; i < (int)Tops10->len; i++) {
     g_array_index(Tops10, MinHeap *, i) =
         NULL; // Inicializa cada posição com NULL
@@ -47,12 +47,24 @@ gestorArtists *initGestorArtists(const char *errorsFilePath) {
   gestor->artistsTable = artistsTable;
   return gestor;
 }
+
+void freeGArrayQuery4(GArray *Tops10) {
+  for (int i = 0; i < (int)Tops10->len;
+       i++) { // Percorre todas as posições do GArray
+    if (g_array_index(Tops10, MinHeap *, i) != NULL) {
+      freeMinHeap(g_array_index(Tops10, MinHeap *, i)); // Liberta a memória
+    }
+  }
+  g_array_free(Tops10, false);
+}
+
 // Função para libertar os recursos da estrutura gestorArtists
 void freeGestorArtists(gestorArtists *gestor) {
   if (gestor) {
     if (gestor->errorsFile)
       fclose(gestor->errorsFile); // Fecha o ficheiro de erros, se aberto
     g_hash_table_destroy(gestor->artistsTable);
+    freeGArrayQuery4(gestor->Tops10);
     free(gestor); // Liberta a memória da estrutura
   }
 }

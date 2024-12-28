@@ -100,6 +100,8 @@ aumentar em 1 num contador */
   } else {
     semanaInicio = (calcularDiasAte_9_9_2024(DataInicio) + 5) / 7;
     semanaFim = (calcularDiasAte_9_9_2024(DataFim) + 5) / 7;
+    if (semanaInicio >= (int)Tops10->len)
+      semanaInicio = (int)Tops10->len - 1;
   }
   /* printf("semanaInicio = %d semanaFim = %d strsemanaFim %s\n", semanaInicio,
          semanaFim, DataFim); */
@@ -107,18 +109,23 @@ aumentar em 1 num contador */
   gpointer value;
   int maisVezesNoTop10 = 0;
   char *artistMaisVezesNoTop10 = NULL;
+  MinHeap *heap = NULL;
+
+  /* aqui printa */
   for (int i = semanaInicio; i <= semanaFim; i++) {
-    MinHeap *heap = g_array_index(Tops10, MinHeap *, i);
+    heap = g_array_index(Tops10, MinHeap *, i);
     if (heap != NULL) {
+      /* aqui nao printa */
       for (int j = 0; j < getMinHeapSize(heap); j++) {
         HeapNode *node = getMinHeapHeapNode(heap, j);
-        char *currentArtist = strdup(getHeapNodeArtistId(node));
+        char *currentArtist = getHeapNodeArtistId(node);
         /* if (strcmp(currentArtist, "A0003542") == 0)
           printf("semana %d %d\n",); */
         /* if (i == 78)
           printf("%s %d\n", currentArtist, getHeapNodeDuration(node)); */
         gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
                                                 &orig_key, &value);
+
         if (found) {
           int vezesAtuais = incrementArtistVezesNoTop10(orig_key);
           if (vezesAtuais > maisVezesNoTop10) {

@@ -4,6 +4,7 @@
 #include "gestor_queries.h"
 #include "gestor_users.h"
 #include "gestores.h"
+#include "minHeap.h"
 #include "nodo_musica.h"
 #include "query1.h"
 #include "query2.h"
@@ -49,7 +50,6 @@ int main(int argc, char **argv) {
     destroyGestor(gestor);
     return EXIT_FAILURE;
   }
-
 
   // Abre o arquivo de texto passado como argumento para executar as queries
   char *txt = argv[2];

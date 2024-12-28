@@ -9,7 +9,7 @@ int converterParaSegundos(char *tempo);
 
 int calcularDiasAte_9_9_2024(char *data);
 
-float arredondarParaSeisCasas(float numero);
+float arredondarParaSeteCasas(float numero);
 
 void colocaTudoMinusculo(char *word);
 
