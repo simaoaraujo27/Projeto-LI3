@@ -27,6 +27,7 @@ char *pegarMusicLyrics(Musics *m);
 char *getMusicId(gpointer music);
 char *getMusicTitle(gpointer music);
 char *getMusicArtistId(gpointer music);
+char *getMusicAlbumId(gpointer music);
 int getMusicDuration(gpointer music);
 char *getMusicGenre(gpointer music);
 int getMusicYear(gpointer music);

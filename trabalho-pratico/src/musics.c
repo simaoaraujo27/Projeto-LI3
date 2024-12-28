@@ -121,6 +121,7 @@ char *getMusicArtistId(gpointer music) {
   return strdup(m->artist_id);
 }
 
+
 char *getMusicAlbumId(gpointer music) {
   struct musics *m = (struct musics *)music;
   return strdup(m->album_id);
