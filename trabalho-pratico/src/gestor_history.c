@@ -73,7 +73,8 @@ void parserHistory(History *history, char *line, char *copia,
 
     // ---- para query5
 
-    char *currentUser = strdup(getHistoryUserId(history));
+    char *currentUser = getHistoryUserId(history);
+    char *currentUserCopia = currentUser;
     remove_quotes(currentUser);
     gpointer orig_keyUser;
     gpointer valueUser;
@@ -83,11 +84,13 @@ void parserHistory(History *history, char *line, char *copia,
     lookUpMusicsHashTable(gestorMusics, musicId, &valueMusic, &orig_keyMusic);
     char *musicGenre = getMusicGenre(orig_keyMusic);
     incrementMusicsListening(valueUser, musicGenre);
-
+    free(musicGenre);
+    free(currentUserCopia);
     //--- para a query4
 
     remove_quotes(musicId);
     char *timeStamp = getHistoryTimestamp(history);
+    char *timeStampCopia = timeStamp;
     remove_quotes(timeStamp);
     int dias = calcularDiasAte_9_9_2024(timeStamp);
     char *durationStr = getHistoryDuration(history);
@@ -112,6 +115,8 @@ void parserHistory(History *history, char *line, char *copia,
                        getGArrayTops10(gestorArtists));
 
     free(musicId);
+    free(timeStampCopia);
+    free(durationStr);
   } else {
     // Escreve a linha inválida no ficheiro de erros
     fprintf(errorsFile, "%s", line);
@@ -156,6 +161,8 @@ int GestorHistory(Gestores *gestor, char *historyPath) {
         free(copia);
         free(line_copy);
         free(currentMusic);
+        free(line);
+        line = NULL;
       }
     }
     // Liberta a linha utilizada pelo getline

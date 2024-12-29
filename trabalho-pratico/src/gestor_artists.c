@@ -34,8 +34,7 @@ gestorArtists *initGestorArtists(const char *errorsFilePath) {
     return NULL;
   }
   GArray *Tops10 = g_array_new(FALSE, FALSE, sizeof(MinHeap *));
-  g_array_set_size(Tops10,
-                   329); // Define o tamanho inicial do GArray para 100 posições
+  g_array_set_size(Tops10, 329);
   for (int i = 0; i < (int)Tops10->len; i++) {
     g_array_index(Tops10, MinHeap *, i) =
         NULL; // Inicializa cada posição com NULL
@@ -49,24 +48,44 @@ gestorArtists *initGestorArtists(const char *errorsFilePath) {
 }
 
 void freeGArrayQuery4(GArray *Tops10) {
-  for (int i = 0; i < (int)Tops10->len;
-       i++) { // Percorre todas as posições do GArray
-    if (g_array_index(Tops10, MinHeap *, i) != NULL) {
-      freeMinHeap(g_array_index(Tops10, MinHeap *, i)); // Liberta a memória
+  for (int i = 0; i < (int)Tops10->len; i++) {
+    MinHeap *heap = g_array_index(Tops10, MinHeap *, i);
+    if (heap != NULL) {
+      freeMinHeap(heap);
     }
   }
   g_array_free(Tops10, false);
 }
 
-// Função para libertar os recursos da estrutura gestorArtists
 void freeGestorArtists(gestorArtists *gestor) {
-  if (gestor) {
-    if (gestor->errorsFile)
-      fclose(gestor->errorsFile); // Fecha o ficheiro de erros, se aberto
-    g_hash_table_destroy(gestor->artistsTable);
-    freeGArrayQuery4(gestor->Tops10);
-    free(gestor); // Liberta a memória da estrutura
+  if (gestor == NULL) {
+    return; // Se gestor for NULL, não faz nada
   }
+
+  // Fechar o arquivo de erros se aberto
+  if (gestor->errorsFile != NULL) {
+    fclose(gestor->errorsFile);
+  }
+
+  // Liberar os elementos dentro da GArray 'Tops10'
+  if (gestor->Tops10 != NULL) {
+    for (int i = 0; i < (int)gestor->Tops10->len; i++) {
+      MinHeap *heap = g_array_index(gestor->Tops10, MinHeap *, i);
+      if (heap != NULL) {
+        freeMinHeap(heap); // Libera cada MinHeap
+      }
+    }
+    g_array_free(gestor->Tops10,
+                 FALSE); // Liberar a GArray, mas não os elementos dentro dela
+  }
+
+  // Liberar a GHashTable, que já cuida de liberar as chaves e os valores
+  if (gestor->artistsTable != NULL) {
+    g_hash_table_destroy(gestor->artistsTable);
+  }
+
+  // Finalmente, liberar a estrutura do gestor
+  free(gestor);
 }
 
 void parserArtist(GHashTable *ArtistsTable, Artists *artist, FILE *errorsFile,

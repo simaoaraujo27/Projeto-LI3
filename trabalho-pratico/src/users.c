@@ -164,6 +164,7 @@ void destroyUser(Users *u) {
     free(u->subscription_type);
     free(u->liked_musics_id);
     free(u);
+    g_hash_table_destroy(u->musicsListening);
   }
 }
 

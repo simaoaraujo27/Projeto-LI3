@@ -81,6 +81,9 @@ void destroiArgumentosQuery5(argumentosQuery5 *a) {
     free(a->nomesGeneros[i]);
   }
 
+  free(a->matrizClassificacaoMusicas);
+  free(a->idsUtilizadores);
+  free(a->nomesGeneros);
   free(a);
 }
 

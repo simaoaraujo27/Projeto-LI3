@@ -121,6 +121,8 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
 
     genre = getMusicGenre(music);
     addGenre(genresTable, nGeneros, genre);
+    free(genre);
+    genre = NULL;
   } else {
     // Escreve a linha inválida no ficheiro de erros
     fprintf(errorsFile, "%s", line);

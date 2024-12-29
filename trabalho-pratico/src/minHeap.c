@@ -123,13 +123,18 @@ void insertMinHeap(MinHeap *heap, int totalDuration, int durationMinNode,
   }
 
   if (heap->size == 10) {
+    char *heapNodeArtistId = getHeapNodeArtistId(minNode);
     // Substituir o maior elemento (raiz) se o novo for menor
     if ((durationMinNode < totalDuration) ||
         (durationMinNode == totalDuration &&
-         strcmp(currentArtist, getHeapNodeArtistId(minNode)) < 0)) {
+         strcmp(currentArtist, heapNodeArtistId) < 0)) {
+      if (heap->data[indiceMinNode].artist_id != NULL) {
+        free(heap->data[indiceMinNode].artist_id);
+      }
       heap->data[indiceMinNode].artist_id = strdup(currentArtist);
       heap->data[indiceMinNode].duration = totalDuration;
     }
+    free(heapNodeArtistId);
     return;
   }
 
@@ -155,8 +160,12 @@ HeapNode extractMin(MinHeap *heap) {
 
 // Função para liberar a memória da min-heap
 void freeMinHeap(MinHeap *heap) {
-  for (int i = 0; i < heap->size; i++) {
-    free(heap->data[i].artist_id); // Liberar a memória do ID do artista
+  if (heap == NULL) {
+    return; // Verifica se o ponteiro heap é NULL para evitar erro
   }
-  free(heap);
+  for (int i = 0; i < heap->size; i++) {
+    if (heap->data[i].artist_id != NULL) { // Verifica se artist_id não é NULL
+      free(heap->data[i].artist_id); // Liberar a memória do ID do artista
+    }
+  }
 }

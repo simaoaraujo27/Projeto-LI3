@@ -29,6 +29,7 @@ void armazenarValores(char *musicId, int duration,
 
   if (found1) {
     char *artistId = getMusicArtistId(orig_key0);
+    char *copia = artistId;
     remove_quotes(artistId);
     removeFstLast(artistId);
 
@@ -83,8 +84,11 @@ void armazenarValores(char *musicId, int duration,
         }
       }
       lentghArtistId -= 12;
+      free(currentArtist);
+      currentArtist = NULL;
     }
-    free(currentArtist);
+
+    free(copia);
   }
 }
 
@@ -117,18 +121,12 @@ aumentar em 1 num contador */
   char *artistMaisVezesNoTop10 = NULL;
   MinHeap *heap = NULL;
 
-  /* aqui printa */
   for (int i = semanaInicio; i <= semanaFim; i++) {
     heap = g_array_index(Tops10, MinHeap *, i);
     if (heap != NULL) {
-      /* aqui nao printa */
       for (int j = 0; j < getMinHeapSize(heap); j++) {
         HeapNode *node = getMinHeapHeapNode(heap, j);
         char *currentArtist = getHeapNodeArtistId(node);
-        /* if (strcmp(currentArtist, "A0003542") == 0)
-          printf("semana %d %d\n",); */
-        /* if (i == 78)
-          printf("%s %d\n", currentArtist, getHeapNodeDuration(node)); */
         gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
                                                 &orig_key, &value);
 
@@ -136,10 +134,17 @@ aumentar em 1 num contador */
           int vezesAtuais = incrementArtistVezesNoTop10(orig_key);
           if (vezesAtuais > maisVezesNoTop10) {
             maisVezesNoTop10 = vezesAtuais;
+            if (artistMaisVezesNoTop10 != NULL) {
+              free(artistMaisVezesNoTop10);
+            }
             artistMaisVezesNoTop10 = strdup(currentArtist);
+
           } else if (vezesAtuais == maisVezesNoTop10 &&
                      strcmp(artistMaisVezesNoTop10, currentArtist) > 0) {
             maisVezesNoTop10 = vezesAtuais;
+            if (artistMaisVezesNoTop10 != NULL) {
+              free(artistMaisVezesNoTop10);
+            }
             artistMaisVezesNoTop10 = strdup(currentArtist);
           }
         }

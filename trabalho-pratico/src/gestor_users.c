@@ -55,7 +55,7 @@ void parserUser(char *line, gestorMusics *gestorMusic, FILE *errorsFile,
                 GHashTable *usersTable, int *nUsers) {
   char *copia = strdup(line); // Faz uma cópia segura da linha
   Users *user;
-  char *username;
+  char *username = NULL;
   // Valida a linha com base nas regras definidas
   if (validateUsersLine(copia, gestorMusic)) {
     (*nUsers)++;
@@ -65,13 +65,13 @@ void parserUser(char *line, gestorMusics *gestorMusic, FILE *errorsFile,
     username = getUserUsername(user); // Obtém o nome do user
     // Insere o user na hashtable usando o username como chave
     g_hash_table_insert(usersTable, strdup(username), user);
-    int *userIndex = g_malloc(sizeof(int));
-    *userIndex = *nUsers - 1;
   } else {
     // Se a linha for inválida, escreve no arquivo de erros
     fprintf(errorsFile, "%s", line);
   }
   free(copia); // Liberta a memória da cópia da linha
+  if (username != NULL)
+    free(username);
 }
 
 // Função para processar o arquivo de users e inserir os dados na hashtable
@@ -179,6 +179,7 @@ void preencheMatriz(int **matrizClassificaoMusicas, int numGeneros,
     idsUtilizadores[i] = strdup(username);
     preencheLinhaMatriz(matrizClassificaoMusicas, i, user, numGeneros,
                         nomesGeneros);
+    free(username);
     i++;
   }
 }
