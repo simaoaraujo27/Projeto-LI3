@@ -13,18 +13,13 @@ struct gestorUsers {
   FILE *errorsFile;       // Arquivo onde erros serão registrados
   GHashTable *usersTable; // Hashtable para armazenar os users
   int *nUsers; // Contador do número de users (para ser usado na Query 5)
-  GHashTable *usernames; // Hashtable para armazenar os usernames (para ser
-  // usado na Query 5)
 };
 
 // Função para inicializar a estrutura gestorUsers
 gestorUsers *initGestorUsers(const char *errorsFilePath) {
-
   // Inicializa a hashtable para users
   GHashTable *usersTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyUser);
-  GHashTable *usernames =
-      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
   gestorUsers *gestorUser = malloc(sizeof(struct gestorUsers));
   if (!gestorUser)
     return NULL;
@@ -42,8 +37,6 @@ gestorUsers *initGestorUsers(const char *errorsFilePath) {
   gestorUser->nUsers = malloc(sizeof(int *));
   *(gestorUser->nUsers) = 0;
 
-  // Cria o GArray para armazenar os IDs dos users
-  gestorUser->usernames = usernames;
   return gestorUser;
 }
 
@@ -53,14 +46,13 @@ void freeGestorUsers(gestorUsers *gestorUser) {
     if (gestorUser->errorsFile)
       fclose(gestorUser->errorsFile); // Fecha o arquivo de erros
     g_hash_table_destroy(gestorUser->usersTable);
-    g_hash_table_destroy(gestorUser->usernames);
     free(gestorUser->nUsers);
     free(gestorUser); // Liberta a memória da estrutura
   }
 }
 
 void parserUser(char *line, gestorMusics *gestorMusic, FILE *errorsFile,
-                GHashTable *usersTable, int *nUsers, GHashTable *usernames) {
+                GHashTable *usersTable, int *nUsers) {
   char *copia = strdup(line); // Faz uma cópia segura da linha
   Users *user;
   char *username;
@@ -75,8 +67,6 @@ void parserUser(char *line, gestorMusics *gestorMusic, FILE *errorsFile,
     g_hash_table_insert(usersTable, strdup(username), user);
     int *userIndex = g_malloc(sizeof(int));
     *userIndex = *nUsers - 1;
-    g_hash_table_insert(usernames, strdup(username), userIndex);
-
   } else {
     // Se a linha for inválida, escreve no arquivo de erros
     fprintf(errorsFile, "%s", line);
@@ -99,8 +89,7 @@ int GestorUsers(gestorUsers *gestorUser, gestorMusics *gestorMusic,
     // Lê o arquivo linha por linha
     while (getline(&line, &len, fp) != -1) {
       parserUser(line, gestorMusic, gestorUser->errorsFile,
-                 gestorUser->usersTable, gestorUser->nUsers,
-                 gestorUser->usernames);
+                 gestorUser->usersTable, gestorUser->nUsers);
     }
     free(line); // Liberta a memória da linha lida
 
@@ -112,17 +101,17 @@ int GestorUsers(gestorUsers *gestorUser, gestorMusics *gestorMusic,
   return 1;
 }
 
-// Função para obter a hashtable dos users
-GHashTable *getUsersTable(gestorUsers *gestorUser) {
-  return gestorUser->usersTable;
-}
-
 gboolean lookUpUsersHashTable(gestorUsers *gestorUser, char *line,
                               gpointer *value, gpointer *orig_key) {
   // Procura o user na hashtable usando a chave fornecida (line)
   gboolean found = g_hash_table_lookup_extended(gestorUser->usersTable, line,
                                                 value, orig_key);
   return found;
+}
+
+// Função para obter a hashtable dos users
+GHashTable *getUsersTable(gestorUsers *gestorUser) {
+  return gestorUser->usersTable;
 }
 
 void processAllUsers(Gestores *gestor, NodoMusica **lista) {
@@ -177,57 +166,6 @@ int getNUsers(gestorUsers *gestorUser) {
   return *i;
 }
 
-GHashTable *getUsernames(gestorUsers *gestorUser) {
-  return gestorUser->usernames;
-}
-
-char **insertIdsToArray(gestorUsers *gestorUsers, int numUtilizadores) {
-  char **idsUtilizadores = (char **)malloc(numUtilizadores * sizeof(char *));
-  if (idsUtilizadores == NULL) {
-    perror("Falha na alocação de memória para o array");
-    return NULL;
-  }
-  GHashTableIter iter;
-  gpointer key1, value1;
-  int i = 0;
-  // int *value = NULL;
-  char *key = NULL;
-  g_hash_table_iter_init(&iter, gestorUsers->usernames);
-  while (g_hash_table_iter_next(&iter, &key1, &value1) && i < numUtilizadores) {
-    key = (char *)key1;
-    // value = (int *)value1;
-    // printf("Key: %s | ", key);
-    // printf("Value: %d | ", *value);
-    idsUtilizadores[i] = (char *)malloc((strlen(key) + 1) * sizeof(char));
-    if (idsUtilizadores[i] == NULL) {
-      perror("Falha na alocação de memória para a string");
-      for (int j = 0; j < i; j++) {
-        free(idsUtilizadores[j]);
-      }
-      free(idsUtilizadores);
-      return NULL;
-    }
-    idsUtilizadores[i] = strdup(key);
-    // printf("idsUtilizadores: %s\n", idsUtilizadores[i]);
-    i++;
-  }
-
-  return idsUtilizadores;
-}
-
-int procuraIndexHashTable(char *user, gestorUsers *gestorUsers) {
-  gpointer value = NULL;
-  gpointer orig_key = NULL;
-  gboolean found = g_hash_table_lookup_extended(gestorUsers->usernames, user,
-                                                value, orig_key);
-  if (found) {
-    int *index = (int *)value;
-    return *index;
-  }
-
-  return -1;
-}
-
 void preencheMatriz(int **matrizClassificaoMusicas, int numGeneros,
                     char **nomesGeneros, gestorUsers *gestorUsers,
                     char **idsUtilizadores) {
@@ -241,16 +179,6 @@ void preencheMatriz(int **matrizClassificaoMusicas, int numGeneros,
     idsUtilizadores[i] = strdup(username);
     preencheLinhaMatriz(matrizClassificaoMusicas, i, user, numGeneros,
                         nomesGeneros);
-    
     i++;
   }
-}
-
-gboolean pertenceAosUsernames(char *username, gestorUsers *gestorUsers) {
-  gpointer value = NULL;
-  gpointer orig_key = NULL;
-  gboolean found = g_hash_table_lookup_extended(gestorUsers->usernames,
-                                                username, value, orig_key);
-
-  return found;
 }

@@ -88,11 +88,12 @@ char **insertGenreToArray(gestorMusics *gestorMusics, int numGeneros) {
   int i = 0;
 
   // Itera sobre os elementos da GHashTable e armazena os valores no array
-  while (g_hash_table_iter_next(&iter, &key1, &value1) && i < numGeneros) {
+  while (g_hash_table_iter_next(&iter, &key1, &value1)) {
     // Verifique se value1 é um ponteiro válido para uma string
     if (key1 != NULL) {
       valuesArray[i] = "";
       char *genre = strdup((char *)key1);
+      // printf("%s\n", genre);
       if (genre == NULL) {
         perror("Falha na alocação de memória para a string");
         return NULL;

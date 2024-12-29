@@ -12,9 +12,9 @@
 #include <string.h>
 #include <time.h>
 
-void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
-                   double *total_time_query1, double *total_time_query2,
-                   double *total_time_query3) {
+void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
+                   argumentosQuery5 *a, int i, double *total_time_query1,
+                   double *total_time_query2, double *total_time_query3) {
   clock_t start, end;
   double time_spent;
   int firstOcorr = 0, maxAge = 0, minAge = 0;
@@ -85,14 +85,14 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
       remove_quotes(Username);
       numRecomendacoes = line + 12;
       int numRecomendacoesInt = atoi(numRecomendacoes);
-      query5(gestor, numRecomendacoesInt, Username, i);
+      query5(gestor, numRecomendacoesInt, Username, i, a);
     } else {
       Username = line + 2;
       Username[8] = '\0';
       remove_quotes(Username);
       numRecomendacoes = line + 11;
       int numRecomendacoesInt = atoi(numRecomendacoes);
-      query5(gestor, numRecomendacoesInt, Username, i);
+      query5(gestor, numRecomendacoesInt, Username, i, a);
     }
   } else if (line[0] == '6') {
     /*

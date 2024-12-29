@@ -25,6 +25,7 @@
 #define MAX_PATH_SIZE 1024
 
 int main(int argc, char **argv) {
+  argumentosQuery5 *a = initArgumentosQuery5();
   FILE *fp = NULL;
 
   // Variáveis para calcular o tempo total de duração de cada query
@@ -71,9 +72,12 @@ int main(int argc, char **argv) {
 
   total_time_query3 += (double)(end - start) / CLOCKS_PER_SEC;
 
+  alocaMatriz(gestor, a);
+  constroiQuery5(gestor, a);
+
   // Processa as queries lidas do arquivo
   while (getline(&line, &len, fp) != -1) {
-    gestorQueries(line, gestor, lista, i, &total_time_query1,
+    gestorQueries(line, gestor, lista, a, i, &total_time_query1,
                   &total_time_query2, &total_time_query3);
     i++;
   }
@@ -82,6 +86,7 @@ int main(int argc, char **argv) {
 
   // Liberta toda a memória alocada e destrói as hashtables
   liberar_lista(lista);
+  destroiArgumentosQuery5(a);
   destroyGestor(gestor);
 
   // Medir o uso de memória no final da execução
