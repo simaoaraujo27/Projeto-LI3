@@ -13,14 +13,8 @@ typedef struct gestorHistory gestorHistory;
 gestorHistory *initGestorHistory(const char *errorsFilePath);
 void freeGestorHistory(gestorHistory *gestor);
 
-void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
-                   char *line, char *copia, gestorMusics *gestorMusics,
-                   gestorArtists *gestorArtists);
-int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
-                  gestorArtists *gestorArtists, char *historyPath);
+void parserHistory(History *history, char *line, char *copia, Gestores *gestor);
 
-void preencheMatriz(int **matrizClassificaoMusicas, int numUtilizadores,
-                    int numGeneros, char **idsUtilizadores, char **nomesGeneros,
-                    gestorMusics *gestorMusics, gestorHistory *gestorHistory, gestorUsers *gestorUsers);
+int GestorHistory(Gestores *gestor, char *historyPath);
 
 #endif

@@ -4,7 +4,6 @@
 #include "gestores.h"
 
 void removeZerosAEsquerda(char *username);
-void query5(Gestores *gestor);
-
+void query5(Gestores *gestor, int numRecomendacoes, char *idUtilizadorAlvo);
 
 #endif

@@ -3,7 +3,6 @@
 
 #include <glib.h>
 
-
 typedef struct users Users;
 
 void setUserUsername(Users *u, char *username);
@@ -18,6 +17,8 @@ void setUserAge(Users *u, char *birth_date);
 void setUserLikedMusicsId(Users *u, char *liked_musics_id);
 
 Users *separateUsers(char *line);
+
+void incrementMusicsListening(gpointer user, char *genre);
 
 char *pegarUserUsername(Users *u);
 char *pegarUserEmail(Users *u);
@@ -40,5 +41,8 @@ char *getUserLikedMusicsId(gpointer user);
 char *getUserLikedMusicsId(gpointer user);
 
 void destroyUser(Users *u);
+
+void preencheLinhaMatriz(int **matrizClassificaoMusicas, int linha, Users *User,
+                         int numGeneros, char **nomesGeneros);
 
 #endif

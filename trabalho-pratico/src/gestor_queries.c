@@ -77,7 +77,23 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
     } else
       query4(pegarGestorArtist(gestor), NULL, NULL, i, temS);
   } else if (line[0] == '5') {
-    // query5(gestor);
+    char *Username = NULL;
+    char *numRecomendacoes;
+    if (temS) {
+      Username = line + 2;
+      Username[10] = '\0';
+      remove_quotes(Username);
+      numRecomendacoes = line + 11;
+      int numRecomendacoesInt = atoi(numRecomendacoes);
+      query5(gestor, numRecomendacoesInt, Username);
+    } else {
+      Username = line + 1;
+      Username[10] = '\0';
+      remove_quotes(Username);
+      numRecomendacoes = line + 10;
+      int numRecomendacoesInt = atoi(numRecomendacoes);
+      query5(gestor, numRecomendacoesInt, Username);
+    }
   } else if (line[0] == '6') {
     /*
     line += 2;

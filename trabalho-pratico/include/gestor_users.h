@@ -33,4 +33,8 @@ int procuraIndexHashTable(char *user, gestorUsers *gestorUsers);
 
 gboolean pertenceAosUsernames(char *username, gestorUsers *gestorUsers);
 
+void preencheMatriz(int **matrizClassificaoMusicas, int numGeneros,
+                    char **nomesGeneros, gestorUsers *gestorUsers,
+                    char **idsUtilizadores);
+
 #endif

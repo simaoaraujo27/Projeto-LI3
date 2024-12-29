@@ -228,6 +228,24 @@ int procuraIndexHashTable(char *user, gestorUsers *gestorUsers) {
   return -1;
 }
 
+void preencheMatriz(int **matrizClassificaoMusicas, int numGeneros,
+                    char **nomesGeneros, gestorUsers *gestorUsers,
+                    char **idsUtilizadores) {
+  GHashTableIter iter;
+  gpointer key1, value1;
+  g_hash_table_iter_init(&iter, gestorUsers->usersTable);
+  int i = 0;
+  while (g_hash_table_iter_next(&iter, &key1, &value1)) {
+    Users *user = (Users *)value1; // Obtém a música atual
+    char *username = getUserUsername(value1);
+    idsUtilizadores[i] = strdup(username);
+    preencheLinhaMatriz(matrizClassificaoMusicas, i, user, numGeneros,
+                        nomesGeneros);
+
+    i++;
+  }
+}
+
 gboolean pertenceAosUsernames(char *username, gestorUsers *gestorUsers) {
   gpointer value = NULL;
   gpointer orig_key = NULL;

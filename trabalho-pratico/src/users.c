@@ -17,6 +17,7 @@ struct users {
   char *country;           // País onde a conta foi registrada
   char *subscription_type; // Tipo de assinatura (normal ou premium)
   char *liked_musics_id;   // IDs das músicas curtidas
+  GHashTable *musicsListening;
 };
 
 // Função para definir o username de um user
@@ -90,6 +91,10 @@ Users *separateUsers(char *line) {
       user, strdup(strsep(
                 &line, "\n"))); // A última parte da linha é o liked_musics_id
 
+  GHashTable *musicsListening =
+      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+  user->musicsListening = musicsListening;
+
   return user;
 }
 
@@ -159,5 +164,44 @@ void destroyUser(Users *u) {
     free(u->subscription_type);
     free(u->liked_musics_id);
     free(u);
+  }
+}
+
+void incrementMusicsListening(gpointer user, char *genre) {
+  struct users *u = (struct users *)user;
+  gpointer orig_key = NULL;
+  gpointer value = NULL;
+  remove_quotes(genre);
+  gboolean found = g_hash_table_lookup_extended(u->musicsListening, genre,
+                                                &orig_key, &value);
+  if (found) {
+    int *count = (int *)value;
+    (*count)++;
+  } else {
+    // Cria um novo contador inicializado com 1
+    int *new_count = g_malloc(sizeof(int));
+    *new_count = 1;
+    g_hash_table_insert(u->musicsListening, g_strdup(genre), new_count);
+  }
+}
+
+int retornaIndiceGenero(char **nomesGeneros, char *genero, int numGeneros) {
+  for (int i = 0; i < numGeneros; i++) {
+    if (strcmp(nomesGeneros[i], genero) == 0)
+      return i;
+  }
+  return -1;
+}
+
+void preencheLinhaMatriz(int **matrizClassificaoMusicas, int linha, Users *User,
+                         int numGeneros, char **nomesGeneros) {
+  GHashTableIter iter;
+  gpointer key1, value1;
+  g_hash_table_iter_init(&iter, User->musicsListening);
+  while (g_hash_table_iter_next(&iter, &key1, &value1)) {
+    char *genre = (char *)key1;
+    int *count = (int *)value1;
+    int coluna = retornaIndiceGenero(nomesGeneros, genre, numGeneros);
+    matrizClassificaoMusicas[linha][coluna] = *count;
   }
 }

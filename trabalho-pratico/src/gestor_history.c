@@ -2,6 +2,7 @@
 #include "gestor_artists.h"
 #include "gestor_musics.h"
 #include "gestor_users.h"
+#include "gestores.h"
 #include "history.h"
 #include "query4.h"
 #include "validation.h"
@@ -49,9 +50,16 @@ void freeGestorHistory(gestorHistory *gestor) {
   }
 }
 
-void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
-                   char *line, char *copia, gestorMusics *gestorMusics,
-                   gestorArtists *gestorArtists) {
+void parserHistory(History *history, char *line, char *copia,
+                   Gestores *gestor) {
+
+  gestorArtists *gestorArtists = pegarGestorArtist(gestor);
+  gestorHistory *gestorHistory = pegarGestorHistory(gestor);
+  gestorMusics *gestorMusics = pegarGestorMusic(gestor);
+  gestorUsers *gestorUsers = pegarGestorUser(gestor);
+  FILE *errorsFile = gestorHistory->errorsFile;
+  GHashTable *historyTable = gestorHistory->historyTable;
+
   if (validateHistoryLine(copia)) {
     // Obtém o ID do history e remove aspas
     char *id = getHistoryId(history);
@@ -63,7 +71,21 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
     char *musicId = getHistoryMusicId(history);
     incrementMusicRep(musicId, gestorMusics, gestorArtists);
 
+    // ---- para query5
+
+    char *currentUser = strdup(getHistoryUserId(history));
+    remove_quotes(currentUser);
+    gpointer orig_keyUser;
+    gpointer valueUser;
+    lookUpUsersHashTable(gestorUsers, currentUser, &orig_keyUser, &valueUser);
+    gpointer orig_keyMusic;
+    gpointer valueMusic;
+    lookUpMusicsHashTable(gestorMusics, musicId, &valueMusic, &orig_keyMusic);
+    char *musicGenre = getMusicGenre(orig_keyMusic);
+    incrementMusicsListening(valueUser, musicGenre);
+
     //--- para a query4
+
     remove_quotes(musicId);
     char *timeStamp = getHistoryTimestamp(history);
     remove_quotes(timeStamp);
@@ -98,8 +120,9 @@ void parserHistory(GHashTable *historyTable, History *history, FILE *errorsFile,
 
 // Função para processar o ficheiro de history utilizando a estrutura
 // gestorHistory
-int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
-                  gestorArtists *gestorArtists, char *historyPath) {
+int GestorHistory(Gestores *gestor, char *historyPath) {
+  gestorMusics *gestorMusics = pegarGestorMusic(gestor);
+
   // Abre o arquivo de history e carrega os dados
   FILE *fp = fopen(historyPath, "r");
 
@@ -126,11 +149,10 @@ int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
         char *currentMusic = getHistoryMusicId(history);
         gpointer orig_key;
         gpointer value;
-        lookUpMusicsHashTable(gestorMusic, currentMusic, &value, &orig_key);
+        lookUpMusicsHashTable(gestorMusics, currentMusic, &value, &orig_key);
 
         char *copia = strdup(line);
-        parserHistory(gestor->historyTable, history, gestor->errorsFile, line,
-                      copia, gestorMusic, gestorArtists);
+        parserHistory(history, line, copia, gestor);
         free(copia);
         free(line_copy);
         free(currentMusic);
@@ -145,40 +167,6 @@ int GestorHistory(gestorHistory *gestor, gestorMusics *gestorMusic,
   }
 
   return 1;
-}
-
-void preencheMatriz(int **matrizClassificaoMusicas, int numUtilizadores,
-                    int numGeneros, char **idsUtilizadores, char **nomesGeneros,
-                    gestorMusics *gestorMusics, gestorHistory *gestorHistory,
-                    gestorUsers *gestorUsers) {
-  if (matrizClassificaoMusicas != NULL) {
-  }
-
-  GHashTableIter iter;
-  gpointer key1, value1;
-  g_hash_table_iter_init(&iter, gestorHistory->historyTable);
-  int linha, coluna;
-
-  while (g_hash_table_iter_next(&iter, &key1, &value1)) {
-    History *history = (History *)value1; // Obtém a música atual
-    char *username = getHistoryUserId(history);
-    char *musicId = getHistoryMusicId(history);
-    linha = procuraIndexHashTable(username, gestorUsers);
-    remove_quotes(username);
-    remove_quotes(musicId);
-    removeZerosAEsquerda(username);
-    linha = atoi(username) - 1;
-    if (linha) {
-    }
-    char *genre = getMusicGenreById(musicId, gestorMusics);
-    if (genre && numUtilizadores && idsUtilizadores != NULL) {
-    }
-
-    coluna = procuraIndexString(nomesGeneros, genre, numGeneros);
-
-    if (linha != -1 && coluna != -1)
-      matrizClassificaoMusicas[linha][coluna] += 1;
-  }
 }
 
 /*

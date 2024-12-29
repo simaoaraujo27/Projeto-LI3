@@ -42,7 +42,6 @@ int GestorParsers(Gestores *gestor, char *path) {
   gestorMusics *gestorMusics = pegarGestorMusic(gestor);
   gestorUsers *gestorUsers = pegarGestorUser(gestor);
   gestorAlbuns *gestorAlbuns = pegarGestorAlbum(gestor);
-  gestorHistory *gestorHistory = pegarGestorHistory(gestor);
 
   if (!GestorArtists(gestorArtists, artistsPath)) {
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
@@ -64,7 +63,7 @@ int GestorParsers(Gestores *gestor, char *path) {
     return 0;
   }
 
-  if (!GestorHistory(gestorHistory, gestorMusics, gestorArtists, historyPath)) {
+  if (!GestorHistory(gestor, historyPath)) {
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
     return 0;
   }
