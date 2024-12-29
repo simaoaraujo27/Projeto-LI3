@@ -241,7 +241,7 @@ void preencheMatriz(int **matrizClassificaoMusicas, int numGeneros,
     idsUtilizadores[i] = strdup(username);
     preencheLinhaMatriz(matrizClassificaoMusicas, i, user, numGeneros,
                         nomesGeneros);
-
+    
     i++;
   }
 }

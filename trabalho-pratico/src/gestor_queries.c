@@ -80,17 +80,17 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
     char *Username = NULL;
     char *numRecomendacoes;
     if (temS) {
-      Username = line + 2;
-      Username[10] = '\0';
+      Username = line + 3;
+      Username[8] = '\0';
       remove_quotes(Username);
-      numRecomendacoes = line + 11;
+      numRecomendacoes = line + 12;
       int numRecomendacoesInt = atoi(numRecomendacoes);
       query5(gestor, numRecomendacoesInt, Username);
     } else {
-      Username = line + 1;
-      Username[10] = '\0';
+      Username = line + 2;
+      Username[8] = '\0';
       remove_quotes(Username);
-      numRecomendacoes = line + 10;
+      numRecomendacoes = line + 11;
       int numRecomendacoesInt = atoi(numRecomendacoes);
       query5(gestor, numRecomendacoesInt, Username);
     }

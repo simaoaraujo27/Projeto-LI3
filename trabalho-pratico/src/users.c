@@ -187,6 +187,7 @@ void incrementMusicsListening(gpointer user, char *genre) {
 
 int retornaIndiceGenero(char **nomesGeneros, char *genero, int numGeneros) {
   for (int i = 0; i < numGeneros; i++) {
+    remove_quotes(nomesGeneros[i]);
     if (strcmp(nomesGeneros[i], genero) == 0)
       return i;
   }
