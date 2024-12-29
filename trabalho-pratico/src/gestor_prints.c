@@ -80,7 +80,7 @@ void printQuery2(GList **listaResposta, FILE *newFile, int temS) {
   fclose(newFile);
 }
 
-// Função para imprimir os resultados da query 2 em um ficheiro
+// Função para imprimir os resultados da query 4 em um ficheiro
 void printQuery4(FILE *newFile, int temS, char *name, char *type,
                  int countTop10) {
 
@@ -106,6 +106,16 @@ void printQuery4(FILE *newFile, int temS, char *name, char *type,
   // Liberta a memória alocada para cada campo
   free(contarTop10);
   free(new_str);
+
+  // Fecha o ficheiro após a escrita
+  fclose(newFile);
+}
+
+// Função para imprimir os resultados da query 5 em um ficheiro
+void printQuery5(FILE *newFile, char **recomendacao, int numRecomendacoes) {
+  for (int i = 0; i < numRecomendacoes; i++) {
+    fprintf(newFile, "%s\n", recomendacao[i]);
+  }
 
   // Fecha o ficheiro após a escrita
   fclose(newFile);
