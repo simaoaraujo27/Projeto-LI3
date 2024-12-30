@@ -207,14 +207,17 @@ void updateUserResumeGeneros(Resumo *res, char *gen, int duracao){
 }
 
 void updateUserResume(gpointer u, int year, int duracao, char *musicId, char *artistId, char *albumId, char *genero, int dia, int hora) {
-  struct users *user = (struct users *)u;
+  if(u == NULL) return;
+  Users *user = (Users *)u;
+  if(user == NULL) return;
   GArray *resumos = user->resumos;
 
   // Verifica o tamanho atual da duração por semana
+  if(resumos == NULL) return;
   int tamanho = resumos->len;
-  printf("%d ", tamanho);
-
   int indice = 2024 - year;
+  //printf("%d %d\n",tamanho, indice);
+  
   // Ajusta o tamanho do array se necessário
   if (indice >= tamanho) {
     g_array_set_size(resumos, (guint)(indice + 1)); 
@@ -273,7 +276,7 @@ Users *separateUsers(char *line) {
 
   GArray *resumos = g_array_new(FALSE, FALSE, sizeof(Resumo *));
   g_array_set_size(resumos, 7);
-  for (int i = 0; i < (int)resumos->len; i++) {
+  for (int i = 0; i < 7; i++) {
     g_array_index(resumos, Resumo *, i) =
         NULL; // Inicializa cada posição com NULL
   }

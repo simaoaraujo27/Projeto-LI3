@@ -58,15 +58,11 @@ void parserHistory(History *history, char *line, char *copia,
   gestorMusics *gestorMusics = pegarGestorMusic(gestor);
   gestorUsers *gestorUsers = pegarGestorUser(gestor);
   FILE *errorsFile = gestorHistory->errorsFile;
-  GHashTable *historyTable = gestorHistory->historyTable;
 
   if (validateHistoryLine(copia)) {
     // Obtém o ID do history e remove aspas
     char *id = getHistoryId(history);
     remove_quotes(id);
-
-    // Insere o novo history na tabela hash
-    g_hash_table_insert(historyTable, id, history);
 
     char *musicId = getHistoryMusicId(history);
     incrementMusicRep(musicId, gestorMusics, gestorArtists);
@@ -120,7 +116,7 @@ void parserHistory(History *history, char *line, char *copia,
     art[8] = '\0';
     if(year && dia && hora){}
     //printf("%d %d %s %s %s %s %d %d\n\n", year, durationSeg, musicId, art, albumId, musicGenre, dia, hora);
-    //updateUserResume(orig_keyUser, year, durationSeg, musicId, art, albumId, musicGenre, dia, hora);
+    updateUserResume(valueUser, year, durationSeg, musicId, art, albumId, musicGenre, dia, hora);
     free(albumId);
     free(artistId);
     free(musicGenre);
@@ -141,6 +137,7 @@ void parserHistory(History *history, char *line, char *copia,
     // Escreve a linha inválida no ficheiro de erros
     fprintf(errorsFile, "%s", line);
   }
+  destroyHistory(history);
 }
 
 // Função para processar o ficheiro de history utilizando a estrutura
