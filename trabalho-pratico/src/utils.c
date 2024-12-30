@@ -294,3 +294,28 @@ void converterParaTempo(int segundos, char *resultado) {
     // Formatar a string no formato "HH:MM:SS"
     snprintf(resultado, 16, "%02d:%02d:%02d", horas, minutos, segundos);
 }
+
+// funcao que calcula o dia do ano recebendo uma string da forma MM:DD (MM é o mes e DD é o dia) e considerando anos bissextos
+int calculateDiaAno(char *diaStr) {
+    int diasPorMes[] = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; 
+
+    int mes, dia;
+
+    if (sscanf(diaStr, "%d/%d", &mes, &dia) != 2) {
+        return -1;
+    }
+
+    // Verificar validade do mês e do dia
+    if (mes < 1 || mes > 12 || dia < 1 || dia > diasPorMes[mes]) {
+        return -1;
+    }
+
+    // Calcular o dia do ano
+    int diaAno = 0;
+    for (int i = 1; i < mes; i++) {
+        diaAno += diasPorMes[i];
+    }
+    diaAno += dia;
+
+    return diaAno;
+}

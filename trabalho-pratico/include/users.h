@@ -20,7 +20,7 @@ void setUserSubscriptionType(Users *u, char *subscription_type);
 void setUserLikedMusicsId(Users *u, char *liked_musics_id);
 void setUserAge(Users *u, char *birth_date);
 void setUserLikedMusicsId(Users *u, char *liked_musics_id);
-void updateUserResume(gpointer u, int year);
+void updateUserResume(gpointer u, int year, int duracao, char *musicId, char *artistId, char *albumId, char *genero, int dia, int hora);
 
 Users *separateUsers(char *line);
 

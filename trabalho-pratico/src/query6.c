@@ -23,8 +23,11 @@ listening time;#musics;artist;day;genre;favorite_album;hour
 // Inicializar com tudo a zero
 // sempre que se passar por uma musica aumentar em 1 no array nessa hora
 
-/*
+/* // ATENCAO AO CASO DE HAVER MAIS DE UM ARTIST PARA A MUSICA
 void query6(char *user_id, int year, int N, gestorUsers *gestorUsers, int i, int temS){
+  GList *artistsTempoList = NULL;
+  GList *albunsTempoList = NULL;
+  GList *generosTempoList = NULL;
   FILE *newFile = createFile(i);
   gpointer value;
   gpointer orig_key;

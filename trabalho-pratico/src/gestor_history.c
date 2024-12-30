@@ -83,10 +83,13 @@ void parserHistory(History *history, char *line, char *copia,
     gpointer valueMusic;
     lookUpMusicsHashTable(gestorMusics, musicId, &valueMusic, &orig_keyMusic);
     char *musicGenre = getMusicGenre(orig_keyMusic);
+    char *artistId = getMusicArtistId(orig_keyMusic);
+    char *albumId = getMusicAlbumId(orig_keyMusic);
+    remove_quotes(albumId);
     incrementMusicsListening(valueUser, musicGenre);
-    free(musicGenre);
     free(currentUserCopia);
     //--- para a query4
+
 
     remove_quotes(musicId);
     char *timeStamp = getHistoryTimestamp(history);
@@ -104,7 +107,24 @@ void parserHistory(History *history, char *line, char *copia,
       semana2 = (dias + 5) / 7;
     }
     int dif = 0;
-
+// query 6
+    int year = atoi(timeStampCopia);
+    timeStampCopia += 5;
+    timeStampCopia[5] = '\0';
+    int dia = calculateDiaAno(timeStampCopia) - 1;
+    timeStampCopia += 6;
+    int hora = atoi(timeStampCopia);
+    //if (year && dia && hora){}
+    char *art = strdup(artistId);
+    art += 3;
+    art[8] = '\0';
+    if(year && dia && hora){}
+    //printf("%d %d %s %s %s %s %d %d\n\n", year, durationSeg, musicId, art, albumId, musicGenre, dia, hora);
+    //updateUserResume(orig_keyUser, year, durationSeg, musicId, art, albumId, musicGenre, dia, hora);
+    free(albumId);
+    free(artistId);
+    free(musicGenre);
+//
     if (semana1 != semana2 && somaHoras(durationStr, timeStamp + 11, &dif)) {
       armazenarValores(musicId, durationSeg - dif, dias, gestorMusics,
                        gestorArtists, getGArrayTops10(gestorArtists));
@@ -115,7 +135,7 @@ void parserHistory(History *history, char *line, char *copia,
                        getGArrayTops10(gestorArtists));
 
     free(musicId);
-    free(timeStampCopia);
+    //free(timeStampCopia);
     free(durationStr);
   } else {
     // Escreve a linha inválida no ficheiro de erros
