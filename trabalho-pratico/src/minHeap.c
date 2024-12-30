@@ -21,7 +21,7 @@ HeapNode menorHeapNode(MinHeap *heap, int *indice) {
       menor = heap->data[i];
       *indice = i;
     } else if (heap->data[i].duration == menor.duration &&
-               strcmp(menor.artist_id, heap->data[i].artist_id) > 0) {
+               strcmp(menor.artist_id, heap->data[i].artist_id) < 0) {
       menor = heap->data[i];
       *indice = i;
     }

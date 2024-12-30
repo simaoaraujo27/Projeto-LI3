@@ -20,7 +20,7 @@ void armazenarValores(char *musicId, int duration,
   gpointer orig_key0;
   int semana = 0;
   if (timeStamp >= 2)
-    semana = (timeStamp + 4) / 7;
+    semana = (timeStamp + 5) / 7;
   remove_quotes(musicId);
   gboolean found1 =
       lookUpMusicsHashTable(gestorMusics, musicId, &value0, &orig_key0);
