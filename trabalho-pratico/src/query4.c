@@ -12,8 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* se o artista ja esta na minHeap trocar so o valor */
-
 void armazenarValores(char *musicId, int duration,
                       int timeStamp /* esta em dias ate ao dia 9 / 9 / 2024 */,
                       gestorMusics *gestorMusics, gestorArtists *gestorArtists,
@@ -113,8 +111,7 @@ aumentar em 1 num contador */
       return;
     }
   }
-  /* printf("semanaInicio = %d semanaFim = %d strsemanaFim %s\n", semanaInicio,
-         semanaFim, DataFim); */
+
   gpointer orig_key;
   gpointer value;
   int maisVezesNoTop10 = 0;
@@ -160,21 +157,3 @@ aumentar em 1 num contador */
   free(artistMaisVezesNoTop10);
   colocaZeroVezesTop10(gestorArtists);
 }
-
-/*
-enquanto é feito o parser de history:
-  - ver o music_id
-    - atraves do music_id sacar o artist_id da musica
-  - ver a duration
-  - ver o timestamp (data)
-
-atraves do timestamp:
-distancia em dias entre a data limite (9 de setembro) e a data que queremos
-calcular e depois dividir por 7 -> da o indice da semana a ver no array
-dinamico
-
-array dinamico de minheaps de structs -> cada struct tem o artist_id e a
-duracao total nessa semana cada posicao do array corresponde a uma semana; a
-minheap é atraves da duracão (o menor fica no inicio) e tem tamanho 10
-
-*/

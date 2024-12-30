@@ -1,3 +1,4 @@
+#include "programa-testes.h"
 #include "compare_files.h"
 #define MAX_PATH_SIZE 1024
 
@@ -58,8 +59,9 @@ int main(int argc, char **argv) {
   int totalTestesQ6 = 0;
   int totalTestes = 0;
 
+  // Flag para indicar o início de uma nova linha
   int ch;
-  int nova_linha = 1; // Flag para indicar o início de uma nova linha
+  int nova_linha = 1;
 
   // Lê o ficheiro de comandos e conta os testes para cada tipo de consulta
   while ((ch = fgetc(comandos)) != EOF) {
@@ -67,18 +69,19 @@ int main(int argc, char **argv) {
       // Aqui temos o primeiro caractere de uma linha
       char primeiro_char = (char)ch;
 
-      if (primeiro_char == '1')
+      if (primeiro_char == '1') {
         totalTestesQ1++;
-      else if (primeiro_char == '2')
+      } else if (primeiro_char == '2') {
         totalTestesQ2++;
-      else if (primeiro_char == '3')
+      } else if (primeiro_char == '3') {
         totalTestesQ3++;
-      else if (primeiro_char == '4')
+      } else if (primeiro_char == '4') {
         totalTestesQ4++;
-      else if (primeiro_char == '5')
+      } else if (primeiro_char == '5') {
         totalTestesQ5++;
-      else if (primeiro_char == '6')
+      } else if (primeiro_char == '6') {
         totalTestesQ6++;
+      }
 
       totalTestes++;
 
@@ -182,7 +185,7 @@ int main(int argc, char **argv) {
   printf("Query 5: %d/%d testes corretos! \n", corretas[4], totalTestesQ5);
   printf("Query 6: %d/%d testes corretos! \n", corretas[5], totalTestesQ6);
 
-  // Printa o tempo de execução
+  // Printa o tempo total de execução
   printf("Tempo total de execução: %.6f segundos\n", elapsed);
 
   // Liberta a memória alocada para os paths dos ficheiros

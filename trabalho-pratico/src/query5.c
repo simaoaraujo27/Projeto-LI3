@@ -95,7 +95,8 @@ void query5(Gestores *gestor, int numRecomendacoes, char *idUtilizadorAlvo,
   gpointer orig_key;
   // Caso não esteja na HT dos users, é inválido e por isso não faz nada
   if (!lookUpUsersHashTable(pegarGestorUser(gestor), idUtilizadorAlvo,
-                            &orig_key, &value)) {
+                            &orig_key, &value) ||
+      numRecomendacoes == 0) {
     fprintf(newFile, "\n");
     fclose(newFile);
     return;

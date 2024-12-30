@@ -1,4 +1,5 @@
 #include "gestor_queries.h"
+#include "compare_files.h"
 #include "query1.h"
 #include "query2.h"
 #include "query4.h"
@@ -13,8 +14,7 @@
 #include <time.h>
 
 void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
-                   argumentosQuery5 *a, int i, double *total_time_query1,
-                   double *total_time_query2, double *total_time_query3) {
+                   argumentosQuery5 *a, int i, temposTestes *t) {
   clock_t start, end;
   double time_spent;
   int firstOcorr = 0, maxAge = 0, minAge = 0;
@@ -30,7 +30,7 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
       query1Artist(pegarGestorArtist(gestor), line, i, temS);
     end = clock();
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;
-    *total_time_query1 += time_spent; // Acumula o tempo para Query 1
+    setTemposTestes(t, 1, time_spent); // Acumula o tempo para Query 1
   } else if (line[0] == '2') {
     start = clock();
     if (!temAspas(line)) {
@@ -49,7 +49,7 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
     }
     end = clock();
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;
-    *total_time_query2 += time_spent; // Acumula o tempo para Query 2
+    setTemposTestes(t, 2, time_spent); // Acumula o tempo para Query 2
   } else if (line[0] == '3') {
     start = clock();
     if (!temS) {
@@ -64,7 +64,7 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
     query3(minAge, maxAge, lista, i, temS);
     end = clock();
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;
-    *total_time_query3 += time_spent; // Acumula o tempo para Query 3
+    setTemposTestes(t, 3, time_spent); // Acumula o tempo para Query 3
   } else if (line[0] == '4') {
     if ((temS && line[2] == ' ') || (!temS && line[1] == ' ')) {
       line += 2;
@@ -73,9 +73,19 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
       char *fim = line + 11;
       fim[10] = '\0';
       line[10] = '\0';
+      start = clock();
       query4(pegarGestorArtist(gestor), line, fim, i, temS);
-    } else
+      end = clock();
+      time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+      setTemposTestes(t, 4, time_spent); // Acumula o tempo para Query 4
+    } else {
+      start = clock();
       query4(pegarGestorArtist(gestor), NULL, NULL, i, temS);
+      end = clock();
+      time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+      setTemposTestes(t, 4, time_spent); // Acumula o tempo para Query 4
+    }
+
   } else if (line[0] == '5') {
     char *Username = NULL;
     char *numRecomendacoes;
@@ -85,14 +95,22 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
       remove_quotes(Username);
       numRecomendacoes = line + 12;
       int numRecomendacoesInt = atoi(numRecomendacoes);
+      start = clock();
       query5(gestor, numRecomendacoesInt, Username, i, a);
+      end = clock();
+      time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+      setTemposTestes(t, 5, time_spent); // Acumula o tempo para Query 5
     } else {
       Username = line + 2;
       Username[8] = '\0';
       remove_quotes(Username);
       numRecomendacoes = line + 11;
       int numRecomendacoesInt = atoi(numRecomendacoes);
+      start = clock();
       query5(gestor, numRecomendacoesInt, Username, i, a);
+      end = clock();
+      time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+      setTemposTestes(t, 5, time_spent); // Acumula o tempo para Query 5
     }
   } else if (line[0] == '6') {
     /*
@@ -105,6 +123,11 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
     int year = atoi(line);
     line += 5;
     int N = atoi(line);
-    query6(userId, year, N, pegarGestorUser(gestor), i, temS);*/
+    start = clock();
+    query6(userId, year, N, pegarGestorUser(gestor), i, temS);
+    end = clock();
+    time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+    setTemposTestes(t, 6, time_spent); // Acumula o tempo para Query 6
+    */
   }
 }

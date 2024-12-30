@@ -1,3 +1,4 @@
+#include "compare_files.h"
 #include "gestorParsers.h"
 #include "gestor_artists.h"
 #include "gestor_musics.h"
@@ -25,11 +26,10 @@
 #define MAX_PATH_SIZE 1024
 
 int main(int argc, char **argv) {
+  temposTestes *t = initTemposTestes();
   argumentosQuery5 *a = initArgumentosQuery5();
   FILE *fp = NULL;
 
-  // Variáveis para calcular o tempo total de duração de cada query
-  double total_time_query1 = 0, total_time_query2 = 0, total_time_query3 = 0;
 
   clock_t start, end;
 
@@ -66,31 +66,28 @@ int main(int argc, char **argv) {
   NodoMusica *lista =
       NULL; // Lista de músicas baseadas nas preferências dos users
 
+  // Acrescenta o tempo de criar a lista ao tempo total da Query 3
   start = clock();
   lista = CriaListaRespostaQuery3(lista, gestor);
   end = clock();
+  setTemposTestes(t, 3, (double)(end - start) / CLOCKS_PER_SEC);
 
-  total_time_query3 += (double)(end - start) / CLOCKS_PER_SEC;
-
+  // Acrescenta o tempo de criar a matriz ao tempo total da Query 5
+  start = clock();
   alocaMatriz(gestor, a);
   constroiQuery5(gestor, a);
+  end = clock();
+  setTemposTestes(t, 5, (double)(end - start) / CLOCKS_PER_SEC);
 
   // Processa as queries lidas do arquivo
   while (getline(&line, &len, fp) != -1) {
-    gestorQueries(line, gestor, lista, a, i, &total_time_query1,
-                  &total_time_query2, &total_time_query3);
+    gestorQueries(line, gestor, lista, a, i, t);
     i++;
   }
   fclose(fp);
   free(line);
 
-  // Liberta toda a memória alocada e destrói as hashtables
-  liberar_lista(lista);
-  destroiArgumentosQuery5(a);
-  destroyGestor(gestor);
-
-  // Medir o uso de memória no final da execução
-  // Verifica se o programa foi chamado com RAM_MONITOR
+  // Verifica se o programa-principal foi chamado a partir do programa-testes
   if (getenv("RAM_MONITOR") != NULL) {
     // Medir o uso de memória no final da execução
     struct rusage r_usage;
@@ -98,9 +95,18 @@ int main(int argc, char **argv) {
     printf("Memória utilizada: %ld KB\n", r_usage.ru_maxrss);
 
     printf("Tempos de execução: \n");
-    printf("Q1: %fs\n", total_time_query1);
-    printf("Q2: %fs\n", total_time_query2);
-    printf("Q3: %fs\n", total_time_query3);
+    printf("Q1: %fs\n", getTemposTestes(t, 1));
+    printf("Q2: %fs\n", getTemposTestes(t, 2));
+    printf("Q3: %fs\n", getTemposTestes(t, 3));
+    printf("Q4: %fs\n", getTemposTestes(t, 4));
+    printf("Q5: %fs\n", getTemposTestes(t, 5));
+    printf("Q6: %fs\n", getTemposTestes(t, 6));
   }
+
+  // Liberta toda a memória alocada e destrói as hashtables
+  liberar_lista(lista);
+  destroiArgumentosQuery5(a);
+  destroyGestor(gestor);
+  destroyTemposTestes(t);
   return 0;
 }
