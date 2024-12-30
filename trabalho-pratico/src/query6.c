@@ -1,5 +1,6 @@
 #include "query6.h"
 #include "glib.h"
+#include "utils.h"
 
 /*
 Output:
@@ -8,11 +9,10 @@ listening time;#musics;artist;day;genre;favorite_album;hour
 [artista_preferido_2;#musicas;listening_time]
 [. . . ]
 */
-
-// procurar este user_id e este year no history csv
-// guardar numa nova struct:
-// todas as musics_id (diferentes) que ele ouviu e o numero de musicas diferentes ouvidas 
-// guardar o artista dessa musica e o tempo que passou a ouvir este artista
+// percorrer o history 
+// guardar numa nova struct que estara na struct dos users:
+// todas as musics_id (diferentes) que ele ouviu 
+// guardar o artista dessa musica e o tempo que passou a ouvir este artista e o numero de musicas distintas ouvidas desse artista
 // ao somar todos os artistas temos o tempo total de audição
 // guardar o album dessa musica e o tempo que passou a ouvir este album
 // Fazer um array com 366 posicoes (dias possiveis)
@@ -23,10 +23,76 @@ listening time;#musics;artist;day;genre;favorite_album;hour
 // Inicializar com tudo a zero
 // sempre que se passar por uma musica aumentar em 1 no array nessa hora
 
-struct categoriaTempo {
-  char *categoria; // artista, album ou género
-  guint time;  // tempo de reprodução em segundos
-};
+/*
+void query6(char *user_id, int year, int N, gestorUsers *gestorUsers, int i, int temS){
+  FILE *newFile = createFile(i);
+  gpointer value;
+  gpointer orig_key;
+
+  gboolean found =
+      lookUpUsersHashTable(gestorUsers, line, &value, &orig_key);
+
+  if(found){
+    int indice = 2024 - year;
+    if (existUserResume(orig_key, indice)){
+    int listeningTime = getUserResumoListeningTime(orig_key, year);
+    char *listeningTimeStr = NULL;
+    converterParaTempo(listeningTime, listeningTimeStr);
+    int numMusicasDiferentes = getUserResumoNumMusicasDiferentes(orig_key, year);
+    char *numMusicasStr = intToString(numMusicasDiferentes);
+    char *artists = getUserResumoArtists(orig_key, year, N, temS);
+    //deve ser da forma: artistId;numMusicasDiferentes;listening_time\n ou com =
+    int day = getUserResumoDay(orig_key, year);
+    char *dayStr = intToString(day);
+    char *genre = getUserResumoGenero(orig_key, year);
+    char *album = getUserResumoAlbum(orig_key, year);
+    int hour = getUserResumoHora(orig_key, year);
+    char *hourStr = intToString(hour);
+    char *favouriteArtist = strdup(artists);
+    favouriteArtist[8] = '\0';
+    // free(favouriteArtist + 9);
+    int total_len = strlen(listeningTimeStr) + strlen(numMusicasStr) + strlen(favouriteArtist) +
+                  strlen(dayStr) + strlen(genre) + strlen(album) + strlen(hourStr) +
+                  7; // 5 para os ';' ou '=' e o '\0'
+    if (N != 0) total_len += 1 + strlen(artists);
+    char *new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
+
+    if (temS && N == 0) {
+      // Formata a string concatenada com os dados do user, separando-os por '='
+      snprintf(new_str, total_len + 1, "%s=%s=%s=%s=%s=%s=%s\n", listeningTimeStr, numMusicasStr,
+             favouriteArtist, dayStr, genre, album, hourStr);
+    } else if (temS && N != 0) {
+      // Formata a string concatenada com os dados do user, separando-os por '='
+      snprintf(new_str, total_len + 1, "%s=%s=%s=%s=%s=%s=%s\n%s", listeningTimeStr, numMusicasStr,
+             favouriteArtist, dayStr, genre, album, hourStr, artists);
+    } else if (N == 0){
+      // Formata a string concatenada com os dados do user, separando-os por ';'
+      snprintf(new_str, total_len + 1, "%s;%s;%s;%s;%s;%s;%s\n", listeningTimeStr, numMusicasStr,
+             favouriteArtist, dayStr, genre, album, hourStr);
+    } else{
+      // Formata a string concatenada com os dados do user, separando-os por ';'
+      snprintf(new_str, total_len + 1, "%s;%s;%s;%s;%s;%s;%s\n%s", listeningTimeStr, numMusicasStr,
+             favouriteArtist, dayStr, genre, album, hourStr, artists);
+    }
+    writeFile(newFile, new_str);
+
+    // Liberta a memória alocada para as strings
+    free(listeningTimeStr);
+    free(numMusicasStr);
+    free(favouriteArtist);
+    free(dayStr);
+    free(genre);
+    free(album);
+    free(hourStr);
+    free(artists);
+    free(new_str);
+    }else{
+      writeFile(newFile, "\n");
+    }
+  }else{
+  writeFile(newFile, "\n");
+  }
+}*/
 /*
 void query6(char *user_id, int year, int N, gestorHistory *gestorHistory){
     int numMusicasDiferentes = 0;

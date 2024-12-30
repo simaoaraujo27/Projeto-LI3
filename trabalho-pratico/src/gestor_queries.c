@@ -105,7 +105,6 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
     int year = atoi(line);
     line += 5;
     int N = atoi(line);
-    query6(userId, year, N);
-    */
+    query6(userId, year, N, pegarGestorUser(gestor), i, temS);*/
   }
 }

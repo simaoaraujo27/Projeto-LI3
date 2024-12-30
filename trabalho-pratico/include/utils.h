@@ -37,4 +37,6 @@ void removeZerosAEsquerda(char *username);
 
 int procuraIndexString(char **lista, char *string, int len);
 
+void converterParaTempo(int segundos, char *resultado);
+
 #endif

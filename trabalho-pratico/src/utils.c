@@ -277,3 +277,20 @@ int procuraIndexString(char **lista, char *string, int len) {
 
   return -1;
 }
+
+// Função para converter segundos em "HH:MM:SS"
+void converterParaTempo(int segundos, char *resultado) {
+    int horas, minutos;
+
+    // Garantir que os segundos sejam positivos
+    segundos = abs(segundos);
+
+    // Calcular horas, minutos e segundos
+    horas = segundos / 3600;
+    segundos %= 3600;
+    minutos = segundos / 60;
+    segundos %= 60;
+
+    // Formatar a string no formato "HH:MM:SS"
+    snprintf(resultado, 16, "%02d:%02d:%02d", horas, minutos, segundos);
+}
