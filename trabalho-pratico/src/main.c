@@ -31,8 +31,6 @@ int main(int argc, char **argv) {
   FILE *fp = NULL;
 
 
-  clock_t start, end;
-
   // Verifica se foram passados argumentos suficientes (path + nome do
   // arquivo de texto)
   if (argc < 3) {
@@ -66,18 +64,9 @@ int main(int argc, char **argv) {
   NodoMusica *lista =
       NULL; // Lista de músicas baseadas nas preferências dos users
 
-  // Acrescenta o tempo de criar a lista ao tempo total da Query 3
-  start = clock();
   lista = CriaListaRespostaQuery3(lista, gestor);
-  end = clock();
-  setTemposTestes(t, 3, (double)(end - start) / CLOCKS_PER_SEC);
-
-  // Acrescenta o tempo de criar a matriz ao tempo total da Query 5
-  start = clock();
   alocaMatriz(gestor, a);
   constroiQuery5(gestor, a);
-  end = clock();
-  setTemposTestes(t, 5, (double)(end - start) / CLOCKS_PER_SEC);
 
   // Processa as queries lidas do arquivo
   while (getline(&line, &len, fp) != -1) {

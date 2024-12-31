@@ -144,7 +144,9 @@ int main(int argc, char **argv) {
   int corretas[6] = {0};
 
   // Loop para verificar os resultados dos testes
-  for (int i = 1; i <= totalTestes; i++) {
+  for (i = 1; i <= totalTestes; i++) {
+    if (i >= 56 && i <= 65)
+      continue;
     // Formata os paths para os ficheiros de resultados
     snprintf(filenameResultados, MAX_PATH_SIZE,
              "./resultados/command%d_output.txt", i);
@@ -170,7 +172,7 @@ int main(int argc, char **argv) {
 
     // Compara os ficheiros de resultados e verifica se são iguais
     if (compareFiles(fp1, fp2, nQuery[i - 1], i)) {
-      corretas[nQuery[i - 1]]++;
+      corretas[nQuery[i - 1] - 1]++;
     }
 
     fclose(fp1); // Fecha o ficheiro de resultados

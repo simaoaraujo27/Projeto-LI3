@@ -115,7 +115,7 @@ GHashTable *getUsersTable(gestorUsers *gestorUser) {
 }
 
 void processAllUsers(Gestores *gestor, NodoMusica **lista) {
-  int IDADE_INICIAL = 120;
+  int IDADE_INICIAL = 150;
   guint idade_max = IDADE_INICIAL; // Inicializa a idade máxima
 
   // Itera sobre a tabela de users para processar as músicas que eles gostam

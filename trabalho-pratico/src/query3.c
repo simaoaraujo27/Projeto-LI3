@@ -1,8 +1,8 @@
 #include "query3.h"
 #include "gestor_musics.h"
 #include "gestor_users.h"
-#include "inputResult.h"
 #include "gestores.h"
+#include "inputResult.h"
 #include "utils.h"
 #include <stdio.h>
 
@@ -17,7 +17,12 @@ struct generoLikes {
 gint comparar_likes(gconstpointer a, gconstpointer b) {
   const GeneroLikes *g1 = a;
   const GeneroLikes *g2 = b;
-  return (g1->count < g2->count) - (g1->count > g2->count);
+  // Em caso de empate, ordena lexicograficamente
+  if ((g1->count == g2->count)) {
+    return (strcmp(g1->genero, g2->genero) < 0);
+  } else {
+    return ((g1->count < g2->count) - (g1->count > g2->count));
+  }
 }
 
 void processUser(char *liked_musics_id, Gestores *gestor, NodoMusica **lista,
@@ -91,12 +96,12 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i, int temS) {
     GeneroLikes *genero_likes = iter->data;
     if (genero_likes->count != 0) {
       remove_quotes(genero_likes->genero); // Remove as aspas do género
-      if(temS){
+      if (temS) {
         fprintf(newFile, "%s=%d\n", genero_likes->genero,
-              genero_likes->count); // Escreve no arquivo
-      }else{
-      fprintf(newFile, "%s;%d\n", genero_likes->genero,
-              genero_likes->count); // Escreve no arquivo
+                genero_likes->count); // Escreve no arquivo
+      } else {
+        fprintf(newFile, "%s;%d\n", genero_likes->genero,
+                genero_likes->count); // Escreve no arquivo
       }
       tudoAZero = 0; // Se houver pelo menos um like, a flag é alterada
     }

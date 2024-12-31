@@ -125,7 +125,8 @@ int elemUserResumeIdsMusics(Resumo *res, char *musicId) {
   char *musicPercorrer = NULL;
   for (int i = 0; (int)idsMusics->len; i++) {
     musicPercorrer = g_array_index(idsMusics, char *, i);
-    if(musicPercorrer == NULL) return 0;
+    if (musicPercorrer == NULL)
+      return 0;
     if (!strcmp(musicId, musicPercorrer))
       return 1;
   }
@@ -146,7 +147,7 @@ void insertUserResumeIdsMusics(Resumo *res, char *musicId){
 */
 int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
                             char *musicId) {
-    
+
   int lentghArtistId = (int)strlen(artistId);
 
   char *currentArtist = NULL;
@@ -154,39 +155,41 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
   while (lentghArtistId > 0) {
     if (lentghArtistId == (int)strlen(artistId)) {
       artistId = artistId + 1;
-    } else{
+    } else {
       artistId = artistId + 3;
-  }
-      currentArtist = strdup(strsep(&artistId, "'")); // Separa o ID do artista
-      currentArtist[8] = '\0'; // Limita o ID a 8 caracteres
-      GList *a = res->artists;
-      while (a != NULL && continua) {
+    }
+    currentArtist = strdup(strsep(&artistId, "'")); // Separa o ID do artista
+    currentArtist[8] = '\0'; // Limita o ID a 8 caracteres
+    GList *a = res->artists;
+    while (a != NULL && continua) {
       ArtistaTempo *artist = (ArtistaTempo *)a->data;
       if (strcmp(artist->artista, currentArtist) == 0) {
         artist->tempo += duracao;
-        if(add) artist->numMusicas++;
+        if (add)
+          artist->numMusicas++;
         if (!elemUserResumeIdsMusics(res, musicId)) {
           g_array_append_val(res->idsMusics, musicId);
           artist->numMusicas++;
           add = 1;
         }
-      continua = 0;
+        continua = 0;
       }
       a = a->next;
     }
-    if(continua){
-    ArtistaTempo *newArtist = (ArtistaTempo *)malloc(sizeof(ArtistaTempo));
-    newArtist->artista = currentArtist;
-    newArtist->tempo = duracao;
-    newArtist->numMusicas = 0;
-    if(add) newArtist->numMusicas++;
-    if (!elemUserResumeIdsMusics(res, musicId)) {
-      g_array_append_val(res->idsMusics, musicId);
-      newArtist->numMusicas++;
-      add = 1;
-    }
-    a = g_list_prepend(a, newArtist);
-    res->artists = a;
+    if (continua) {
+      ArtistaTempo *newArtist = (ArtistaTempo *)malloc(sizeof(ArtistaTempo));
+      newArtist->artista = currentArtist;
+      newArtist->tempo = duracao;
+      newArtist->numMusicas = 0;
+      if (add)
+        newArtist->numMusicas++;
+      if (!elemUserResumeIdsMusics(res, musicId)) {
+        g_array_append_val(res->idsMusics, musicId);
+        newArtist->numMusicas++;
+        add = 1;
+      }
+      a = g_list_prepend(a, newArtist);
+      res->artists = a;
     }
     lentghArtistId -= 12;
     free(currentArtist);
@@ -263,7 +266,7 @@ void updateUserResume(gpointer u, int year, int duracao, char *musicId,
     res = initResumo();
   }
   res->listening_time += duracao;
-  //printf("%s %s\n", artistId, musicId);
+  // printf("%s %s\n", artistId, musicId);
   int add = updateUserResumeArtists(res, artistId, duracao, musicId);
   res->num_musicas_diferentes += add;
   updateUserResumeAlbuns(res, albumId, duracao);
@@ -406,7 +409,8 @@ char *getUserResumoArtists(gpointer user, int year, int N, int temS) {
     while (a != NULL) {
       ArtistaTempo *artist = (ArtistaTempo *)a->data;
       if ((int)artist->tempo > duracao ||
-          ((int)artist->tempo == duracao && (strcmp(artist->artista, art) < 0))) {
+          ((int)artist->tempo == duracao &&
+           (strcmp(artist->artista, art) < 0))) {
         duracao = (int)artist->tempo;
         numeroMusicas = (int)artist->numMusicas;
         if (art != NULL)
@@ -415,21 +419,23 @@ char *getUserResumoArtists(gpointer user, int year, int N, int temS) {
       }
       a = a->next;
     }
-    char *duracaoStr = malloc(sizeof(char)* 16);
+    char *duracaoStr = malloc(sizeof(char) * 16);
     converterParaTempo(duracao, duracaoStr);
     char *numeroMusicasStr = intToString(numeroMusicas);
-    int total_len = strlen(art) + strlen(numeroMusicasStr) + strlen(duracaoStr) +
-                  3; // 2 para os ';' ou '=' e o '\0'
+    int total_len = strlen(art) + strlen(numeroMusicasStr) +
+                    strlen(duracaoStr) + 3; // 2 para os ';' ou '=' e o '\0'
     char *new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
-    if (temS){
-      snprintf(new_str, total_len + 1, "%s=%s=%s\n", art, numeroMusicasStr, duracaoStr);
-    }else{
-      snprintf(new_str, total_len + 1, "%s;%s;%s\n", art, numeroMusicasStr, duracaoStr);
+    if (temS) {
+      snprintf(new_str, total_len + 1, "%s=%s=%s\n", art, numeroMusicasStr,
+               duracaoStr);
+    } else {
+      snprintf(new_str, total_len + 1, "%s;%s;%s\n", art, numeroMusicasStr,
+               duracaoStr);
     }
     return new_str;
   }
   return NULL;
-} 
+}
 
 char *getUserResumoGenero(gpointer user, int year) {
   struct users *u = (struct users *)user;
@@ -442,7 +448,8 @@ char *getUserResumoGenero(gpointer user, int year) {
   while (g != NULL) {
     GeneroTempo *genero = (GeneroTempo *)g->data;
     if ((int)genero->tempo > duracao ||
-        ((int)genero->tempo == duracao && (strcmp(genero->categoria, gen) < 0))) {
+        ((int)genero->tempo == duracao &&
+         (strcmp(genero->categoria, gen) < 0))) {
       duracao = (int)genero->tempo;
       if (gen != NULL)
         free(gen);

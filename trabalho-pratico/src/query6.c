@@ -40,34 +40,34 @@ void query6(char *user_id, int year, int N, gestorUsers *gestorUsers, int i,
     int indice = 2024 - year;
     if (existUserResume(orig_key, indice)) {
       int listeningTime = getUserResumoListeningTime(orig_key, year);
-      //printf("%d\n", listeningTime);
-      char *listeningTimeStr = malloc(sizeof(char)* 16);
+      // printf("%d\n", listeningTime);
+      char *listeningTimeStr = malloc(sizeof(char) * 16);
       converterParaTempo(listeningTime, listeningTimeStr);
-      //printf("%s\n", listeningTimeStr);
+      // printf("%s\n", listeningTimeStr);
       int numMusicasDiferentes =
           getUserResumoNumMusicasDiferentes(orig_key, year);
-      //printf("%d\n", numMusicasDiferentes);
+      // printf("%d\n", numMusicasDiferentes);
       char *numMusicasStr = intToString(numMusicasDiferentes);
-      //printf("%s\n", numMusicasStr);
+      // printf("%s\n", numMusicasStr);
       char *artists = getUserResumoArtists(orig_key, year, N, temS);
-      //printf("%s\n", artists);
-      // deve ser da forma: artistId;numMusicasDiferentes;listening_time\n ou
-      // com =
+      // printf("%s\n", artists);
+      //  deve ser da forma: artistId;numMusicasDiferentes;listening_time\n ou
+      //  com =
       int day = getUserResumoDay(orig_key, year);
-      //printf("%d\n", day);
+      // printf("%d\n", day);
       char *dayStr = calculateData(day, year);
-      //printf("%s\n", dayStr);
+      // printf("%s\n", dayStr);
       char *genre = getUserResumoGenero(orig_key, year);
-      //printf("%s\n", genre);
+      // printf("%s\n", genre);
       char *album = getUserResumoAlbum(orig_key, year);
-      //printf("%s\n", album);
+      // printf("%s\n", album);
       int hour = getUserResumoHora(orig_key, year);
-      //printf("%d\n", hour);
+      // printf("%d\n", hour);
       char *hourStr = intToHour(hour);
-      //printf("%s\n", hourStr);
+      // printf("%s\n", hourStr);
       char *favouriteArtist = strdup(artists);
       favouriteArtist[8] = '\0';
-      //printf("%s\n", favouriteArtist);
+      // printf("%s\n", favouriteArtist);
       int total_len = strlen(listeningTimeStr) + strlen(numMusicasStr) +
                       strlen(favouriteArtist) + strlen(dayStr) + strlen(genre) +
                       strlen(album) + strlen(hourStr) +
@@ -104,15 +104,15 @@ void query6(char *user_id, int year, int N, gestorUsers *gestorUsers, int i,
       writeFile(newFile, new_str);
 
       // Liberta a memória alocada para as strings
-      //free(listeningTimeStr);
-      //free(numMusicasStr);
-      //free(favouriteArtist);
-      //free(dayStr);
-      //free(genre);
-      //free(album);
-      //free(hourStr);
-      //free(artists);
-      //free(new_str);
+      // free(listeningTimeStr);
+      // free(numMusicasStr);
+      // free(favouriteArtist);
+      // free(dayStr);
+      // free(genre);
+      // free(album);
+      // free(hourStr);
+      // free(artists);
+      // free(new_str);
     } else {
       writeFile(newFile, "\n");
     }
