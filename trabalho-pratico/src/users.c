@@ -146,32 +146,53 @@ void insertUserResumeIdsMusics(Resumo *res, char *musicId){
 */
 int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
                             char *musicId) {
-  int add = 0;
-  GList *a = res->artists;
-  while (a != NULL) {
-    ArtistaTempo *artist = (ArtistaTempo *)a->data;
-    if (strcmp(artist->artista, artistId) == 0) {
-      artist->tempo += duracao;
-      if (!elemUserResumeIdsMusics(res, musicId)) {
-        g_array_append_val(res->idsMusics, musicId);
-        artist->numMusicas++;
-        add = 1;
+    
+  int lentghArtistId = (int)strlen(artistId);
+
+  char *currentArtist = NULL;
+  int add = 0, continua = 1;
+  while (lentghArtistId > 0) {
+    if (lentghArtistId == (int)strlen(artistId)) {
+      artistId = artistId + 1;
+    } else{
+      artistId = artistId + 3;
+  }
+      currentArtist = strdup(strsep(&artistId, "'")); // Separa o ID do artista
+      currentArtist[8] = '\0'; // Limita o ID a 8 caracteres
+      GList *a = res->artists;
+      while (a != NULL && continua) {
+      ArtistaTempo *artist = (ArtistaTempo *)a->data;
+      if (strcmp(artist->artista, currentArtist) == 0) {
+        artist->tempo += duracao;
+        if(add) artist->numMusicas++;
+        if (!elemUserResumeIdsMusics(res, musicId)) {
+          g_array_append_val(res->idsMusics, musicId);
+          artist->numMusicas++;
+          add = 1;
+        }
+      continua = 0;
       }
-      return add;
+      a = a->next;
     }
-    a = a->next;
+    if(continua){
+    ArtistaTempo *newArtist = (ArtistaTempo *)malloc(sizeof(ArtistaTempo));
+    newArtist->artista = currentArtist;
+    newArtist->tempo = duracao;
+    newArtist->numMusicas = 0;
+    if(add) newArtist->numMusicas++;
+    if (!elemUserResumeIdsMusics(res, musicId)) {
+      g_array_append_val(res->idsMusics, musicId);
+      newArtist->numMusicas++;
+      add = 1;
+    }
+    a = g_list_prepend(a, newArtist);
+    res->artists = a;
+    }
+    lentghArtistId -= 12;
+    free(currentArtist);
+    currentArtist = NULL;
+    continua = 1;
   }
-  ArtistaTempo *newArtist = (ArtistaTempo *)malloc(sizeof(ArtistaTempo));
-  newArtist->artista = artistId;
-  newArtist->tempo = duracao;
-  newArtist->numMusicas = 0;
-  if (!elemUserResumeIdsMusics(res, musicId)) {
-    g_array_append_val(res->idsMusics, musicId);
-    newArtist->numMusicas++;
-    add = 1;
-  }
-  a = g_list_prepend(a, newArtist);
-  res->artists = a;
   return add;
 }
 
@@ -242,6 +263,7 @@ void updateUserResume(gpointer u, int year, int duracao, char *musicId,
     res = initResumo();
   }
   res->listening_time += duracao;
+  //printf("%s %s\n", artistId, musicId);
   int add = updateUserResumeArtists(res, artistId, duracao, musicId);
   res->num_musicas_diferentes += add;
   updateUserResumeAlbuns(res, albumId, duracao);

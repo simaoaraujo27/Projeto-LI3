@@ -107,8 +107,8 @@ void parserHistory(History *history, char *line, char *copia,
     int hora = atoi(timeStampCopia);
     // if (year && dia && hora){}
     char *art = strdup(artistId);
-    art += 3;
-    art[8] = '\0';
+    remove_quotes(art);
+    removeFstLast(art);
     if (year && dia && hora) {
     }
     // printf("%d %d %s %s %s %s %d %d\n\n", year, durationSeg, musicId, art,
