@@ -114,6 +114,9 @@ int elemMinHeap(char *currentArtist, HeapNode data[], int tamanho) {
 // Função para inserir um elemento na min-heap
 void insertMinHeap(MinHeap *heap, int totalDuration, int durationMinNode,
                    HeapNode *minNode, char *currentArtist, int indiceMinNode) {
+  if (!heap || !currentArtist)
+    return; // Validações básicas
+
   int indice = elemMinHeap(currentArtist, heap->data, heap->size);
 
   // Verificar se a heap está cheia
@@ -124,6 +127,9 @@ void insertMinHeap(MinHeap *heap, int totalDuration, int durationMinNode,
 
   if (heap->size == 10) {
     char *heapNodeArtistId = getHeapNodeArtistId(minNode);
+    if (!heapNodeArtistId)
+      return;
+
     // Substituir o maior elemento (raiz) se o novo for menor
     if ((durationMinNode < totalDuration) ||
         (durationMinNode == totalDuration &&
@@ -131,7 +137,12 @@ void insertMinHeap(MinHeap *heap, int totalDuration, int durationMinNode,
       if (heap->data[indiceMinNode].artist_id != NULL) {
         free(heap->data[indiceMinNode].artist_id);
       }
+
       heap->data[indiceMinNode].artist_id = strdup(currentArtist);
+      if (!heap->data[indiceMinNode].artist_id) {
+        free(heapNodeArtistId);
+        return;
+      }
       heap->data[indiceMinNode].duration = totalDuration;
     }
     free(heapNodeArtistId);
@@ -141,6 +152,12 @@ void insertMinHeap(MinHeap *heap, int totalDuration, int durationMinNode,
   // Adicionar no final e ajustar
   int i = heap->size++;
   heap->data[i].artist_id = strdup(currentArtist);
+
+  // Verificar falha em strdup
+  if (!heap->data[i].artist_id) {
+    heap->size--; // Reverter incremento se falhar
+    return;
+  }
   heap->data[i].duration = totalDuration;
 }
 
@@ -158,14 +175,14 @@ HeapNode extractMin(MinHeap *heap) {
   return root;
 }
 
-// Função para liberar a memória da min-heap
 void freeMinHeap(MinHeap *heap) {
-  if (heap == NULL) {
-    return; // Verifica se o ponteiro heap é NULL para evitar erro
-  }
-  for (int i = 0; i < heap->size; i++) {
-    if (heap->data[i].artist_id != NULL) { // Verifica se artist_id não é NULL
-      free(heap->data[i].artist_id); // Liberar a memória do ID do artista
+  if (heap != NULL) {
+    for (int i = 0; i < heap->size; i++) {
+      if (heap->data[i].artist_id != NULL) {
+        free(heap->data[i].artist_id);
+      }
     }
+
+    free(heap);
   }
 }

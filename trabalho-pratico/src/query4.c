@@ -83,7 +83,6 @@ void armazenarValores(char *musicId, int duration,
       }
       lentghArtistId -= 12;
       free(currentArtist);
-      currentArtist = NULL;
     }
 
     free(copia);

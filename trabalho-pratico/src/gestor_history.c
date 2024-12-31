@@ -99,6 +99,7 @@ void parserHistory(History *history, char *line, char *copia,
                      getGArrayTops10(gestorArtists));
 
     // query 6
+    char *temp = timeStampCopia;
     int year = atoi(timeStampCopia);
     timeStampCopia += 5;
     timeStampCopia[5] = '\0';
@@ -118,16 +119,17 @@ void parserHistory(History *history, char *line, char *copia,
     free(albumId);
     free(artistId);
     free(musicGenre);
-    //
-
     free(musicId);
-    // free(timeStampCopia);
+    free(temp);
     free(durationStr);
+    free(art);
+    free(id);
   } else {
     // Escreve a linha inválida no ficheiro de erros
     fprintf(errorsFile, "%s", line);
   }
   destroyHistory(history);
+  
 }
 
 // Função para processar o ficheiro de history utilizando a estrutura

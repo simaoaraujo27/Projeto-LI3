@@ -553,14 +553,36 @@ void destroyUser(Users *u) {
     free(u->subscription_type);
     free(u->liked_musics_id);
     g_hash_table_destroy(u->musicsListening);
-    if (u->resumos != NULL) {
-      for (int i = 0; i < (int)u->resumos->len; i++) {
-        Resumo *res = g_array_index(u->resumos, Resumo *, i);
-        if (res != NULL)
-          free_resumo(res);
+    for (int i = 0; i < (int)u->resumos->len; i++) {
+      Resumo *resumo = g_array_index(u->resumos, Resumo *, i);
+      if (resumo != NULL) {
+        // Libere a memória de `idsMusics` se for um `GArray`
+        if (resumo->idsMusics != NULL) {
+          g_array_free(resumo->idsMusics, TRUE);
+        }
+
+        // Libere as listas (artistas, álbuns, gêneros)
+        if (resumo->artists != NULL) {
+          g_list_free_full(resumo->artists,
+                           g_free); // Assume que os elementos são strings ou
+                                    // memória dinâmica
+        }
+        if (resumo->albuns != NULL) {
+          g_list_free_full(resumo->albuns,
+                           g_free); // Mesmo processo para álbuns
+        }
+        if (resumo->generos != NULL) {
+          g_list_free_full(resumo->generos,
+                           g_free); // Mesmo processo para gêneros
+        }
+
+        // Finalmente, libere o próprio objeto `Resumo`
+        g_free(resumo);
       }
-      g_array_free(u->resumos, FALSE);
     }
+
+    // Libere a GArray principal
+    g_array_free(u->resumos, TRUE);
     free(u);
   }
 }

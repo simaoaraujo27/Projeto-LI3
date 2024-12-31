@@ -56,36 +56,35 @@ void freeGArrayQuery4(GArray *Tops10) {
   }
   g_array_free(Tops10, false);
 }
-
-void freeGestorArtists(gestorArtists *gestor) {
-  if (gestor == NULL) {
-    return; // Se gestor for NULL, não faz nada
-  }
-
-  // Fechar o arquivo de erros se aberto
-  if (gestor->errorsFile != NULL) {
-    fclose(gestor->errorsFile);
-  }
-
-  // Liberar os elementos dentro da GArray 'Tops10'
-  if (gestor->Tops10 != NULL) {
-    for (int i = 0; i < (int)gestor->Tops10->len; i++) {
-      MinHeap *heap = g_array_index(gestor->Tops10, MinHeap *, i);
-      if (heap != NULL) {
-        freeMinHeap(heap); // Libera cada MinHeap
-      }
+void freeGestorArtists(struct gestorArtists *gestor) {
+  if (gestor != NULL) {
+    // Feche o arquivo de erros, se aberto
+    if (gestor->errorsFile != NULL) {
+      fclose(gestor->errorsFile);
     }
-    g_array_free(gestor->Tops10,
-                 FALSE); // Liberar a GArray, mas não os elementos dentro dela
-  }
 
-  // Liberar a GHashTable, que já cuida de liberar as chaves e os valores
-  if (gestor->artistsTable != NULL) {
-    g_hash_table_destroy(gestor->artistsTable);
-  }
+    // Libere a tabela hash
+    if (gestor->artistsTable != NULL) {
+      // Supondo que as chaves e valores precisam ser liberados
+      g_hash_table_destroy(gestor->artistsTable);
+    }
 
-  // Finalmente, liberar a estrutura do gestor
-  free(gestor);
+    // Libere o array GArray
+    if (gestor->Tops10 != NULL) {
+      // Para cada elemento na GArray (supondo que seja ponteiros para algo que
+      // precisa ser liberado)
+      for (guint i = 0; i < gestor->Tops10->len; i++) {
+        gpointer elem = g_array_index(gestor->Tops10, gpointer, i);
+        if (elem != NULL) {
+          g_free(elem); // Libere o elemento se necessário
+        }
+      }
+      g_array_free(gestor->Tops10, TRUE);
+    }
+
+    // Finalmente, libere a estrutura principal
+    free(gestor);
+  }
 }
 
 void parserArtist(GHashTable *ArtistsTable, Artists *artist, FILE *errorsFile,
