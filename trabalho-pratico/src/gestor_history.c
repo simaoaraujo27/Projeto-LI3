@@ -104,6 +104,7 @@ void parserHistory(History *history, char *line, char *copia,
     timeStampCopia += 5;
     timeStampCopia[5] = '\0';
     int dia = calculateDiaAno(timeStampCopia) - 1;
+    if (isLeapYear(year)) dia++;
     timeStampCopia += 6;
     int hora = atoi(timeStampCopia);
     // if (year && dia && hora){}
@@ -114,11 +115,11 @@ void parserHistory(History *history, char *line, char *copia,
     }
     // printf("%d %d %s %s %s %s %d %d\n\n", year, durationSeg, musicId, art,
     // albumId, musicGenre, dia, hora);
-    //updateUserResume(valueUser, year, durationSeg, musicId, art, albumId,
-    //                 musicGenre, dia, hora);
-    free(albumId);
+    updateUserResume(valueUser, year, durationSeg, musicId, art, albumId,
+                     musicGenre, dia, hora);
+    //free(albumId); // esta linha estava a provocar erro
     free(artistId);
-    free(musicGenre);
+    //free(musicGenre); // esta linha estava a provocar erro
     free(musicId);
     free(temp);
     free(durationStr);

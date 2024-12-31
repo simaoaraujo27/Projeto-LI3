@@ -114,7 +114,7 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
       setTemposTestes(t, 5, time_spent); // Acumula o tempo para Query 5
     }
   } else if (line[0] == '6') {
-    /*
+    
     line += 2;
     if (temS)
         line++;

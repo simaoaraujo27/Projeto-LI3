@@ -160,6 +160,7 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
     }
     currentArtist = strdup(strsep(&artistId, "'")); // Separa o ID do artista
     currentArtist[8] = '\0'; // Limita o ID a 8 caracteres
+    //printf("UpResArt: %s\n", currentArtist);
     GList *a = res->artists;
     while (a != NULL && continua) {
       ArtistaTempo *artist = (ArtistaTempo *)a->data;
@@ -191,9 +192,10 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
       a = g_list_prepend(a, newArtist);
       res->artists = a;
     }
+    //printf("%s\n", currentArtist);
     lentghArtistId -= 12;
-    free(currentArtist);
-    currentArtist = NULL;
+    //free(currentArtist); isto causa erro
+    //currentArtist = NULL;
     continua = 1;
   }
   return add;
@@ -201,19 +203,22 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
 
 void updateUserResumeAlbuns(Resumo *res, char *albumId, int duracao) {
   GList *a = res->albuns;
-  while (a != NULL) {
+  int continua = 1;
+  while (a != NULL && continua) {
     AlbumTempo *album = (AlbumTempo *)a->data;
     if (strcmp(album->categoria, albumId) == 0) {
       album->tempo += duracao;
-      return;
+      continua = 0;
     }
     a = a->next;
   }
+  if(continua){
   AlbumTempo *newAlbum = (AlbumTempo *)malloc(sizeof(AlbumTempo));
   newAlbum->categoria = albumId;
   newAlbum->tempo = duracao;
   a = g_list_prepend(a, newAlbum);
   res->albuns = a;
+  }
 }
 
 void updateUserResumeGeneros(Resumo *res, char *gen, int duracao) {
@@ -266,7 +271,6 @@ void updateUserResume(gpointer u, int year, int duracao, char *musicId,
     res = initResumo();
   }
   res->listening_time += duracao;
-  // printf("%s %s\n", artistId, musicId);
   int add = updateUserResumeArtists(res, artistId, duracao, musicId);
   res->num_musicas_diferentes += add;
   updateUserResumeAlbuns(res, albumId, duracao);
@@ -489,7 +493,7 @@ int getUserResumoDay(gpointer user, int year) {
   Resumo *res = g_array_index(resumos, Resumo *, indice);
   int max = res->dias[0], maxInd = 0;
   for (int i = 1; i < 366; i++) {
-    if (res->dias[i] > max) {
+    if (res->dias[i] >= max) {
       max = res->dias[i];
       maxInd = i;
     }

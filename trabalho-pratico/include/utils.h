@@ -43,6 +43,8 @@ void converterParaTempo(int segundos, char *resultado);
 
 int calculateDiaAno(char *diaStr);
 
+int isLeapYear(int year);
+
 //char* calculateData(int diaAno);
 
 char* calculateData(int diaAno, int year);
