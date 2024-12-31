@@ -8,21 +8,21 @@
 #include <string.h>
 
 struct artistaAudicoes {
-  char *artista; // artista
-  guint tempo;  // tempo de reprodução em segundos
+  char *artista;    // artista
+  guint tempo;      // tempo de reprodução em segundos
   guint numMusicas; // número de músicas diferentes ouvidas desta artista
 };
 
 struct categoriaTempo {
   char *categoria; // album ou género
-  guint tempo;  // tempo de reprodução em segundos
+  guint tempo;     // tempo de reprodução em segundos
 };
 
-struct resumo{
+struct resumo {
   GArray *idsMusics;
-  GList *artists;   // ordenar
-  GList *albuns;      // ordenar
-  GList *generos;    // ordenar
+  GList *artists; // ordenar
+  GList *albuns;  // ordenar
+  GList *generos; // ordenar
   int dias[366];
   int horas[24];
   int listening_time;
@@ -91,7 +91,7 @@ void setUserLikedMusicsId(Users *u, char *liked_musics_id) {
   u->liked_musics_id = liked_musics_id;
 }
 
-GArray *initIdsMusics(){
+GArray *initIdsMusics() {
   GArray *idsMusics = g_array_new(FALSE, FALSE, sizeof(char *));
   g_array_set_size(idsMusics, 10);
   for (int i = 0; i < (int)idsMusics->len; i++) {
@@ -109,10 +109,10 @@ Resumo *initResumo() {
   res->albuns = NULL;
   res->generos = NULL;
   for (int i = 0; i < 366; i++) {
-      res->dias[i] = 0;
+    res->dias[i] = 0;
   }
   for (int i = 0; i < 24; i++) {
-      res->horas[i] = 0;
+    res->horas[i] = 0;
   }
   res->listening_time = 0;
   res->num_musicas_diferentes = 0;
@@ -120,12 +120,14 @@ Resumo *initResumo() {
   return res;
 }
 
-int elemUserResumeIdsMusics(Resumo *res, char *musicId){
+int elemUserResumeIdsMusics(Resumo *res, char *musicId) {
   GArray *idsMusics = res->idsMusics;
   char *musicPercorrer = NULL;
-  for (int i = 0; (int)idsMusics->len; i++){
-  musicPercorrer = g_array_index(idsMusics, char *, i);
-  if(!strcmp(musicId, musicPercorrer)) return 1;
+  for (int i = 0; (int)idsMusics->len; i++) {
+    musicPercorrer = g_array_index(idsMusics, char *, i);
+    if(musicPercorrer == NULL) return 0;
+    if (!strcmp(musicId, musicPercorrer))
+      return 1;
   }
   return 0;
 }
@@ -142,14 +144,15 @@ void insertUserResumeIdsMusics(Resumo *res, char *musicId){
   res->idsMusics = idsMusics;
 }
 */
-int updateUserResumeArtists(Resumo *res, char *artistId, int duracao, char *musicId){
+int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
+                            char *musicId) {
   int add = 0;
   GList *a = res->artists;
-  while(a != NULL){
+  while (a != NULL) {
     ArtistaTempo *artist = (ArtistaTempo *)a->data;
-    if (strcmp(artist->artista, artistId) == 0){
+    if (strcmp(artist->artista, artistId) == 0) {
       artist->tempo += duracao;
-      if(!elemUserResumeIdsMusics(res, musicId)){
+      if (!elemUserResumeIdsMusics(res, musicId)) {
         g_array_append_val(res->idsMusics, musicId);
         artist->numMusicas++;
         add = 1;
@@ -162,7 +165,7 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao, char *musi
   newArtist->artista = artistId;
   newArtist->tempo = duracao;
   newArtist->numMusicas = 0;
-  if(!elemUserResumeIdsMusics(res, musicId)){
+  if (!elemUserResumeIdsMusics(res, musicId)) {
     g_array_append_val(res->idsMusics, musicId);
     newArtist->numMusicas++;
     add = 1;
@@ -172,11 +175,11 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao, char *musi
   return add;
 }
 
-void updateUserResumeAlbuns(Resumo *res, char *albumId, int duracao){
+void updateUserResumeAlbuns(Resumo *res, char *albumId, int duracao) {
   GList *a = res->albuns;
-  while(a != NULL){
+  while (a != NULL) {
     AlbumTempo *album = (AlbumTempo *)a->data;
-    if (strcmp(album->categoria, albumId) == 0){
+    if (strcmp(album->categoria, albumId) == 0) {
       album->tempo += duracao;
       return;
     }
@@ -189,11 +192,11 @@ void updateUserResumeAlbuns(Resumo *res, char *albumId, int duracao){
   res->albuns = a;
 }
 
-void updateUserResumeGeneros(Resumo *res, char *gen, int duracao){
+void updateUserResumeGeneros(Resumo *res, char *gen, int duracao) {
   GList *g = res->generos;
-  while(g != NULL){
+  while (g != NULL) {
     GeneroTempo *genero = (GeneroTempo *)g->data;
-    if (strcmp(genero->categoria, gen) == 0){
+    if (strcmp(genero->categoria, gen) == 0) {
       genero->tempo += duracao;
       return;
     }
@@ -206,21 +209,26 @@ void updateUserResumeGeneros(Resumo *res, char *gen, int duracao){
   res->generos = g;
 }
 
-void updateUserResume(gpointer u, int year, int duracao, char *musicId, char *artistId, char *albumId, char *genero, int dia, int hora) {
-  if(u == NULL) return;
+void updateUserResume(gpointer u, int year, int duracao, char *musicId,
+                      char *artistId, char *albumId, char *genero, int dia,
+                      int hora) {
+  if (u == NULL)
+    return;
   Users *user = (Users *)u;
-  if(user == NULL) return;
+  if (user == NULL)
+    return;
   GArray *resumos = user->resumos;
 
   // Verifica o tamanho atual da duração por semana
-  if(resumos == NULL) return;
+  if (resumos == NULL)
+    return;
   int tamanho = resumos->len;
   int indice = 2024 - year;
-  //printf("%d %d\n",tamanho, indice);
-  
+  // printf("%d %d\n",tamanho, indice);
+
   // Ajusta o tamanho do array se necessário
   if (indice >= tamanho) {
-    g_array_set_size(resumos, (guint)(indice + 1)); 
+    g_array_set_size(resumos, (guint)(indice + 1));
 
     // Inicializa as novas posições com NULL
     for (int i = tamanho; i <= indice; i++) {
@@ -229,8 +237,8 @@ void updateUserResume(gpointer u, int year, int duracao, char *musicId, char *ar
     tamanho = resumos->len;
   }
 
-  Resumo *res = g_array_index(resumos, Resumo*, indice);
-  if(res == NULL){
+  Resumo *res = g_array_index(resumos, Resumo *, indice);
+  if (res == NULL) {
     res = initResumo();
   }
   res->listening_time += duracao;
@@ -238,13 +246,12 @@ void updateUserResume(gpointer u, int year, int duracao, char *musicId, char *ar
   res->num_musicas_diferentes += add;
   updateUserResumeAlbuns(res, albumId, duracao);
   updateUserResumeGeneros(res, genero, duracao);
-  if(dia && hora){}
   res->dias[dia]++;
-  res->horas[hora]+=duracao;
+  res->horas[hora] += duracao;
   g_array_index(resumos, Resumo *, indice) = res;
 
   // Retorna o novo valor da duração para a semana
-  //return g_array_index(durationPerWeek, int, semana);
+  // return g_array_index(durationPerWeek, int, semana);
 }
 
 // Função para separar os dados de um user a partir de uma linha de texto
@@ -286,7 +293,6 @@ Users *separateUsers(char *line) {
   return user;
 }
 
-
 // Funções para pegar os valores de cada campo de um user
 char *pegarUserUsername(Users *u) { return strdup(u->username); }
 char *pegarUserEmail(Users *u) { return strdup(u->email); }
@@ -302,11 +308,12 @@ char *pegarUserLikedMusicsId(Users *u) { return strdup(u->liked_musics_id); }
 // Funções para pegar os valores de cada campo de um user, usando gpointer
 // (útil para GList)
 
-int existUserResume(gpointer user, int indice){
+int existUserResume(gpointer user, int indice) {
   struct users *u = (struct users *)user;
-  if (g_array_index(u->resumos, Resumo *, indice) ==
-        NULL) return 0;
-  else return 1;
+  if (g_array_index(u->resumos, Resumo *, indice) == NULL)
+    return 0;
+  else
+    return 1;
 }
 
 char *getUserUsername(gpointer user) {
@@ -349,34 +356,161 @@ char *getUserLikedMusicsId(gpointer user) {
   return strdup(u->liked_musics_id);
 }
 
-void free_resumo(Resumo *r) {
-    if (r == NULL) return;
-
-    // Liberar idsMusics
-    if (r->idsMusics) {
-        for (int i = 0; i < (int)r->idsMusics->len; i++) {
-            char *musicId = g_array_index(r->idsMusics, char*, i);
-            g_free(musicId); // Liberar cada string individual
-        }
-        g_array_free(r->idsMusics, TRUE);
-    }
-
-    // Liberar a lista de artists (GList de ArtistaAudicoes)
-    if (r->artists) {
-        g_list_free_full(r->artists, (GDestroyNotify)g_free);
-    }
-
-    // Liberar a lista de albuns (GList de CategoriaTempo)
-    if (r->albuns) {
-        g_list_free_full(r->albuns, (GDestroyNotify)g_free);
-    }
-
-    // Liberar a lista de generos (GList de CategoriaTempo)
-    if (r->generos) {
-        g_list_free_full(r->generos, (GDestroyNotify)g_free);
-    }
+int getUserResumoListeningTime(gpointer user, int year) {
+  struct users *u = (struct users *)user;
+  GArray *resumos = u->resumos;
+  int indice = 2024 - year;
+  Resumo *res = g_array_index(resumos, Resumo *, indice);
+  return res->listening_time;
 }
 
+int getUserResumoNumMusicasDiferentes(gpointer user, int year) {
+  struct users *u = (struct users *)user;
+  GArray *resumos = u->resumos;
+  int indice = 2024 - year;
+  Resumo *res = g_array_index(resumos, Resumo *, indice);
+  return res->num_musicas_diferentes;
+}
+
+char *getUserResumoArtists(gpointer user, int year, int N, int temS) {
+  if (N >= 0) {
+    struct users *u = (struct users *)user;
+    GArray *resumos = u->resumos;
+    int indice = 2024 - year;
+    Resumo *res = g_array_index(resumos, Resumo *, indice);
+    GList *a = res->artists;
+    int duracao = 0, numeroMusicas = 0;
+    char *art = NULL;
+    while (a != NULL) {
+      ArtistaTempo *artist = (ArtistaTempo *)a->data;
+      if ((int)artist->tempo > duracao ||
+          ((int)artist->tempo == duracao && (strcmp(artist->artista, art) < 0))) {
+        duracao = (int)artist->tempo;
+        numeroMusicas = (int)artist->numMusicas;
+        if (art != NULL)
+          free(art);
+        art = strdup(artist->artista);
+      }
+      a = a->next;
+    }
+    char *duracaoStr = malloc(sizeof(char)* 16);
+    converterParaTempo(duracao, duracaoStr);
+    char *numeroMusicasStr = intToString(numeroMusicas);
+    int total_len = strlen(art) + strlen(numeroMusicasStr) + strlen(duracaoStr) +
+                  3; // 2 para os ';' ou '=' e o '\0'
+    char *new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
+    if (temS){
+      snprintf(new_str, total_len + 1, "%s=%s=%s\n", art, numeroMusicasStr, duracaoStr);
+    }else{
+      snprintf(new_str, total_len + 1, "%s;%s;%s\n", art, numeroMusicasStr, duracaoStr);
+    }
+    return new_str;
+  }
+  return NULL;
+} 
+
+char *getUserResumoGenero(gpointer user, int year) {
+  struct users *u = (struct users *)user;
+  GArray *resumos = u->resumos;
+  int indice = 2024 - year;
+  Resumo *res = g_array_index(resumos, Resumo *, indice);
+  GList *g = res->generos;
+  int duracao = 0;
+  char *gen = NULL;
+  while (g != NULL) {
+    GeneroTempo *genero = (GeneroTempo *)g->data;
+    if ((int)genero->tempo > duracao ||
+        ((int)genero->tempo == duracao && (strcmp(genero->categoria, gen) < 0))) {
+      duracao = (int)genero->tempo;
+      if (gen != NULL)
+        free(gen);
+      gen = strdup(genero->categoria);
+    }
+    g = g->next;
+  }
+  return gen;
+}
+
+char *getUserResumoAlbum(gpointer user, int year) {
+  struct users *u = (struct users *)user;
+  GArray *resumos = u->resumos;
+  int indice = 2024 - year;
+  Resumo *res = g_array_index(resumos, Resumo *, indice);
+  GList *a = res->albuns;
+  int duracao = 0;
+  char *alb = NULL;
+  while (a != NULL) {
+    AlbumTempo *album = (AlbumTempo *)a->data;
+    if ((int)album->tempo > duracao ||
+        ((int)album->tempo == duracao && (strcmp(album->categoria, alb) < 0))) {
+      duracao = (int)album->tempo;
+      if (alb != NULL)
+        free(alb);
+      alb = strdup(album->categoria);
+    }
+    a = a->next;
+  }
+  return alb;
+}
+
+int getUserResumoDay(gpointer user, int year) {
+  struct users *u = (struct users *)user;
+  GArray *resumos = u->resumos;
+  int indice = 2024 - year;
+  Resumo *res = g_array_index(resumos, Resumo *, indice);
+  int max = res->dias[0], maxInd = 0;
+  for (int i = 1; i < 366; i++) {
+    if (res->dias[i] > max) {
+      max = res->dias[i];
+      maxInd = i;
+    }
+  }
+  return maxInd;
+}
+
+int getUserResumoHora(gpointer user, int year) {
+  struct users *u = (struct users *)user;
+  GArray *resumos = u->resumos;
+  int indice = 2024 - year;
+  Resumo *res = g_array_index(resumos, Resumo *, indice);
+  int max = res->horas[0], maxInd = 0;
+  for (int i = 1; i < 24; i++) {
+    if (res->horas[i] > max) {
+      max = res->horas[i];
+      maxInd = i;
+    }
+  }
+  return maxInd;
+}
+
+void free_resumo(Resumo *r) {
+  if (r == NULL)
+    return;
+
+  // Liberar idsMusics
+  if (r->idsMusics) {
+    for (int i = 0; i < (int)r->idsMusics->len; i++) {
+      char *musicId = g_array_index(r->idsMusics, char *, i);
+      g_free(musicId); // Liberar cada string individual
+    }
+    g_array_free(r->idsMusics, TRUE);
+  }
+
+  // Liberar a lista de artists (GList de ArtistaAudicoes)
+  if (r->artists) {
+    g_list_free_full(r->artists, (GDestroyNotify)g_free);
+  }
+
+  // Liberar a lista de albuns (GList de CategoriaTempo)
+  if (r->albuns) {
+    g_list_free_full(r->albuns, (GDestroyNotify)g_free);
+  }
+
+  // Liberar a lista de generos (GList de CategoriaTempo)
+  if (r->generos) {
+    g_list_free_full(r->generos, (GDestroyNotify)g_free);
+  }
+}
 
 // Função para libertar a memória associada a um user
 void destroyUser(Users *u) {
@@ -391,11 +525,12 @@ void destroyUser(Users *u) {
     free(u->liked_musics_id);
     g_hash_table_destroy(u->musicsListening);
     if (u->resumos != NULL) {
-        for (int i = 0; i < (int)u->resumos->len; i++) {
-            Resumo *res = g_array_index(u->resumos, Resumo *, i);
-            if (res != NULL) free_resumo(res);
-        }
-        g_array_free(u->resumos, FALSE);
+      for (int i = 0; i < (int)u->resumos->len; i++) {
+        Resumo *res = g_array_index(u->resumos, Resumo *, i);
+        if (res != NULL)
+          free_resumo(res);
+      }
+      g_array_free(u->resumos, FALSE);
     }
     free(u);
   }

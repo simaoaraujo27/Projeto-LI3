@@ -113,8 +113,8 @@ void parserHistory(History *history, char *line, char *copia,
     }
     // printf("%d %d %s %s %s %s %d %d\n\n", year, durationSeg, musicId, art,
     // albumId, musicGenre, dia, hora);
-    updateUserResume(valueUser, year, durationSeg, musicId, art, albumId,
-                     musicGenre, dia, hora);
+    //updateUserResume(valueUser, year, durationSeg, musicId, art, albumId,
+    //                 musicGenre, dia, hora);
     free(albumId);
     free(artistId);
     free(musicGenre);

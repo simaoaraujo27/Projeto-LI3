@@ -4,6 +4,7 @@
 #include "query2.h"
 #include "query4.h"
 #include "query5.h"
+#include "query6.h"
 #include "utils.h"
 #include "validation.h"
 #include <glib.h>
@@ -127,7 +128,6 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
     query6(userId, year, N, pegarGestorUser(gestor), i, temS);
     end = clock();
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;
-    setTemposTestes(t, 6, time_spent); // Acumula o tempo para Query 6
-    */
+    setTemposTestes(t, 6, time_spent); // Acumula o tempo para Query 6*/
   }
 }

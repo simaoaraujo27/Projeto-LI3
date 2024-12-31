@@ -47,6 +47,14 @@ char *getUserSubscriptionType(gpointer user);
 char *getUserLikedMusicsId(gpointer user);
 char *getUserLikedMusicsId(gpointer user);
 
+int getUserResumoListeningTime(gpointer user, int year);
+int getUserResumoNumMusicasDiferentes(gpointer user, int year);
+char *getUserResumoArtists(gpointer user, int year, int N, int temS);
+char *getUserResumoGenero(gpointer user, int year);
+char *getUserResumoAlbum(gpointer user, int year);
+int getUserResumoDay(gpointer user, int year);
+int getUserResumoHora(gpointer user, int year);
+
 void destroyUser(Users *u);
 
 void preencheLinhaMatriz(int **matrizClassificaoMusicas, int linha, Users *User,

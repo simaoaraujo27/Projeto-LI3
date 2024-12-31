@@ -249,6 +249,17 @@ char *intToString(int number) {
   return result;
 }
 
+char *intToHour(int number) {
+    // Aloca memória suficiente para armazenar a string (máximo "99\0", ou seja, 3 caracteres)
+    char *result = (char *)malloc(3 * sizeof(char));
+    if (result == NULL) {
+        return NULL; // Retorna NULL se não conseguiu alocar memória
+    }
+    // Converte o número inteiro em string com dois dígitos
+    sprintf(result, "%02d", number);
+    return result;
+}
+
 void removeZerosAEsquerda(char *username) {
   // Encontra o primeiro caractere não-zero e remove o 'U'
   char *primeiroNaoZero = username;
@@ -318,4 +329,54 @@ int calculateDiaAno(char *diaStr) {
     diaAno += dia;
 
     return diaAno;
+}
+/*
+char* calculateData(int diaAno) {
+    static char data[7]; // Aumentado para garantir espaço suficiente (MM/DD + '\0')
+    int diasPorMes[] = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; 
+
+    if (diaAno < 1 || diaAno > 366) { // Validar o intervalo de entrada
+        return NULL;
+    }
+
+    int mes = 1, diaRestante = diaAno;
+
+    // Determinar o mês e o dia correspondente
+    while (diaRestante > diasPorMes[mes]) {
+        diaRestante -= diasPorMes[mes];
+        mes++;
+    }
+
+    // Formatar o resultado como MM/DD
+    snprintf(data, sizeof(data), "%02d/%02d", mes, diaRestante);
+
+    return data;
+}*/
+
+char* calculateData(int diaAno, int year) {
+    static char data[20]; // Suficiente para "YYYY/MM/DD\0" no pior caso (até 2147483647)
+    int diasPorMes[] = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; 
+
+    // Verificar se o ano é bissexto
+    int isLeapYear = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+    diasPorMes[2] = isLeapYear ? 29 : 28;
+
+    // Validar o intervalo do dia do ano
+    int maxDias = isLeapYear ? 366 : 365;
+    if (diaAno < 1 || diaAno > maxDias) {
+        return NULL;
+    }
+
+    int mes = 1, diaRestante = diaAno;
+
+    // Determinar o mês e o dia correspondente
+    while (diaRestante > diasPorMes[mes]) {
+        diaRestante -= diasPorMes[mes];
+        mes++;
+    }
+
+    // Formatar o resultado como YYYY/MM/DD
+    snprintf(data, sizeof(data), "%04d/%02d/%02d", year, mes, diaRestante);
+
+    return data;
 }

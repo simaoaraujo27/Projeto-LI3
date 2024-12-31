@@ -33,6 +33,8 @@ int comparaStrings(char *str1, char *str2);
 
 char *intToString(int number);
 
+char *intToHour(int number);
+
 void removeZerosAEsquerda(char *username);
 
 int procuraIndexString(char **lista, char *string, int len);
@@ -40,5 +42,9 @@ int procuraIndexString(char **lista, char *string, int len);
 void converterParaTempo(int segundos, char *resultado);
 
 int calculateDiaAno(char *diaStr);
+
+//char* calculateData(int diaAno);
+
+char* calculateData(int diaAno, int year);
 
 #endif
