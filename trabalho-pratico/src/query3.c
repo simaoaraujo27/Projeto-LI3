@@ -19,7 +19,7 @@ gint comparar_likes(gconstpointer a, gconstpointer b) {
   const GeneroLikes *g2 = b;
   // Em caso de empate, ordena lexicograficamente
   if ((g1->count == g2->count)) {
-    return (strcmp(g1->genero, g2->genero) < 0);
+    return (strcmp(g1->genero, g2->genero) > 0);
   } else {
     return ((g1->count < g2->count) - (g1->count > g2->count));
   }
