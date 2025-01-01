@@ -160,7 +160,7 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
     }
     currentArtist = strdup(strsep(&artistId, "'")); // Separa o ID do artista
     currentArtist[8] = '\0'; // Limita o ID a 8 caracteres
-    //printf("UpResArt: %s\n", currentArtist);
+    // printf("UpResArt: %s\n", currentArtist);
     GList *a = res->artists;
     while (a != NULL && continua) {
       ArtistaTempo *artist = (ArtistaTempo *)a->data;
@@ -189,13 +189,12 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
         newArtist->numMusicas++;
         add = 1;
       }
-      a = g_list_prepend(a, newArtist);
-      res->artists = a;
+      res->artists = g_list_prepend(res->artists, newArtist);
     }
-    //printf("%s\n", currentArtist);
+    // printf("%s\n", currentArtist);
     lentghArtistId -= 12;
-    //free(currentArtist); isto causa erro
-    //currentArtist = NULL;
+    // free(currentArtist); isto causa erro
+    // currentArtist = NULL;
     continua = 1;
   }
   return add;
@@ -212,12 +211,11 @@ void updateUserResumeAlbuns(Resumo *res, char *albumId, int duracao) {
     }
     a = a->next;
   }
-  if(continua){
-  AlbumTempo *newAlbum = (AlbumTempo *)malloc(sizeof(AlbumTempo));
-  newAlbum->categoria = albumId;
-  newAlbum->tempo = duracao;
-  a = g_list_prepend(a, newAlbum);
-  res->albuns = a;
+  if (continua) {
+    AlbumTempo *newAlbum = (AlbumTempo *)malloc(sizeof(AlbumTempo));
+    newAlbum->categoria = albumId;
+    newAlbum->tempo = duracao;
+    res->albuns = g_list_prepend(res->albuns, newAlbum);
   }
 }
 
@@ -234,8 +232,7 @@ void updateUserResumeGeneros(Resumo *res, char *gen, int duracao) {
   GeneroTempo *newGenero = (GeneroTempo *)malloc(sizeof(GeneroTempo));
   newGenero->categoria = gen;
   newGenero->tempo = duracao;
-  g = g_list_prepend(g, newGenero);
-  res->generos = g;
+  res->generos = g_list_prepend(res->generos, newGenero);
 }
 
 void updateUserResume(gpointer u, int year, int duracao, char *musicId,
@@ -432,6 +429,7 @@ char *getUserResumoArtists(gpointer user, int year, int N, int temS) {
           free(art);
         art = strdup(artist->artista);
       }
+
       a = a->next;
     }
     char *duracaoStr = malloc(sizeof(char) * 16);
@@ -448,105 +446,63 @@ char *getUserResumoArtists(gpointer user, int year, int N, int temS) {
                duracaoStr);
     }
     return new_str;
-  }
-  else {
+  } else {
     struct users *u = (struct users *)user;
     GArray *resumos = u->resumos;
     int indice = 2024 - year;
     Resumo *res = g_array_index(resumos, Resumo *, indice);
     GList *a = res->artists;
-    
+
     // Ordena a lista usando a função comparar_likes_Q6
     a = g_list_sort(a, comparar_likes_Q6);
-    
+
     // Itera nos primeiros N elementos
     GList *current = a;
     char *new_str = NULL;
     int total_len = 0;
 
     for (int i = 0; i < N && current != NULL; i++) {
-        ArtistaTempo *artist = (ArtistaTempo *)current->data;
+      ArtistaTempo *artist = (ArtistaTempo *)current->data;
 
-        char *duracaoStr = malloc(sizeof(char) * 16);
-        converterParaTempo(artist->tempo, duracaoStr);
-        char *numeroMusicasStr = intToString(artist->numMusicas);
+      char *duracaoStr = malloc(sizeof(char) * 16);
+      converterParaTempo(artist->tempo, duracaoStr);
+      char *numeroMusicasStr = intToString(artist->numMusicas);
 
-        // Calcula o tamanho necessário para este artista
-        int current_len = strlen(artist->artista) + strlen(numeroMusicasStr) +
-                          strlen(duracaoStr) + 3; // 2 para delimitadores e 1 para '\n'
+      // Calcula o tamanho necessário para este artista
+      int current_len = strlen(artist->artista) + strlen(numeroMusicasStr) +
+                        strlen(duracaoStr) +
+                        3; // 2 para delimitadores e 1 para '\n'
 
-        // Realoca memória para new_str
-        new_str = realloc(new_str, total_len + current_len + 1); // +1 para '\0'
-        if (new_str == NULL) {
-            perror("Erro ao alocar memória");
-            exit(EXIT_FAILURE);
-        }
-
-        // Adiciona os dados do artista ao final de new_str
-        if (temS) {
-            snprintf(new_str + total_len, current_len + 1, "%s=%s=%s\n", 
-                     artist->artista, numeroMusicasStr, duracaoStr);
-        } else {
-            snprintf(new_str + total_len, current_len + 1, "%s;%s;%s\n", 
-                     artist->artista, numeroMusicasStr, duracaoStr);
-        }
-
-        // Atualiza o comprimento total
-        total_len += current_len;
-
-        // Libera as strings temporárias
-        free(duracaoStr);
-        free(numeroMusicasStr);
-
-        // Avança para o próximo elemento da lista
-        current = current->next;
-    }
-
-    return new_str;
-}
-}
-
-
-/*
-char *getUserResumoArtists(gpointer user, int year, int N, int temS) {
-  if (N >= 0) {
-    struct users *u = (struct users *)user;
-    GArray *resumos = u->resumos;
-    int indice = 2024 - year;
-    Resumo *res = g_array_index(resumos, Resumo *, indice);
-    GList *a = res->artists;
-    int duracao = 0, numeroMusicas = 0;
-    char *art = NULL;
-    while (a != NULL) {
-      ArtistaTempo *artist = (ArtistaTempo *)a->data;
-      if ((int)artist->tempo > duracao ||
-          ((int)artist->tempo == duracao &&
-           (strcmp(artist->artista, art) > 0))) {
-        duracao = (int)artist->tempo;
-        numeroMusicas = (int)artist->numMusicas;
-        if (art != NULL)
-          free(art);
-        art = strdup(artist->artista);
+      // Realoca memória para new_str
+      new_str = realloc(new_str, total_len + current_len + 1); // +1 para '\0'
+      if (new_str == NULL) {
+        perror("Erro ao alocar memória");
+        exit(EXIT_FAILURE);
       }
-      a = a->next;
+
+      // Adiciona os dados do artista ao final de new_str
+      if (temS) {
+        snprintf(new_str + total_len, current_len + 1, "%s=%s=%s\n",
+                 artist->artista, numeroMusicasStr, duracaoStr);
+      } else {
+        snprintf(new_str + total_len, current_len + 1, "%s;%s;%s\n",
+                 artist->artista, numeroMusicasStr, duracaoStr);
+      }
+
+      // Atualiza o comprimento total
+      total_len += current_len;
+
+      // Libera as strings temporárias
+      free(duracaoStr);
+      free(numeroMusicasStr);
+
+      // Avança para o próximo elemento da lista
+      current = current->next;
     }
-    char *duracaoStr = malloc(sizeof(char) * 16);
-    converterParaTempo(duracao, duracaoStr);
-    char *numeroMusicasStr = intToString(numeroMusicas);
-    int total_len = strlen(art) + strlen(numeroMusicasStr) +
-                    strlen(duracaoStr) + 3; // 2 para os ';' ou '=' e o '\0'
-    char *new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
-    if (temS) {
-      snprintf(new_str, total_len + 1, "%s=%s=%s\n", art, numeroMusicasStr,
-               duracaoStr);
-    } else {
-      snprintf(new_str, total_len + 1, "%s;%s;%s\n", art, numeroMusicasStr,
-               duracaoStr);
-    }
+
     return new_str;
   }
-  return NULL;
-}*/
+}
 
 char *getUserResumoGenero(gpointer user, int year) {
   struct users *u = (struct users *)user;
@@ -560,7 +516,7 @@ char *getUserResumoGenero(gpointer user, int year) {
     GeneroTempo *genero = (GeneroTempo *)g->data;
     if ((int)genero->tempo > duracao ||
         ((int)genero->tempo == duracao &&
-         (strcmp(genero->categoria, gen) < 0))) {
+         (strcmp(genero->categoria, gen) > 0))) {
       duracao = (int)genero->tempo;
       if (gen != NULL)
         free(gen);
@@ -582,7 +538,7 @@ char *getUserResumoAlbum(gpointer user, int year) {
   while (a != NULL) {
     AlbumTempo *album = (AlbumTempo *)a->data;
     if ((int)album->tempo > duracao ||
-        ((int)album->tempo == duracao && (strcmp(album->categoria, alb) < 0))) {
+        ((int)album->tempo == duracao && (strcmp(album->categoria, alb) > 0))) {
       duracao = (int)album->tempo;
       if (alb != NULL)
         free(alb);
