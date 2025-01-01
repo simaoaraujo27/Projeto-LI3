@@ -145,8 +145,6 @@ int main(int argc, char **argv) {
 
   // Loop para verificar os resultados dos testes
   for (i = 1; i <= totalTestes; i++) {
-    if (i >= 56 && i <= 65)
-      continue;
     // Formata os paths para os ficheiros de resultados
     snprintf(filenameResultados, MAX_PATH_SIZE,
              "./resultados/command%d_output.txt", i);
@@ -165,8 +163,7 @@ int main(int argc, char **argv) {
     fp2 = fopen(filenameResultadosEsperados, "r");
 
     if (fp1 == NULL || fp2 == NULL) {
-      perror("Erro ao abrir os ficheiros %d"); // Exibe erro caso não consiga
-                                               // abrir os ficheiros
+      printf("Erro ao abrir os ficheiros %s!", filenameResultados);
       return 1;
     }
 
