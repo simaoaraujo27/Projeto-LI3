@@ -24,8 +24,8 @@ struct resumo {
   GList *artists; // ordenar
   GList *albuns;  // ordenar
   GList *generos; // ordenar
-  uint8_t dias[366];
-  uint8_t horas[24];
+  int dias[366];
+  int horas[24];
   int listening_time;
   int num_musicas_diferentes;
 };
