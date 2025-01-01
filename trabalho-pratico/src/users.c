@@ -3,6 +3,7 @@
 
 #include <ctype.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,8 +24,8 @@ struct resumo {
   GList *artists; // ordenar
   GList *albuns;  // ordenar
   GList *generos; // ordenar
-  int dias[366];
-  int horas[24];
+  uint8_t dias[366];
+  uint8_t horas[24];
   int listening_time;
   int num_musicas_diferentes;
 };
@@ -579,35 +580,6 @@ int getUserResumoHora(gpointer user, int year) {
   return maxInd;
 }
 
-void free_resumo(Resumo *r) {
-  if (r == NULL)
-    return;
-
-  // Liberar idsMusics
-  if (r->idsMusics) {
-    for (int i = 0; i < (int)r->idsMusics->len; i++) {
-      char *musicId = g_array_index(r->idsMusics, char *, i);
-      g_free(musicId); // Liberar cada string individual
-    }
-    g_array_free(r->idsMusics, TRUE);
-  }
-
-  // Liberar a lista de artists (GList de ArtistaAudicoes)
-  if (r->artists) {
-    g_list_free_full(r->artists, (GDestroyNotify)g_free);
-  }
-
-  // Liberar a lista de albuns (GList de CategoriaTempo)
-  if (r->albuns) {
-    g_list_free_full(r->albuns, (GDestroyNotify)g_free);
-  }
-
-  // Liberar a lista de generos (GList de CategoriaTempo)
-  if (r->generos) {
-    g_list_free_full(r->generos, (GDestroyNotify)g_free);
-  }
-}
-
 // Função para libertar a memória associada a um user
 void destroyUser(Users *u) {
   if (u) {
@@ -623,32 +595,54 @@ void destroyUser(Users *u) {
     for (int i = 0; i < (int)u->resumos->len; i++) {
       Resumo *resumo = g_array_index(u->resumos, Resumo *, i);
       if (resumo != NULL) {
-        // Libere a memória de `idsMusics` se for um `GArray`
         if (resumo->idsMusics != NULL) {
           g_array_free(resumo->idsMusics, TRUE);
         }
-
-        // Libere as listas (artistas, álbuns, gêneros)
         if (resumo->artists != NULL) {
-          g_list_free_full(resumo->artists,
-                           g_free); // Assume que os elementos são strings ou
-                                    // memória dinâmica
+          GList *iterator = resumo->artists;
+          while (iterator != NULL) {
+            struct artistaAudicoes *data =
+                (struct artistaAudicoes *)iterator->data;
+            if (data->artista != NULL) {
+              free(data->artista);
+            }
+            free(data);
+            iterator = iterator->next;
+          }
+          g_list_free(resumo->artists);
         }
         if (resumo->albuns != NULL) {
-          g_list_free_full(resumo->albuns,
-                           g_free); // Mesmo processo para álbuns
+          GList *iterator = resumo->albuns;
+          while (iterator != NULL) {
+            struct categoriaTempo *data =
+                (struct categoriaTempo *)iterator->data;
+            if (data->categoria != NULL) {
+              free(data->categoria);
+            }
+            free(data);
+            iterator = iterator->next;
+          }
+          g_list_free(resumo->albuns);
         }
         if (resumo->generos != NULL) {
-          g_list_free_full(resumo->generos,
-                           g_free); // Mesmo processo para gêneros
-        }
+          GList *iterator = resumo->generos;
+          while (iterator != NULL) {
+            struct categoriaTempo *data =
+                (struct categoriaTempo *)iterator->data;
 
-        // Finalmente, libere o próprio objeto `Resumo`
+            if (data->categoria != NULL) {
+              free(data->categoria);
+            }
+            free(data);
+            iterator = iterator->next;
+          }
+
+          g_list_free(resumo->generos);
+        }
         g_free(resumo);
       }
     }
 
-    // Libere a GArray principal
     g_array_free(u->resumos, TRUE);
     free(u);
   }
