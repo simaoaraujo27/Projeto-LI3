@@ -36,7 +36,7 @@ void query6(char *user_id, int year, int N, gestorUsers *gestorUsers, int i,
 
   gboolean found =
       lookUpUsersHashTable(gestorUsers, user_id, &value, &orig_key);
-  if (found) {
+  if (found && year <= 2024) {
     int indice = 2024 - year;
     if (existUserResume(orig_key, indice)) {
       int listeningTime = getUserResumoListeningTime(orig_key, year);
