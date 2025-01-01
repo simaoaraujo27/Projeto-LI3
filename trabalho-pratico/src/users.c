@@ -687,3 +687,12 @@ void preencheLinhaMatriz(int **matrizClassificaoMusicas, int linha, Users *User,
     matrizClassificaoMusicas[linha][coluna] = *count;
   }
 }
+
+/*
+Percorrer o input.txt
+Guardar numa ht onde a key é o user_id e o value é o ano e N
+Percorer o history
+Ver se o user da linha do history pertence à ht
+Se pertencer, fazer o update para ele
+Senão, ignorar
+*/
