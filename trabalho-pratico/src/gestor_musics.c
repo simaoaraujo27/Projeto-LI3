@@ -114,10 +114,37 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
   if (validateMusicsLine(copia, gestorArtist, gestorAlbuns)) {
     // Se a linha for válida, separa os campos e cria um objeto Musics
     music = separateMusics(line);
+    int duration = getMusicDuration(music);
 
     //  Obtém o ID da música e insere na hashtable usando o ID como chave
     id = getMusicId(music);
     g_hash_table_insert(musicsTable, id, music);
+
+    char *artistId = getMusicArtistId(music);
+    remove_quotes(artistId);
+    removeFstLast(artistId);
+
+    int lentghArtistId = (int)strlen(artistId);
+
+    char *currentArtist = NULL;
+    gpointer orig_key;
+    gpointer value;
+
+    while (lentghArtistId > 0) {
+      if (lentghArtistId == (int)strlen(artistId)) {
+        artistId = artistId + 1;
+      } else
+        artistId = artistId + 3;
+      currentArtist = strdup(strsep(&artistId, "'")); // Separa o ID do artista
+      currentArtist[8] = '\0'; // Limita o ID a 8 caracteres
+      gboolean found = lookUpArtistsHashTable(gestorArtist, currentArtist,
+                                              &orig_key, &value);
+      if (found) {
+        int discografiaAntiga = getArtistDiscografia(orig_key);
+        setArtistDiscografia(orig_key, discografiaAntiga + duration);
+      }
+      lentghArtistId -= 12;
+    }
 
     genre = getMusicGenre(music);
     addGenre(genresTable, nGeneros, genre);

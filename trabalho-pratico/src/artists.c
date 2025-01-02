@@ -37,8 +37,8 @@ void setArtistCountry(Artists *a, char *country) { a->country = country; }
 
 void setArtistTipo(Artists *a, enum tipoArtista tipo) { a->tipo = tipo; }
 
-void setArtistDiscografia(Artists *a, int discografia) {
-  a->discografia = discografia;
+void setArtistDiscografia(gpointer a, int discografia) {
+  ((struct artists *)a)->discografia = discografia;
 }
 
 void alterarArtistNumAlbunsIndividual(gpointer a, int num_albuns_individual) {
@@ -135,7 +135,7 @@ Artists *separateArtists(char *line) {
   }
 
   // Inicializa a discografia com zero
-  setArtistDiscografia(artist, 0);
+  artist->discografia = 0;
 
   setArtistNumAlbunsIndividual(artist, 0);
 
@@ -319,10 +319,10 @@ void destroyArtist(Artists *a) {
     free(a->name);
     free(a->id_constituent);
     free(a->country);
-/*     for (guint i = 0; i < a->durationPerWeek->len; i++) {
-      MinHeap *m = g_array_index(a->durationPerWeek, MinHeap *, i);
-      freeMinHeap(m);
-    } */
+    /*     for (guint i = 0; i < a->durationPerWeek->len; i++) {
+          MinHeap *m = g_array_index(a->durationPerWeek, MinHeap *, i);
+          freeMinHeap(m);
+        } */
     g_array_free(a->durationPerWeek, TRUE);
     free(a);
   }
@@ -346,4 +346,16 @@ float ReceitaArtista(float reproducoes, float ratePerStreamArtista) {
 float ReceitaArtistaIndividual(float receitaArtista,
                                float receitaParticipacao) {
   return receitaArtista + receitaParticipacao;
+}
+
+Artists *cloneArtists(Artists *artist) {
+  Artists *clone = g_malloc(sizeof(Artists));
+  clone->id = g_strdup(artist->id);
+  clone->name = g_strdup(artist->name);
+  clone->id_constituent = g_strdup(artist->id_constituent);
+  clone->country = g_strdup(artist->country);
+  clone->receitaTotal = artist->receitaTotal;
+  clone->tamanhoGrupo = artist->tamanhoGrupo;
+  clone->durationPerWeek = NULL;
+  return clone;
 }

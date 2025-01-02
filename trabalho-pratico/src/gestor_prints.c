@@ -15,68 +15,124 @@ char *SegundosParaHoras(int segundos) {
 }
 
 // Função para imprimir os resultados da query 2 em um ficheiro
-void printQuery2(GList **listaResposta, FILE *newFile, int temS) {
-  GList *node = *listaResposta;
-  int i = 0; // Contador para verificar se a lista está vazia
+void printQuery2(GList *listaResposta, FILE *newFile, int numeroArtists,
+                 int temS, char *country1) {
+  GList *node = listaResposta;
 
-  // Percorre a lista de artistas
-  while (node != NULL) {
-    char *name;
-    char *type;
-    char *discografia;
-    char *country;
-    char *new_str;
+  int contadorDeNodes = 0;
 
-    // Obtém o artista atual da lista
-    Artists *currentArtist = (Artists *)node->data;
+  if (country1 == NULL) {
+    while (node != NULL && contadorDeNodes < numeroArtists) {
+      char *name;
+      char *type;
+      char *discografia;
+      char *country;
+      char *new_str;
 
-    // Extrai informações do artista
-    name = pegarArtistName(currentArtist); // Nome do artista
-    type = pegarArtistType(currentArtist); // Tipo (Individual ou Grupo)
-    discografia = SegundosParaHoras(pegarArtistDiscografia(
-        currentArtist)); // Duração total em formato "hh:mm:ss"
-    country = pegarArtistCountry(currentArtist); // País do artista
+      // Obtém o artista atual da lista
+      Artists *currentArtist = (Artists *)node->data;
 
-    // Calcula o comprimento total da string de saída
-    int total_len = strlen(name) + strlen(type) + 4 + strlen(country) + 4;
+      name = pegarArtistName(currentArtist); // Nome do artista
+      type = pegarArtistType(currentArtist); // Tipo (Individual ou Grupo)
+      discografia = SegundosParaHoras(pegarArtistDiscografia(
+          currentArtist)); // Duração total em formato "hh:mm:ss"
+      country = pegarArtistCountry(currentArtist); // País do artista
 
-    // Aloca memória para a nova string a ser escrita no ficheiro
-    new_str =
-        malloc((total_len + 1) * sizeof(char)); // +1 para o caractere '\0'
+      // Calcula o comprimento total da string de saída
+      int total_len = strlen(name) + strlen(type) + 4 + strlen(country) + 4;
 
-    // Remove aspas no nome e país
-    remove_quotes(name);
-    remove_quotes(country);
-    if (temS) {
-      // Formata a string de saída no formato: "name=type=discografia=country"
-      snprintf(new_str, total_len + 1, "%s=%s=%s=%s\n", name, type, discografia,
-               country);
-    } else {
-      // Formata a string de saída no formato: "name;type;discografia;country"
-      snprintf(new_str, total_len + 1, "%s;%s;%s;%s\n", name, type, discografia,
-               country);
+      // Aloca memória para a nova string a ser escrita no ficheiro
+      new_str =
+          malloc((total_len + 1) * sizeof(char)); // +1 para o caractere '\0'
+
+      // Remove aspas no nome e país
+      remove_quotes(name);
+      remove_quotes(country);
+      if (temS) {
+        // Formata a string de saída no formato: "name=type=discografia=country"
+        snprintf(new_str, total_len + 1, "%s=%s=%s=%s\n", name, type,
+                 discografia, country);
+      } else {
+        // Formata a string de saída no formato: "name;type;discografia;country"
+        snprintf(new_str, total_len + 1, "%s;%s;%s;%s\n", name, type,
+                 discografia, country);
+      }
+      // Escreve no ficheiro
+      fprintf(newFile, "%s", new_str);
+
+      // Avança para o próximo nó da lista
+      node = node->next;
+
+      contadorDeNodes++; // Incrementa o contador
+
+      // Liberta a memória alocada para cada campo
+      free(name);
+      free(type);
+      free(discografia);
+      free(country);
+      free(new_str);
     }
-    // Escreve no ficheiro
-    fprintf(newFile, "%s", new_str);
+  } else {
+    removeLast(country1);
+    while (node != NULL && contadorDeNodes < numeroArtists) {
+      char *name;
+      char *type;
+      char *discografia;
+      char *country;
+      char *new_str;
 
-    // Avança para o próximo nó da lista
-    node = node->next;
+      // Obtém o artista atual da lista
+      Artists *currentArtist = (Artists *)node->data;
+      country = pegarArtistCountry(currentArtist); // País do artista
+      if (strcmp(country1, country) != 0) {
+        node = node->next;
+      } else {
+        name = pegarArtistName(currentArtist); // Nome do artista
+        type = pegarArtistType(currentArtist); // Tipo (Individual ou Grupo)
+        discografia = SegundosParaHoras(pegarArtistDiscografia(
+            currentArtist)); // Duração total em formato "hh:mm:ss"
 
-    i++; // Incrementa o contador
+        // Calcula o comprimento total da string de saída
+        int total_len = strlen(name) + strlen(type) + 4 + strlen(country) + 4;
 
-    // Liberta a memória alocada para cada campo
-    free(name);
-    free(type);
-    free(discografia);
-    free(country);
-    free(new_str);
+        // Aloca memória para a nova string a ser escrita no ficheiro
+        new_str =
+            malloc((total_len + 1) * sizeof(char)); // +1 para o caractere '\0'
+
+        // Remove aspas no nome e país
+        remove_quotes(name);
+        remove_quotes(country);
+        if (temS) {
+          // Formata a string de saída no formato:
+          // "name=type=discografia=country"
+          snprintf(new_str, total_len + 1, "%s=%s=%s=%s\n", name, type,
+                   discografia, country);
+        } else {
+          // Formata a string de saída no formato:
+          // "name;type;discografia;country"
+          snprintf(new_str, total_len + 1, "%s;%s;%s;%s\n", name, type,
+                   discografia, country);
+        }
+        // Escreve no ficheiro
+        fprintf(newFile, "%s", new_str);
+
+        // Avança para o próximo nó da lista
+        node = node->next;
+
+        contadorDeNodes++; // Incrementa o contador
+
+        // Liberta a memória alocada para cada campo
+        free(name);
+        free(type);
+        free(discografia);
+        free(country);
+        free(new_str);
+      }
+    }
   }
-
-  // Caso a lista esteja vazia, escreve apenas uma linha em branco no ficheiro
-  if (i == 0)
+  if (contadorDeNodes == 0) {
     fprintf(newFile, "\n");
-
-  // Fecha o ficheiro após a escrita
+  }
   fclose(newFile);
 }
 

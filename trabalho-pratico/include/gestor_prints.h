@@ -4,7 +4,8 @@
 #include <glib.h>
 #include <stdio.h>
 
-void printQuery2(GList **listaResposta, FILE *newFile, int temS);
+void printQuery2(GList *listaResposta, FILE *newFile, int numeroArtists,
+                 int temS, char *country);
 
 void printQuery4(FILE *newFile, int temS, char *name, char *type,
                  int countTop10);

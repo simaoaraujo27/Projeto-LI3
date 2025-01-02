@@ -8,7 +8,6 @@
 enum tipoArtista;
 
 typedef struct artists Artists;
-;
 
 Artists *separateArtists(char *line);
 bool validateArtist(Artists *artist);
@@ -25,7 +24,7 @@ void setArtistRecipePerStream(Artists *a, float recipe_per_stream);
 void setArtistIdConstituent(Artists *a, char *id_constituent);
 void setArtistCountry(Artists *a, char *country);
 void setArtistTipo(Artists *a, enum tipoArtista tipo);
-void setArtistDiscografia(Artists *a, int discografia);
+void setArtistDiscografia(gpointer a, int discografia);
 void setArtistNumAlbunsIndividual(Artists *a, int num_albuns_individual);
 void setArtistReceitaTotal(gpointer artist, float receitaTotal);
 
@@ -76,5 +75,7 @@ float ReceitaArtista(float reproducoes, float ratePerStreamArtista);
 void putArtistsVezesTop10Zero(Artists *artist);
 
 float ReceitaArtistaIndividual(float receitaArtista, float receitaParticipacao);
+
+Artists *cloneArtists(Artists *artist);
 
 #endif

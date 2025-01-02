@@ -14,7 +14,10 @@ struct gestorArtists {
   FILE *errorsFile;         // Ficheiro para registo de erros
   GHashTable *artistsTable; // Hashtable para armazenar os artistas
   GArray *Tops10;           // tops 10 artistas por semana
+  GList *listaQuery2;
 };
+
+void free_glist(gpointer data) { g_list_free((GList *)data); }
 
 gestorArtists *initGestorArtists(const char *errorsFilePath) {
 
@@ -41,6 +44,8 @@ gestorArtists *initGestorArtists(const char *errorsFilePath) {
   }
 
   gestor->Tops10 = Tops10;
+
+  gestor->listaQuery2 = NULL;
 
   // Atribui a tabela hash fornecida
   gestor->artistsTable = artistsTable;
@@ -225,5 +230,167 @@ void colocaZeroVezesTop10(gestorArtists *GestorArtists) {
   while (g_hash_table_iter_next(&iter, &key1, &value1)) {
     Artists *artist = (Artists *)value1;
     putArtistsVezesTop10Zero(artist);
+  }
+}
+
+/* void setQuery2Tables(char *line, gestorArtists *gestorArtists, int *max) {
+  if (line[0] == '2') {
+    if (line[1] == 'S') {
+      line++;
+    }
+    line += 2;
+
+    int nArtistas = atoi(line);
+    int numeroDigitos = 1 + (nArtistas / 10);
+
+    if (strcmp(line + numeroDigitos, "\n") == 0) { // caso de nao ter pais
+      if (nArtistas > *max)
+        *max = nArtistas;
+    } else { // caso de ter pais
+      char *lineCountry = line + 1 + numeroDigitos;
+      char *country = strdup(strsep(&lineCountry, "\n"));
+      remove_quotes(country);
+      g_hash_table_insert(gestorArtists->listaPaisesQuery2, country, NULL);
+    }
+  }
+} */
+
+void insertListaQuery2(gestorArtists *gestorArtists, Artists *artist) {
+  char *artistId = pegarArtistId(artist);
+  remove_quotes(artistId);
+  char *currentArtist = NULL;
+  gpointer orig_key;
+  gpointer value;
+  GList *node = gestorArtists->listaQuery2;
+  Artists *currentArtistList;
+  currentArtist = artistId;
+  gboolean found =
+      lookUpArtistsHashTable(gestorArtists, currentArtist, &orig_key, &value);
+  if (found) {
+    int inseriu = 0;
+    while (node != NULL && !inseriu) {
+      // Insere o artista na posição correta baseado na discografia
+      currentArtistList = (Artists *)node->data;
+      if (getArtistDiscografia(currentArtistList) <
+              getArtistDiscografia(orig_key) ||
+          (getArtistDiscografia(currentArtistList) ==
+               getArtistDiscografia(orig_key) &&
+           strcmp(getArtistId(currentArtistList), currentArtist) > 0)) {
+        inseriu = 1;
+        gestorArtists->listaQuery2 =
+            g_list_insert_before(gestorArtists->listaQuery2, node, artist);
+      }
+      node = node->next;
+    }
+    if (!inseriu) {
+      gestorArtists->listaQuery2 =
+          g_list_append(gestorArtists->listaQuery2, artist);
+    }
+  }
+}
+
+/* void insertListaPaisesQuery2(gestorArtists *gestorArtists, Artists *artist) {
+  char *artistId = pegarArtistId(artist);
+  remove_quotes(artistId);
+
+  char *currentArtist = NULL;
+  gpointer orig_key;
+  gpointer value;
+  char *country = pegarArtistCountry(artist);
+  // remove_quotes(country);
+  currentArtist = artistId;
+  gboolean found =
+      lookUpArtistsHashTable(gestorArtists, currentArtist, &orig_key, &value);
+
+  if (found) {
+    int inseriu = 0;
+    gpointer orig_keyPaises;
+    gpointer valuePaises;
+
+    gboolean foundPais;
+
+    foundPais =
+        g_hash_table_lookup_extended(gestorArtists->listaPaisesQuery2, country,
+                                     &orig_keyPaises, &valuePaises);
+
+    if (foundPais) {
+      GList *listaPais = (GList *)valuePaises;
+      if (listaPais == NULL) {
+        fprintf(stderr, "Aviso: 'listaPais' é NULL. Criando nova lista.\n");
+      } else
+        printf("nao esta\n");
+      GList *node = listaPais;
+
+      Artists *currentArtistList;
+      while (node != NULL && !inseriu) {
+        currentArtistList = (Artists *)node->data;
+
+        char *IdCurrentArtist = pegarArtistId(currentArtistList);
+        printf("%s\n", IdCurrentArtist);
+        int discografy1 = pegarArtistDiscografia(currentArtistList);
+
+        int discografy2 = getArtistDiscografia(orig_key);
+
+        if (discografy1 < discografy2 ||
+            (discografy1 == discografy2 &&
+             strcmp(IdCurrentArtist, currentArtist) > 0)) {
+          inseriu = 1;
+
+          listaPais = g_list_insert_before(listaPais, node, artist);
+        }
+
+        node = node->next;
+      }
+
+       printf("a\n");
+if (!inseriu) {
+  listaPais = g_list_append(listaPais, artist);
+}
+
+GList *clone = cloneGListDeArtists(listaPais);
+
+g_hash_table_insert(gestorArtists->listaPaisesQuery2, country, clone);
+}
+// printf("nao encontrou e country: %s\n", country);
+}
+}
+*/
+
+void CriaListasQuery2(gestorArtists *gestorArtists) {
+  GHashTableIter iter;
+  g_hash_table_iter_init(&iter, gestorArtists->artistsTable);
+
+  gpointer key1, value1;
+  while (g_hash_table_iter_next(&iter, &key1, &value1)) {
+    Artists *artist = (Artists *)value1;
+    insertListaQuery2(gestorArtists, artist);
+  }
+}
+
+GList *getGListQuery2GestorArtist(gestorArtists *gestorArtists) {
+  return gestorArtists->listaQuery2;
+}
+
+/* GList *getGListQuery2HashTableCountryGestorArtist(gestorArtists
+*gestorArtists, char *country) { gpointer orig_keyPaises; gpointer valuePaises;
+  gboolean foundPais;
+
+  foundPais = g_hash_table_lookup_extended(
+      gestorArtists->listaPaisesQuery2, country, &orig_keyPaises, &valuePaises);
+
+  if (foundPais) {
+    GList *listaPais = (GList *)valuePaises;
+    return listaPais;
+  }
+  return NULL;
+} */
+
+void printLista(gestorArtists *gestorArtists) {
+  GList *node = gestorArtists->listaQuery2;
+  while (node) {
+    Artists *artist = (Artists *)node->data;
+    printf("id: %s, discografy: %d\n", getArtistId(artist),
+           getArtistDiscografia(artist));
+    node = node->next;
   }
 }

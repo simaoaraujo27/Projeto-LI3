@@ -20,7 +20,7 @@ GHashTable *getMusicsTable(gestorMusics *gestorMusic);
 
 int getMusicsNGenres(gestorMusics *gestorMusic);
 
-char** insertGenreToArray(gestorMusics *gestorMusics, int numGeneros);
+char **insertGenreToArray(gestorMusics *gestorMusics, int numGeneros);
 
 GHashTableIter iterInitMusicsHashTable(gestorMusics *gestorMusics);
 
@@ -38,5 +38,5 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
                        gestorArtists *gestorArtists);
 
 char *getMusicGenreById(char *musicId, gestorMusics *gestorMusics);
-                      
+
 #endif
