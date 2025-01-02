@@ -10,9 +10,10 @@
 
 // Definição da estrutura gestorUsers
 struct gestorUsers {
-  FILE *errorsFile;       // Arquivo onde erros serão registrados
-  GHashTable *usersTable; // Hashtable para armazenar os users
+  FILE *errorsFile;
+  GHashTable *usersTable;
   int *nUsers; // Contador do número de users (para ser usado na Query 5)
+  GHashTable *query6Table;
 };
 
 // Função para inicializar a estrutura gestorUsers
@@ -37,6 +38,10 @@ gestorUsers *initGestorUsers(const char *errorsFilePath) {
   gestorUser->nUsers = malloc(sizeof(int *));
   *(gestorUser->nUsers) = 0;
 
+  GHashTable *query6Table =
+      g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+  gestorUser->query6Table = query6Table;
+
   return gestorUser;
 }
 
@@ -47,6 +52,8 @@ void freeGestorUsers(gestorUsers *gestorUser) {
       fclose(gestorUser->errorsFile); // Fecha o arquivo de erros
     g_hash_table_destroy(gestorUser->usersTable);
     free(gestorUser->nUsers);
+    g_hash_table_destroy(gestorUser->query6Table);
+
     free(gestorUser); // Liberta a memória da estrutura
   }
 }
@@ -181,5 +188,49 @@ void preencheMatriz(int **matrizClassificaoMusicas, int numGeneros,
                         nomesGeneros);
     free(username);
     i++;
+  }
+}
+
+gboolean lookUpQuery6Table(gestorUsers *gestorUser, char *line, gpointer *value,
+                           gpointer *orig_key) {
+  // Procura o user na hashtable usando a chave fornecida (line)
+  gboolean found = g_hash_table_lookup_extended(gestorUser->query6Table, line,
+                                                value, orig_key);
+  return found;
+}
+void setQuery6Table(char *line, gestorUsers *gestorUsers) {
+  if (line[0] == '6') {
+    char *key;
+    char *value;
+    if (line[1] == 'S') {
+      line++;
+    }
+    line += 2;
+
+    // Pega no id
+    key = strndup(line, 8);
+
+    // Pega no ano
+    value = strndup(line + 9, 4);
+
+    gpointer value1 = NULL;
+    gpointer orig_key1 = NULL;
+    gboolean found =
+        lookUpQuery6Table(gestorUsers, key, &value1, &orig_key1);
+
+    if (found) {
+      char *anoAntigo = (char *)value1;
+      char *anoNovo = malloc(strlen(anoAntigo) + strlen(value) + 1);
+
+      // Concatena os dois anos
+      strcpy(anoNovo, anoAntigo);
+      strcat(anoNovo, value);
+
+      g_hash_table_replace(gestorUsers->query6Table, key, anoNovo);
+
+      free(value);
+    } else {
+      g_hash_table_insert(gestorUsers->query6Table, key, value);
+    }
   }
 }

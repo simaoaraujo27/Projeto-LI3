@@ -30,7 +30,6 @@ int main(int argc, char **argv) {
   argumentosQuery5 *a = initArgumentosQuery5();
   FILE *fp = NULL;
 
-
   // Verifica se foram passados argumentos suficientes (path + nome do
   // arquivo de texto)
   if (argc < 3) {
@@ -42,14 +41,6 @@ int main(int argc, char **argv) {
   char *path = argv[1];
   int flag = 0;
 
-  Gestores *gestor = initgestor(&flag);
-
-  if (flag == 1 || !GestorParsers(gestor, path)) {
-    fprintf(stderr, "Failed to initialize Gestor\n");
-    destroyGestor(gestor);
-    return EXIT_FAILURE;
-  }
-
   // Abre o arquivo de texto passado como argumento para executar as queries
   char *txt = argv[2];
   fp = fopen(txt, "r");
@@ -57,6 +48,15 @@ int main(int argc, char **argv) {
     perror("Error");
     return EXIT_FAILURE;
   }
+
+  Gestores *gestor = initgestor(&flag);
+
+  if (flag == 1 || !GestorParsers(gestor, path, fp)) {
+    fprintf(stderr, "Failed to initialize Gestor\n");
+    destroyGestor(gestor);
+    return EXIT_FAILURE;
+  }
+  fclose(fp);
 
   char *line = NULL;
   size_t len = 0;
@@ -67,6 +67,12 @@ int main(int argc, char **argv) {
   lista = CriaListaRespostaQuery3(lista, gestor);
   alocaMatriz(gestor, a);
   constroiQuery5(gestor, a);
+
+  fp = fopen(txt, "r");
+  if (!fp) {
+    perror("Error");
+    return EXIT_FAILURE;
+  }
 
   // Processa as queries lidas do arquivo
   while (getline(&line, &len, fp) != -1) {

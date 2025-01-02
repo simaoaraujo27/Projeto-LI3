@@ -37,4 +37,9 @@ void preencheMatriz(int **matrizClassificaoMusicas, int numGeneros,
                     char **nomesGeneros, gestorUsers *gestorUsers,
                     char **idsUtilizadores);
 
+gboolean lookUpQuery6Table(gestorUsers *gestorUser, char *line, gpointer *value,
+                           gpointer *orig_key);
+
+void setQuery6Table(char *line, gestorUsers *gestorUsers);
+
 #endif

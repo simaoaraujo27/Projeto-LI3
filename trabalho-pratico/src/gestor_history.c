@@ -11,16 +11,11 @@
 #include <stdio.h>
 
 struct gestorHistory {
-  FILE *errorsFile;         // Ficheiro para registo de erros
-  GHashTable *historyTable; // Hashtable para armazenar o history
+  FILE *errorsFile; // Ficheiro para registo de erros
 };
 
 // Função para inicializar a estrutura gestorHistory
 gestorHistory *initGestorHistory(const char *errorsFilePath) {
-
-  GHashTable *gestorTable = g_hash_table_new_full(
-      g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyHistory);
-
   // Aloca memória para a estrutura
   gestorHistory *gestorHistory = malloc(sizeof(struct gestorHistory));
   if (!gestorHistory)
@@ -34,8 +29,6 @@ gestorHistory *initGestorHistory(const char *errorsFilePath) {
     return NULL;
   }
 
-  // Atribui a hashtable fornecida
-  gestorHistory->historyTable = gestorTable;
   return gestorHistory;
 }
 
@@ -45,8 +38,7 @@ void freeGestorHistory(gestorHistory *gestor) {
     if (gestor->errorsFile)
       fclose(
           gestor->errorsFile); // Fecha o ficheiro de erros, se estiver aberto
-    g_hash_table_destroy(gestor->historyTable);
-    free(gestor); // Liberta a memória da estrutura
+    free(gestor);              // Liberta a memória da estrutura
   }
 }
 
@@ -83,7 +75,7 @@ void parserHistory(History *history, char *line, char *copia,
     char *albumId = getMusicAlbumId(orig_keyMusic);
     remove_quotes(albumId);
     incrementMusicsListening(valueUser, musicGenre);
-    free(currentUserCopia);
+
     //--- para a query4
 
     remove_quotes(musicId);
@@ -104,33 +96,53 @@ void parserHistory(History *history, char *line, char *copia,
     timeStampCopia += 5;
     timeStampCopia[5] = '\0';
     int dia = calculateDiaAno(timeStampCopia) - 1;
-    if (isLeapYear(year)) dia++;
+    if (isLeapYear(year))
+      dia++;
     timeStampCopia += 6;
     int hora = atoi(timeStampCopia);
-    // if (year && dia && hora){}
     char *art = strdup(artistId);
     remove_quotes(art);
     removeFstLast(art);
-    if (year && dia && hora) {
+    gpointer value = NULL;
+    gpointer orig_key = NULL;
+    gboolean found =
+        lookUpQuery6Table(gestorUsers, currentUser, &value, &orig_key);
+    int y = 0;
+    int val = 0;
+    if (found) {
+      char *v = (char *)orig_key;
+      while (v != NULL && strlen(v) > 3) {
+        char *a = strndup(v, 4);
+        y = atoi(a);
+        if (y == year) {
+          val = 1;
+          break;
+        } else {
+          v = v + 4;
+        }
+        free(a);
+      }
     }
-    // printf("%d %d %s %s %s %s %d %d\n\n", year, durationSeg, musicId, art,
-    // albumId, musicGenre, dia, hora);
-    updateUserResume(valueUser, year, durationSeg, musicId, art, albumId,
-                     musicGenre, dia, hora);
-    //free(albumId); // esta linha estava a provocar erro
+
+    if (found && year <= 2024 && val) {
+      updateUserResume(valueUser, year, durationSeg, musicId, art, albumId,
+                       musicGenre, dia, hora);
+    }
+
+    // free(albumId); // esta linha estava a provocar erro
     free(artistId);
-    //free(musicGenre); // esta linha estava a provocar erro
+    // free(musicGenre); // esta linha estava a provocar erro
     free(musicId);
     free(temp);
     free(durationStr);
     free(art);
     free(id);
+    free(currentUserCopia);
   } else {
     // Escreve a linha inválida no ficheiro de erros
     fprintf(errorsFile, "%s", line);
   }
   destroyHistory(history);
-  
 }
 
 // Função para processar o ficheiro de history utilizando a estrutura
@@ -185,8 +197,3 @@ int GestorHistory(Gestores *gestor, char *historyPath) {
 
   return 1;
 }
-
-/*
-Pegar no id do user
-Pegar todas as vezes que ele aparece na ht do history
-*/

@@ -22,8 +22,7 @@ void libertaPaths(char *p1, char *p2, char *p3, char *p4, char *p5) {
   free(p5);
 }
 
-int GestorParsers(Gestores *gestor, char *path) {
-
+int GestorParsers(Gestores *gestor, char *path, FILE *fp) {
   // Aloca memória para os paths completos dos arquivos
   char *artistsPath = malloc(MAX_PATH_SIZE * sizeof(char));
   char *musicsPath = malloc(MAX_PATH_SIZE * sizeof(char));
@@ -42,6 +41,13 @@ int GestorParsers(Gestores *gestor, char *path) {
   gestorMusics *gestorMusics = pegarGestorMusic(gestor);
   gestorUsers *gestorUsers = pegarGestorUser(gestor);
   gestorAlbuns *gestorAlbuns = pegarGestorAlbum(gestor);
+
+  char *line = NULL;
+  size_t len = 0;
+
+  while (getline(&line, &len, fp) != -1) {
+    setQuery6Table(line, gestorUsers);
+  }
 
   if (!GestorArtists(gestorArtists, artistsPath)) {
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
@@ -71,8 +77,3 @@ int GestorParsers(Gestores *gestor, char *path) {
   libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
   return 1;
 }
-
-/*
-TÃO AQUI OS LEAKS TODOS!!
-
-*/

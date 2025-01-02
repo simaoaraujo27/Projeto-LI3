@@ -4,6 +4,6 @@
 #include "gestores.h"
 #include <stdio.h>
 
-int GestorParsers(Gestores *gestor, char *path);
+int GestorParsers(Gestores *gestor, char *path, FILE *fp);
 
 #endif
