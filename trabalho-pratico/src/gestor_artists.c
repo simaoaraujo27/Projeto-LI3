@@ -87,6 +87,7 @@ void freeGestorArtists(struct gestorArtists *gestor) {
       g_array_free(gestor->Tops10, TRUE);
     }
 
+    g_list_free(gestor->listaQuery2);
     // Finalmente, libere a estrutura principal
     free(gestor);
   }

@@ -214,7 +214,7 @@ void updateUserResumeAlbuns(Resumo *res, char *albumId, int duracao) {
   }
   if (continua) {
     AlbumTempo *newAlbum = (AlbumTempo *)malloc(sizeof(AlbumTempo));
-    newAlbum->categoria = albumId;
+    newAlbum->categoria = strdup(albumId);
     newAlbum->tempo = duracao;
     res->albuns = g_list_prepend(res->albuns, newAlbum);
   }
@@ -231,7 +231,7 @@ void updateUserResumeGeneros(Resumo *res, char *gen, int duracao) {
     g = g->next;
   }
   GeneroTempo *newGenero = (GeneroTempo *)malloc(sizeof(GeneroTempo));
-  newGenero->categoria = gen;
+  newGenero->categoria = strdup(gen);
   newGenero->tempo = duracao;
   res->generos = g_list_prepend(res->generos, newGenero);
 }
@@ -592,6 +592,7 @@ void destroyUser(Users *u) {
     free(u->subscription_type);
     free(u->liked_musics_id);
     g_hash_table_destroy(u->musicsListening);
+
     for (int i = 0; i < (int)u->resumos->len; i++) {
       Resumo *resumo = g_array_index(u->resumos, Resumo *, i);
       if (resumo != NULL) {
@@ -614,8 +615,7 @@ void destroyUser(Users *u) {
         if (resumo->albuns != NULL) {
           GList *iterator = resumo->albuns;
           while (iterator != NULL) {
-            struct categoriaTempo *data =
-                (struct categoriaTempo *)iterator->data;
+            AlbumTempo *data = (AlbumTempo *)iterator->data;
             if (data->categoria != NULL) {
               free(data->categoria);
             }
@@ -627,8 +627,7 @@ void destroyUser(Users *u) {
         if (resumo->generos != NULL) {
           GList *iterator = resumo->generos;
           while (iterator != NULL) {
-            struct categoriaTempo *data =
-                (struct categoriaTempo *)iterator->data;
+            GeneroTempo *data = (GeneroTempo *)iterator->data;
 
             if (data->categoria != NULL) {
               free(data->categoria);

@@ -129,9 +129,9 @@ void parserHistory(History *history, char *line, char *copia,
                        musicGenre, dia, hora);
     }
 
-    // free(albumId); // esta linha estava a provocar erro
+    free(albumId); // esta linha estava a provocar erro
     free(artistId);
-    // free(musicGenre); // esta linha estava a provocar erro
+    free(musicGenre); // esta linha estava a provocar erro
     free(musicId);
     free(temp);
     free(durationStr);

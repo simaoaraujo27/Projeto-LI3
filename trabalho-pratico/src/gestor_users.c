@@ -215,8 +215,7 @@ void setQuery6Table(char *line, gestorUsers *gestorUsers) {
 
     gpointer value1 = NULL;
     gpointer orig_key1 = NULL;
-    gboolean found =
-        lookUpQuery6Table(gestorUsers, key, &value1, &orig_key1);
+    gboolean found = lookUpQuery6Table(gestorUsers, key, &value1, &orig_key1);
 
     if (found) {
       char *anoAntigo = (char *)value1;
