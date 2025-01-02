@@ -176,13 +176,14 @@ HeapNode extractMin(MinHeap *heap) {
 }
 
 void freeMinHeap(MinHeap *heap) {
-  if (heap != NULL) {
+  if (heap != NULL) { // Verifica se a heap não é NULL
     for (int i = 0; i < heap->size; i++) {
-      if (heap->data[i].artist_id != NULL) {
+      if (heap->data[i].artist_id != NULL) { // Libera cada artist_id se alocado
         free(heap->data[i].artist_id);
+        heap->data[i].artist_id = NULL; // Prevenção de uso de ponteiro inválido
       }
     }
-
-    free(heap);
+    free(heap);  // Libera a estrutura da heap
+    heap = NULL; // Prevenção de uso de ponteiro inválido
   }
 }

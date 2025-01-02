@@ -116,35 +116,59 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
     music = separateMusics(line);
     int duration = getMusicDuration(music);
 
-    //  Obtém o ID da música e insere na hashtable usando o ID como chave
+    // Obtém o ID da música e insere na hashtable usando o ID como chave
     id = getMusicId(music);
     g_hash_table_insert(musicsTable, id, music);
 
-    char *artistId = getMusicArtistId(music);
+    char *artistId = getMusicArtistId(music); // Retorno de artistId
+    if (artistId == NULL) {
+      fprintf(errorsFile, "Erro: artistId é NULL para a música: %s\n", line);
+      return;
+    }
+
     remove_quotes(artistId);
     removeFstLast(artistId);
 
-    int lentghArtistId = (int)strlen(artistId);
+    // Preserve o ponteiro original
+    char *originalArtistId = strdup(artistId);
+    char *artistIdCopy = originalArtistId; // Copia temporária para manipulação
 
+    int lengthArtistId = (int)strlen(artistIdCopy);
     char *currentArtist = NULL;
     gpointer orig_key;
     gpointer value;
 
-    while (lentghArtistId > 0) {
-      if (lentghArtistId == (int)strlen(artistId)) {
-        artistId = artistId + 1;
+    while (lengthArtistId > 0) {
+      if (lengthArtistId == (int)strlen(artistIdCopy)) {
+        artistIdCopy = artistIdCopy + 1;
       } else
-        artistId = artistId + 3;
-      currentArtist = strdup(strsep(&artistId, "'")); // Separa o ID do artista
-      currentArtist[8] = '\0'; // Limita o ID a 8 caracteres
+        artistIdCopy = artistIdCopy + 3;
+
+      // Criação de uma cópia temporária
+      char *temp = strsep(&artistIdCopy, "'");
+      if (temp) {
+        currentArtist = strdup(temp); // Aloca memória para currentArtist
+        currentArtist[8] = '\0';      // Limita o ID a 8 caracteres
+      }
+
       gboolean found = lookUpArtistsHashTable(gestorArtist, currentArtist,
                                               &orig_key, &value);
       if (found) {
         int discografiaAntiga = getArtistDiscografia(orig_key);
         setArtistDiscografia(orig_key, discografiaAntiga + duration);
       }
-      lentghArtistId -= 12;
+      lengthArtistId -= 12;
+
+      // Libera a memória de currentArtist
+      free(currentArtist);
+      currentArtist = NULL;
     }
+
+    // Libera a memória alocada para o ID original
+    free(originalArtistId);
+
+    // Libera o retorno de artistId se alocado dinamicamente
+    free(artistId);
 
     genre = getMusicGenre(music);
     addGenre(genresTable, nGeneros, genre);
