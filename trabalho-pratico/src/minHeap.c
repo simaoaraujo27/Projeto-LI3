@@ -187,3 +187,39 @@ void freeMinHeap(MinHeap *heap) {
     heap = NULL; // Prevenção de uso de ponteiro inválido
   }
 }
+
+MinHeap *cloneMinHeap(MinHeap *heap) {
+  if (!heap) {
+    return NULL; // Retorna NULL se a heap original for NULL
+  }
+
+  // Aloca memória para a nova heap
+  MinHeap *newHeap = createMinHeap();
+  if (!newHeap) {
+    fprintf(stderr, "Erro ao alocar memória para a nova heap.\n");
+    return NULL;
+  }
+
+  // Copia o tamanho da heap
+  newHeap->size = heap->size;
+
+  // Copia cada nó da heap original para a nova
+  for (int i = 0; i < heap->size; i++) {
+    newHeap->data[i].artist_id = strdup(heap->data[i].artist_id);
+    if (!newHeap->data[i].artist_id) {
+      fprintf(stderr, "Erro ao alocar memória para o artist_id.\n");
+
+      // Libera os nós já alocados em caso de erro
+      for (int j = 0; j < i; j++) {
+        free(newHeap->data[j].artist_id);
+      }
+      free(newHeap);
+      return NULL;
+    }
+
+    // Copia a duração
+    newHeap->data[i].duration = heap->data[i].duration;
+  }
+
+  return newHeap; // Retorna a nova heap clonada
+}

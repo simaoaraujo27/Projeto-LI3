@@ -72,13 +72,16 @@ void armazenarValores(char *musicId, int duration,
           int durationMinNode = getHeapNodeDuration(&minNode);
           insertMinHeap(heap, totalDuration, durationMinNode, &minNode,
                         currentArtist, indiceMinNode);
-          g_array_index(Tops10, MinHeap *, semana) = heap;
-          heap = g_array_index(Tops10, MinHeap *, semana);
-          minNode = menorHeapNode(heap, &indiceMinNode);
+          MinHeap *new = cloneMinHeap(heap);
+          g_array_index(Tops10, MinHeap *, semana) = new;
+          freeMinHeap(heap);
+
         } else {
           heap = createMinHeap();
           insertMinHeap(heap, totalDuration, 0, NULL, currentArtist, 0);
-          g_array_index(Tops10, MinHeap *, semana) = heap;
+          MinHeap *new = cloneMinHeap(heap);
+          g_array_index(Tops10, MinHeap *, semana) = new;
+          freeMinHeap(heap);
         }
       }
       lentghArtistId -= 12;

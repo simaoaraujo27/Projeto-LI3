@@ -47,6 +47,7 @@ int GestorParsers(Gestores *gestor, char *path, FILE *fp) {
   while (getline(&line, &len, fp) != -1) {
     setQuery6Table(line, gestorUsers);
   }
+  free(line);
 
   if (!GestorArtists(gestorArtists, artistsPath)) {
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);

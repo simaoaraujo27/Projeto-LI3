@@ -86,6 +86,7 @@ void printQuery2(GList *listaResposta, FILE *newFile, int numeroArtists,
       country = pegarArtistCountry(currentArtist); // País do artista
       if (strcmp(country1, country) != 0) {
         node = node->next;
+        free(country);
       } else {
         name = pegarArtistName(currentArtist); // Nome do artista
         type = pegarArtistType(currentArtist); // Tipo (Individual ou Grupo)
