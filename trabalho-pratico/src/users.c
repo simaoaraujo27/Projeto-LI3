@@ -167,8 +167,8 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
       ArtistaTempo *artist = (ArtistaTempo *)a->data;
       if (strcmp(artist->artista, currentArtist) == 0) {
         artist->tempo += duracao;
-        if (add)
-          artist->numMusicas++;
+        /* if (add)
+          artist->numMusicas++; */
         if (!elemUserResumeIdsMusics(res, musicId)) {
           g_array_append_val(res->idsMusics, musicId);
           artist->numMusicas++;
@@ -183,8 +183,8 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
       newArtist->artista = currentArtist;
       newArtist->tempo = duracao;
       newArtist->numMusicas = 0;
-      if (add)
-        newArtist->numMusicas++;
+      /* if (add)
+        newArtist->numMusicas++; */
       if (!elemUserResumeIdsMusics(res, musicId)) {
         g_array_append_val(res->idsMusics, musicId);
         newArtist->numMusicas++;
