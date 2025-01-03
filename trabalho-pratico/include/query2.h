@@ -3,10 +3,7 @@
 
 #include "gestores.h"
 
-void query2(int numeroArtistas, char *country, Gestores *gestor, int i, int temS);
-
-void processMusic(Musics *music, gestorArtists *gestorArtists,
-                  int numeroArtistas, char *country, GList **listaResposta,
-                  char *artistsId);
+void query2(int numeroArtistas, char *country, Gestores *gestor, int i,
+            int temS);
 
 #endif

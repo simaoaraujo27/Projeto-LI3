@@ -1,7 +1,7 @@
 #include "artists.h"
 #include "gestor_artists.h"
 #include "gestor_musics.h"
-#include "outputResult.h"
+#include "output_Result.h"
 #include "gestores.h"
 #include "inputResult.h"
 #include "musics.h"

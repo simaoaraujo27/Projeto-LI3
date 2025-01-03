@@ -1,8 +1,8 @@
 #include "query4.h"
 #include "gestor_musics.h"
 #include "inputResult.h"
-#include "minHeap.h"
-#include "outputResult.h"
+#include "output_Result.h"
+#include "top10Query4.h"
 #include "utils.h"
 #include <assert.h>
 #include <ctype.h>
@@ -12,8 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void armazenarValores(char *musicId, int duration,
-                      int timeStamp /* esta em dias ate ao dia 9 / 9 / 2024 */,
+void armazenarValores(char *musicId, int duration, int timeStamp,
                       gestorMusics *gestorMusics, gestorArtists *gestorArtists,
                       GArray *Tops10) {
   gpointer value0;
@@ -42,27 +41,21 @@ void armazenarValores(char *musicId, int duration,
         artistId = artistId + 1;
       } else
         artistId = artistId + 3;
-      currentArtist = strdup(strsep(&artistId, "'")); // Separa o ID do artista
-      currentArtist[8] = '\0'; // Limita o ID a 8 caracteres
+      currentArtist = strdup(strsep(&artistId, "'"));
+      currentArtist[8] = '\0';
       gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
                                               &orig_key, &value);
       if (found) {
         int totalDuration =
             incrementArtistDurationPerWeek(orig_key, duration, semana);
-        /* if (strcmp("A0003542", currentArtist) == 0)
-            printf("%d\n", totalDuration); */
         int tamanhoTops10 = Tops10->len;
         if (semana >= tamanhoTops10) {
-          // Ajusta o tamanho do array dinamicamente
-          g_array_set_size(Tops10,
-                           (guint)(semana + 1)); // Inclui a posição `semana`
-
-          // Inicializa novas posições com NULL
+          g_array_set_size(Tops10, (guint)(semana + 1));
           for (int i = tamanhoTops10; i <= semana; i++) {
             g_array_index(Tops10, ArrayTop10 *, i) = NULL;
           }
 
-          tamanhoTops10 = Tops10->len; // Atualiza o tamanho
+          tamanhoTops10 = Tops10->len;
         }
 
         ArrayTop10 *top10 = g_array_index(Tops10, ArrayTop10 *, semana);
@@ -92,8 +85,7 @@ void armazenarValores(char *musicId, int duration,
 }
 
 void query4(gestorArtists *gestorArtists, char *DataFim, char *DataInicio,
-            int contadorOutputs, int TemS) { /* tem de percorrer o GArray e
-aumentar em 1 num contador */
+            int contadorOutputs, int TemS) {
   GArray *Tops10 = getGArrayTops10(gestorArtists);
   FILE *newFile = createFile(contadorOutputs);
 

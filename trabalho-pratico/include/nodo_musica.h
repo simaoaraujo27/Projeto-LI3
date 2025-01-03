@@ -22,8 +22,6 @@ void liberar_lista(NodoMusica *lista);
 
 char *getGeneroNodoMusic(NodoMusica *l);
 GArray *getLikesNodoMusic(NodoMusica *l);
-void setGeneroNodoMusic(NodoMusica *l, char *genero);
-void setLikesNodoMusic(NodoMusica *l, GArray *likes);
 NodoMusica *getProxNodoMusic(NodoMusica *l);
 
 #endif

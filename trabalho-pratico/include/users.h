@@ -18,22 +18,14 @@ void setUserBirthDate(Users *u, char *birth_date);
 void setUserCountry(Users *u, char *country);
 void setUserSubscriptionType(Users *u, char *subscription_type);
 void setUserLikedMusicsId(Users *u, char *liked_musics_id);
-void setUserAge(Users *u, char *birth_date);
 void setUserLikedMusicsId(Users *u, char *liked_musics_id);
-void updateUserResume(gpointer u, int year, int duracao, char *musicId, char *artistId, char *albumId, char *genero, int dia, int hora);
+void updateUserResume(gpointer u, int year, int duracao, char *musicId,
+                      char *artistId, char *albumId, char *genero, int dia,
+                      int hora);
 
 Users *separateUsers(char *line);
 
 void incrementMusicsListening(gpointer user, char *genre);
-
-char *pegarUserUsername(Users *u);
-char *pegarUserEmail(Users *u);
-char *pegarUserFirstName(Users *u);
-char *pegarUserLastName(Users *u);
-char *pegarUserBirthDate(Users *u);
-char *pegarUserCountry(Users *u);
-char *pegarUserSubscriptionType(Users *u);
-char *pegarUserLikedMusicsId(Users *u);
 
 int existUserResume(gpointer user, int indice);
 char *getUserAge(gpointer user);

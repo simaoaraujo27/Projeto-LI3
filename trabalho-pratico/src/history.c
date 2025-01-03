@@ -21,15 +21,10 @@ struct history {
 
 // Funções get
 char *getHistoryId(History *hist) { return strdup(hist->id); }
-
 char *getHistoryUserId(History *hist) { return strdup(hist->user_id); }
-
 char *getHistoryMusicId(History *hist) { return strdup(hist->music_id); }
-
 char *getHistoryTimestamp(History *hist) { return strdup(hist->timestamp); }
-
 char *getHistoryDuration(History *hist) { return strdup(hist->duration); }
-
 char *getHistoryPlatform(History *hist) { return strdup(hist->platform); }
 
 // Funções set

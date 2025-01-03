@@ -21,17 +21,10 @@ void freeGestorUsers(gestorUsers *gestorUser);
 gboolean lookUpUsersHashTable(gestorUsers *gestorUser, char *line,
                               gpointer *value, gpointer *orig_key);
 
-GHashTable *getUsersTable(gestorUsers *gestorUser);
 
 void processAllUsers(Gestores *gestor, NodoMusica **lista);
 
 int getNUsers(gestorUsers *gestorUser);
-
-char **insertIdsToArray(gestorUsers *gestorUsers, int numUtilizadores);
-
-int procuraIndexHashTable(char *user, gestorUsers *gestorUsers);
-
-gboolean pertenceAosUsernames(char *username, gestorUsers *gestorUsers);
 
 void preencheMatriz(int **matrizClassificaoMusicas, int numGeneros,
                     char **nomesGeneros, gestorUsers *gestorUsers,

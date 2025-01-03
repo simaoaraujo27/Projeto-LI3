@@ -19,7 +19,6 @@ int incrementArtistVezesNoTop10(gpointer a);
 void alterarArtistNumAlbunsIndividual(gpointer a, int num_albuns_individual);
 void setArtistId(Artists *a, char *id);
 void setArtistName(Artists *a, char *name);
-void setArtistDescription(Artists *a, char *description);
 void setArtistRecipePerStream(Artists *a, float recipe_per_stream);
 void setArtistIdConstituent(Artists *a, char *id_constituent);
 void setArtistCountry(Artists *a, char *country);
@@ -49,15 +48,9 @@ void putArtistsDiscografyZero(Artists *artist);
 
 void destroyArtist(Artists *a);
 
-void print(GList **listaResposta, int numeroArtistas, FILE *newFile);
-
 char *pegarArtistId(Artists *artist);
 
 char *pegarArtistName(Artists *artist);
-
-char *pegarArtistDescription(Artists *artist);
-
-int pegarArtistRecipePerStream(Artists *artist);
 
 char *pegarArtistIdConstituent(Artists *artist);
 
@@ -67,14 +60,7 @@ char *pegarArtistType(Artists *artist);
 
 int pegarArtistDiscografia(Artists *artist);
 
-float ReceitaParticipacao(int numeroDeParticipacoesEmMusicaColetivas,
-                          float reproducoes[], float ratePerStream[],
-                          float constituintes[]);
-float ReceitaArtista(float reproducoes, float ratePerStreamArtista);
-
 void putArtistsVezesTop10Zero(Artists *artist);
-
-float ReceitaArtistaIndividual(float receitaArtista, float receitaParticipacao);
 
 Artists *cloneArtists(Artists *artist);
 

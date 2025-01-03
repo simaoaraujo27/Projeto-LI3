@@ -1,5 +1,5 @@
-#ifndef MIN_top10_H
-#define MIN_top10_H
+#ifndef _TOP10QUERY4_H
+#define _TOP10QUERY4_H
 
 #include <stdlib.h>
 #include <string.h>
@@ -16,11 +16,7 @@ typedef struct ArrayTop10 {
   int size;           // Número atual de elementos na top10
 } ArrayTop10;
 
-void removeArrayTop10(ArrayTop10 *ArrayTop10, int indice);
-
 NodoArray menorNodoArray(ArrayTop10 *top10, int *indice);
-
-void setNodoArray(NodoArray *NodoArray, char *artistId, int duration);
 
 char *getNodoArrayArtistId(NodoArray *NodoArray);
 
@@ -29,23 +25,15 @@ int getArrayTop10Size(ArrayTop10 *h);
 // Função para obter a duração de um nó da top10
 int getNodoArrayDuration(NodoArray *NodoArray);
 
-NodoArray *getArrayTop10FstNodoArray(ArrayTop10 *ArrayTop10);
-
 NodoArray *getArrayTop10NodoArray(ArrayTop10 *ArrayTop10, int i);
 
 // Função para criar uma nova min-top10
 ArrayTop10 *createArrayTop10();
 
-// Função para trocar dois nós na top10
-void swapNodes(NodoArray *a, NodoArray *b);
-
 // Função para inserir um elemento na min-top10
 void insertArrayTop10(ArrayTop10 *top10, int totalDuration, int durationMinNode,
                       NodoArray *minNode, char *currentArtist,
                       int indiceMinNode);
-
-// Função para remover o menor elemento da top10 (extração da raiz)
-NodoArray *extractMin(ArrayTop10 *top10);
 
 // Função para liberar a memória da min-top10
 void freeArrayTop10(ArrayTop10 *top10);

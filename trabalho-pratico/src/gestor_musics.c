@@ -10,58 +10,41 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Definição completa da estrutura gestorMusics, que contém um ficheiro para
-// erros e uma hashtable para músicas
 struct gestorMusics {
-  FILE *errorsFile;        // Ficheiro para registo de erros
-  GHashTable *musicsTable; // Hashtable para armazenar músicas
-  GHashTable *genresTable; // Hashtable para armazenar os diferentes géneros
-                           // (para ser usado na Query 5)
-  int *nGeneros; // Contador do número de géneros (para ser usado na Query 5)
+  FILE *errorsFile;
+  GHashTable *musicsTable;
+  GHashTable *genresTable;
+  int *nGeneros;
 };
 
-// Função para inicializar a estrutura gestorMusics
-// Abre o ficheiro de erros e atribui a hashtable fornecida
 gestorMusics *initGestorMusics(const char *errorsFilePath) {
-
-  // Inicializa a hashtable para musicas
   GHashTable *musicsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyMusic);
-
   GHashTable *genresTable = g_hash_table_new(g_str_hash, g_str_equal);
-
-  // Aloca memória para a estrutura
   gestorMusics *gestorMusic = malloc(sizeof(gestorMusics));
   if (!gestorMusic)
     return NULL;
-
-  // Abre o ficheiro para escrita de erros
   gestorMusic->errorsFile = fopen(errorsFilePath, "w");
   if (!gestorMusic->errorsFile) {
     perror("Erro ao abrir o ficheiro de erros");
     free(gestorMusic);
     return NULL;
   }
-
-  // Atribui a hashtable fornecida
   gestorMusic->musicsTable = musicsTable;
   gestorMusic->genresTable = genresTable;
-
   gestorMusic->nGeneros = malloc(sizeof(int *));
   *(gestorMusic->nGeneros) = 0;
   return gestorMusic;
 }
 
-// Função para libertar a estrutura gestorMusics e os seus recursos
 void freeGestorMusics(gestorMusics *gestor) {
   if (gestor) {
     if (gestor->errorsFile)
-      fclose(
-          gestor->errorsFile); // Fecha o ficheiro de erros, se estiver aberto
+      fclose(gestor->errorsFile);
     g_hash_table_destroy(gestor->musicsTable);
     g_hash_table_destroy(gestor->genresTable);
     free(gestor->nGeneros);
-    free(gestor); // Liberta a memória da estrutura
+    free(gestor);
   }
 }
 
@@ -73,7 +56,6 @@ void addGenre(GHashTable *genresTable, int *nGeneros, char *genre) {
 }
 
 char **insertGenreToArray(gestorMusics *gestorMusics, int numGeneros) {
-  // Aloca memória para o array de ponteiros para char
   char **valuesArray = (char **)malloc(numGeneros * sizeof(char *));
   if (valuesArray == NULL) {
     perror("Falha na alocação de memória para o array");
@@ -87,13 +69,10 @@ char **insertGenreToArray(gestorMusics *gestorMusics, int numGeneros) {
   gpointer value1;
   int i = 0;
 
-  // Itera sobre os elementos da GHashTable e armazena os valores no array
   while (g_hash_table_iter_next(&iter, &key1, &value1)) {
-    // Verifique se value1 é um ponteiro válido para uma string
     if (key1 != NULL) {
       valuesArray[i] = "";
       char *genre = strdup((char *)key1);
-      // printf("%s\n", genre);
       if (genre == NULL) {
         perror("Falha na alocação de memória para a string");
         return NULL;
@@ -109,18 +88,15 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
                  Musics *music, GHashTable *musicsTable, FILE *errorsFile,
                  gestorAlbuns *gestorAlbuns, GHashTable *genresTable,
                  int *nGeneros) {
-  char *id;    // ID da música
-  char *genre; // Género da música
+  char *id;
+  char *genre;
   if (validateMusicsLine(copia, gestorArtist, gestorAlbuns)) {
-    // Se a linha for válida, separa os campos e cria um objeto Musics
     music = separateMusics(line);
     int duration = getMusicDuration(music);
-
-    // Obtém o ID da música e insere na hashtable usando o ID como chave
     id = getMusicId(music);
     g_hash_table_insert(musicsTable, id, music);
 
-    char *artistId = getMusicArtistId(music); // Retorno de artistId
+    char *artistId = getMusicArtistId(music);
     if (artistId == NULL) {
       fprintf(errorsFile, "Erro: artistId é NULL para a música: %s\n", line);
       return;
@@ -129,9 +105,8 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
     remove_quotes(artistId);
     removeFstLast(artistId);
 
-    // Preserve o ponteiro original
     char *originalArtistId = strdup(artistId);
-    char *artistIdCopy = originalArtistId; // Copia temporária para manipulação
+    char *artistIdCopy = originalArtistId;
 
     int lengthArtistId = (int)strlen(artistIdCopy);
     char *currentArtist = NULL;
@@ -144,11 +119,10 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
       } else
         artistIdCopy = artistIdCopy + 3;
 
-      // Criação de uma cópia temporária
       char *temp = strsep(&artistIdCopy, "'");
       if (temp) {
-        currentArtist = strdup(temp); // Aloca memória para currentArtist
-        currentArtist[8] = '\0';      // Limita o ID a 8 caracteres
+        currentArtist = strdup(temp);
+        currentArtist[8] = '\0';
       }
 
       gboolean found = lookUpArtistsHashTable(gestorArtist, currentArtist,
@@ -159,15 +133,11 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
       }
       lengthArtistId -= 12;
 
-      // Libera a memória de currentArtist
       free(currentArtist);
       currentArtist = NULL;
     }
 
-    // Libera a memória alocada para o ID original
     free(originalArtistId);
-
-    // Libera o retorno de artistId se alocado dinamicamente
     free(artistId);
 
     genre = getMusicGenre(music);
@@ -175,37 +145,28 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
     free(genre);
     genre = NULL;
   } else {
-    // Escreve a linha inválida no ficheiro de erros
     fprintf(errorsFile, "%s", line);
   }
 }
 
-// Função para processar o ficheiro de músicas usando a estrutura gestorMusics
 int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
                  gestorAlbuns *gestorAlbuns, char *musicsPath) {
-  // Abre o arquivo de musicas e carrega os dados
   FILE *fp = fopen(musicsPath, "r");
   if (fp) {
-    char *line = NULL; // Pointer para armazenar cada linha lida
-    size_t len = 0;    // Tamanho da linha
+    char *line = NULL;
+    size_t len = 0;
     Musics *music = NULL;
 
-    // Ignora a primeira linha do ficheiro (cabeçalho)
     assert(getline(&line, &len, fp) != -1);
 
-    // Lê o ficheiro linha por linha
     while (getline(&line, &len, fp) != -1) {
-      // Cria uma cópia da linha para validação
       char *copia = strdup(line);
       parserMusic(copia, gestorArtist, line, music, gestorMusic->musicsTable,
                   gestorMusic->errorsFile, gestorAlbuns,
                   gestorMusic->genresTable, gestorMusic->nGeneros);
-      free(copia); // Liberta a memória alocada para a cópia da linha
+      free(copia);
     }
-
-    // Liberta a memória alocada para a linha utilizada pelo getline
     free(line);
-
     fclose(fp);
   } else {
     perror("Error opening musics file");
@@ -214,41 +175,20 @@ int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
   return 1;
 }
 
-// Função para obter a hashtable de músicas da estrutura gestorMusics
-GHashTable *getMusicsTable(gestorMusics *gestorMusic) {
-  return gestorMusic->musicsTable;
-}
-
 int getMusicsNGenres(gestorMusics *gestorMusic) {
   int *i = gestorMusic->nGeneros;
   return *i;
 }
 
-GHashTableIter iterInitMusicsHashTable(gestorMusics *gestorMusics) {
-  // Iterador para percorrer a hashtable das músicas
-  GHashTableIter iter;
-  g_hash_table_iter_init(
-      &iter, getMusicsTable(
-                 gestorMusics)); // Inicializa o iterador da tabela de músicas
-  return iter;
-}
-
-gboolean iter_HashTableMusics(gpointer *key1, gpointer *value1,
-                              GHashTableIter iter) {
-
-  return g_hash_table_iter_next(&iter, key1, value1);
-}
-
 gboolean lookUpMusicsHashTable(gestorMusics *gestorMusic, char *line,
                                gpointer *value, gpointer *orig_key) {
-  // Procura o music na hashtable usando a chave fornecida (line)
   gboolean found = g_hash_table_lookup_extended(gestorMusic->musicsTable, line,
                                                 value, orig_key);
   return found;
 }
 
-void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
-                       gestorArtists *gestorArtists) {
+void incrementRecipeArtist(char *musicId, gestorMusics *gestorMusics,
+                           gestorArtists *gestorArtists) {
   gpointer value0;
   gpointer orig_key0;
 
@@ -263,7 +203,7 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
     remove_quotes(artistId);
     removeFstLast(artistId);
 
-    int lentghArtistId = (int)strlen(artistId); // esta certo
+    int lentghArtistId = (int)strlen(artistId);
 
     char *currentArtist = NULL;
     gpointer orig_key;
@@ -276,45 +216,33 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
         artistId = artistId + 1;
       } else
         artistId = artistId + 3;
-      currentArtist = strdup(strsep(&artistId, "'")); // Separa o ID do artista
-      currentArtist[8] = '\0'; // Limita o ID a 8 caracteres
+      currentArtist = strdup(strsep(&artistId, "'"));
+      currentArtist[8] = '\0';
       gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
                                               &orig_key, &value);
       if (found) {
         char *type = getArtistTypeStr(orig_key);
-
-        float recipe_Per_Stream =
-            getArtistRecipePerStream(orig_key); // esta certo
-
+        float recipe_Per_Stream = getArtistRecipePerStream(orig_key);
         float receitaTotal = recipe_Per_Stream;
-
         float receitaAntiga = getArtistReceitaTotal(orig_key);
-
         float receitaAtualizada = receitaAntiga + receitaTotal;
-
         setArtistReceitaTotal(orig_key, receitaAtualizada);
-
         if (strcmp(type, "group") == 0) {
-
           int NumComponentesBanda = getArtistTamanhoGrupo(orig_key);
-
           char *idComponentes = getArtistIdConstituent(orig_key);
           char *idComponentesOriginal = idComponentes;
-
           remove_quotes(idComponentes);
           removeFstLast(idComponentes);
           int TamanhoIdComponentes = (int)strlen(idComponentes);
-
           while (TamanhoIdComponentes > 0) {
             if (TamanhoIdComponentes == (int)strlen(idComponentes)) {
               idComponentes = idComponentes + 1;
             } else
               idComponentes = idComponentes + 3;
             char *currentComponent = strdup(strsep(&idComponentes, "'"));
-            currentComponent[8] = '\0'; // Limita o ID a 8 caracteres
+            currentComponent[8] = '\0';
             lookUpArtistsHashTable(gestorArtists, currentComponent, &orig_key1,
                                    &value1);
-
             float receitaAntigaComp = getArtistReceitaTotal(orig_key1);
             setArtistReceitaTotal(
                 orig_key1, receitaAntigaComp +
@@ -325,7 +253,7 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
           free(idComponentesOriginal);
         }
       }
-      lentghArtistId -= 12; // Ajusta o comprimento restante da string
+      lentghArtistId -= 12;
       free(currentArtist);
       currentArtist = NULL;
     }
@@ -334,14 +262,3 @@ void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
   }
 }
 
-char *getMusicGenreById(char *musicId, gestorMusics *gestorMusics) {
-  gpointer value;
-  gpointer orig_key;
-  gboolean found =
-      lookUpMusicsHashTable(gestorMusics, musicId, &value, &orig_key);
-  if (found) {
-    char *genre = getMusicGenre(orig_key);
-    return genre;
-  }
-  return NULL;
-}

@@ -16,27 +16,14 @@ gestorMusics *initGestorMusics(const char *errorsFilePath);
 
 void freeGestorMusics(gestorMusics *gestor);
 
-GHashTable *getMusicsTable(gestorMusics *gestorMusic);
-
 int getMusicsNGenres(gestorMusics *gestorMusic);
 
 char **insertGenreToArray(gestorMusics *gestorMusics, int numGeneros);
 
-GHashTableIter iterInitMusicsHashTable(gestorMusics *gestorMusics);
-
-gboolean iter_HashTableMusics(gpointer *key1, gpointer *value1,
-                              GHashTableIter iter);
-
 gboolean lookUpMusicsHashTable(gestorMusics *gestormusic, char *line,
                                gpointer *value, gpointer *orig_key);
 
-void processAllMusics(gestorMusics *gestorMusics, int numeroArtistas,
-                      char *country, GList **listaResposta,
-                      gestorArtists *gestorArtists);
-
-void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
-                       gestorArtists *gestorArtists);
-
-char *getMusicGenreById(char *musicId, gestorMusics *gestorMusics);
+void incrementRecipeArtist(char *musicId, gestorMusics *gestorMusics,
+                           gestorArtists *gestorArtists);
 
 #endif

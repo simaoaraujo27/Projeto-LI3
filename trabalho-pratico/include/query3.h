@@ -15,7 +15,4 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i, int temS);
 
 NodoMusica *CriaListaRespostaQuery3(NodoMusica *lista, Gestores *gestor);
 
-void processUserQuery3(char *liked_musics_id, Gestores *gestor,
-                       NodoMusica *lista, int userAge, guint idade_max);
-
 #endif

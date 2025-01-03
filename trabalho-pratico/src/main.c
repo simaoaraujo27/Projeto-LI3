@@ -4,7 +4,7 @@
 #include "gestor_queries.h"
 #include "gestor_users.h"
 #include "gestores.h"
-#include "minHeap.h"
+#include "top10Query4.h"
 #include "nodo_musica.h"
 #include "parser.h"
 #include "query1.h"
@@ -22,7 +22,6 @@
 #include <string.h>
 #include <sys/resource.h>
 
-// Define o tamanho máximo para os paths dos arquivos
 #define MAX_PATH_SIZE 1024
 
 int main(int argc, char **argv) {
@@ -30,18 +29,14 @@ int main(int argc, char **argv) {
   argumentosQuery5 *a = initArgumentosQuery5();
   FILE *fp = NULL;
 
-  // Verifica se foram passados argumentos suficientes (path + nome do
-  // arquivo de texto)
   if (argc < 3) {
     fprintf(stderr, "Error: Missing filename\n");
     return EXIT_FAILURE;
   }
 
-  // Armazena o path base passado como argumento
   char *path = argv[1];
   int flag = 0;
 
-  // Abre o arquivo de texto passado como argumento para executar as queries
   char *txt = argv[2];
   fp = fopen(txt, "r");
   if (!fp) {
@@ -60,9 +55,8 @@ int main(int argc, char **argv) {
 
   char *line = NULL;
   size_t len = 0;
-  int i = 1; // Contador para o número da query
-  NodoMusica *lista =
-      NULL; // Lista de músicas baseadas nas preferências dos users
+  int i = 1;
+  NodoMusica *lista = NULL;
 
   lista = CriaListaRespostaQuery3(lista, gestor);
   alocaMatriz(gestor, a);
@@ -74,7 +68,6 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  // Processa as queries lidas do arquivo
   while (getline(&line, &len, fp) != -1) {
     gestorQueries(line, gestor, lista, a, i, t);
     i++;
@@ -82,9 +75,7 @@ int main(int argc, char **argv) {
   fclose(fp);
   free(line);
 
-  // Verifica se o programa-principal foi chamado a partir do programa-testes
   if (getenv("RAM_MONITOR") != NULL) {
-    // Medir o uso de memória no final da execução
     struct rusage r_usage;
     getrusage(RUSAGE_SELF, &r_usage);
     printf("Memória utilizada: %ld KB\n", r_usage.ru_maxrss);
@@ -98,7 +89,6 @@ int main(int argc, char **argv) {
     printf("Q6: %fs\n", getTemposTestes(t, 6));
   }
 
-  // Liberta toda a memória alocada e destrói as hashtables
   liberar_lista(lista);
   destroiArgumentosQuery5(a);
   destroyGestor(gestor);

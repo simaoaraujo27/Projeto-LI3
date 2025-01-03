@@ -20,17 +20,13 @@ bool validatePlataformHistory(char *plataform) {
           strcmp(plataform, "desktop") == 0);
 }
 
-// Função para validar uma data no formato aaaa/mm/dd
 bool validateDate(char *date) {
-  // Verifica se a data tem exatamente 10 caracteres
   if (strlen(date) != 10)
     return false;
 
-  // Verifica se os separadores estão corretos ('/' nas posições 4 e 7)
   if (date[4] != '/' || date[7] != '/')
     return false;
 
-  // Verifica se todos os outros caracteres são dígitos
   for (int i = 0; i < 10; i++) {
     if (i == 4 || i == 7)
       continue;
@@ -38,32 +34,26 @@ bool validateDate(char *date) {
       return false;
   }
 
-  int year = atoi(date);      // Converte o ano para inteiro
-  int month = atoi(date + 5); // Converte o mês para inteiro
-  int day = atoi(date + 8);   // Converte o dia para inteiro
+  int year = atoi(date);
+  int month = atoi(date + 5);
+  int day = atoi(date + 8);
 
-  // Verifica se o mês está entre 1 e 12 e o dia entre 1 e 31
   if (month < 1 || month > 12 || day < 1 || day > 31)
     return false;
 
-  // Verifica se a data não é futura (limite: 2024/09/09)
   if (year > 2024 || (year == 2024 && (month > 9 || (month == 9 && day > 9))))
     return false;
 
   return true;
 }
 
-// Função para validar a duração no formato hh:mm:ss
 bool validateDuration(char *duration) {
-  remove_quotes(duration); // Remove as aspas
-  // Verifica se a duração tem exatamente 8 caracteres
+  remove_quotes(duration);
   if (strlen(duration) != 8)
     return false;
-  // Verifica se os separadores estão corretos (':' nas posições 2 e 5)
   if (duration[2] != ':' || duration[5] != ':')
     return false;
 
-  // Verifica se todos os outros caracteres são dígitos
   for (int i = 0; i < 8; i++) {
     if (i == 2 || i == 5)
       continue;
@@ -71,11 +61,10 @@ bool validateDuration(char *duration) {
       return false;
   }
 
-  int hours = atoi(duration);       // Converte as horas para inteiro
-  int minutes = atoi(duration + 3); // Converte os minutos para inteiro
-  int seconds = atoi(duration + 6); // Converte os segundos para inteiro
+  int hours = atoi(duration);
+  int minutes = atoi(duration + 3);
+  int seconds = atoi(duration + 6);
 
-  // Verifica se as horas, minutos e segundos estão dentro dos limites válidos
   if (hours < 0 || hours > 99 || minutes < 0 || minutes > 59 || seconds < 0 ||
       seconds > 59)
     return false;
@@ -83,33 +72,27 @@ bool validateDuration(char *duration) {
   return true;
 }
 
-// Função para validar um email no formato username@domain.com
 bool validateEmail(char *email) {
-  char *at = strchr(email, '@'); // Encontra o símbolo '@' no email
+  char *at = strchr(email, '@');
   if (!at) {
     return false;
   }
-  char *dot = strrchr(at, '.'); // Encontra o ponto (.) após o '@'
-  // Verifica se o domínio está correto (entre 2 a 3 caracteres após o ponto)
+  char *dot = strrchr(at, '.');
   if (!dot || dot - at < 2 || strlen(dot + 1) < 2 || strlen(dot + 1) > 3) {
     return false;
   }
-  // Verifica se todos os caracteres antes do '@' são alfanuméricos
   for (char *p = email; p < at; p++) {
     if (!isalnum(*p)) {
       return false;
     }
   }
 
-  // Verifica se todos os caracteres entre '@' e '.' são letras
   for (char *p = at + 1; p < dot; p++) {
     if (!isalpha(*p)) {
       return false;
     }
   }
 
-  // Verifica se todos os caracteres após o ponto são letras minúsculas ou
-  // alfabéticas
   for (char *p = dot + 1; *p; p++) {
     if (!islower(*p) && !isalpha(*p)) {
       return false;
@@ -119,72 +102,63 @@ bool validateEmail(char *email) {
   return true;
 }
 
-// Função para validar o subscription type ('normal' ou 'premium')
 bool validateSubscriptionType(char *type) {
   return (strcmp(type, "normal") == 0 || strcmp(type, "premium") == 0);
 }
 
-// Função para validar uma lista CSV
 bool validateCSVList(char *list) {
   int lastIndex = strlen(list) - 1;
-  // Verifica se a lista está entre aspas e começa com '[', e termina com ']'
   return (list[0] == '"' && list[1] == '[' && list[lastIndex - 1] == ']' &&
           list[lastIndex] == '"');
 }
 
 bool validateMusicsIdUsers(char *musics_id, gestorMusics *gestorMusics) {
-  remove_quotes(musics_id);       // Remove as aspas
-  removeFstLast(musics_id);       // Remove o primeiro e último caracteres
-  int l = (int)strlen(musics_id); // Obtém o comprimento da string
+  remove_quotes(musics_id);
+  removeFstLast(musics_id);
+  int l = (int)strlen(musics_id);
 
   char *key = NULL;
   gpointer orig_key;
   gpointer value;
 
-  // Processa os IDs das músicas
   while (l > 0) {
     if (l == (int)strlen(musics_id)) {
       musics_id = musics_id + 1;
     } else
       musics_id = musics_id + 3;
-    key = strdup(strsep(&musics_id, "'")); // Separa o ID da música
-    key[8] = '\0';                         // Limita o ID a 8 caracteres
-    gboolean found = g_hash_table_lookup_extended(getMusicsTable(gestorMusics),
-                                                  key, &orig_key, &value);
-    if (!found) { // Se a música não for encontrada, retorna false
+    key = strdup(strsep(&musics_id, "'"));
+    key[8] = '\0';
+    gboolean found =
+        lookUpMusicsHashTable(gestorMusics, key, &orig_key, &value);
+    if (!found) {
       free(key);
       return false;
     }
     free(key);
-    l -= 12; // Ajusta o comprimento restante da string
+    l -= 12;
   }
 
   return true;
 }
 
-// Função para validar uma linha de artistas
 bool validateArtistLine(char *idConstituent, char *type) {
-  removeFstLast(idConstituent); // Remove o primeiro e último caracteres
+  removeFstLast(idConstituent);
   removeFstLast(idConstituent);
   colocaTudoMinusculo(type);
-  // Valida se o tipo de artista é 'individual' ou 'grupo'
   return (((strcmp(type, "individual") == 0) && strlen(idConstituent) == 0) ||
           ((strcmp(type, "group") == 0) && (strlen(idConstituent) != 0)));
 }
 
-// Função para validar os artistas de uma música
 bool validateMusicsArtistsAndAlbuns(char *albuns_id, char *artists_id,
                                     gestorArtists *gestorArtists,
                                     gestorAlbuns *gestorAlbuns) {
-  remove_quotes(artists_id); // Remove as aspas
-  removeFstLast(artists_id); // Remove o primeiro e último caracteres
-  int lentghArtistsId =
-      (int)strlen(artists_id); // Obtém o comprimento da string
+  remove_quotes(artists_id);
+  removeFstLast(artists_id);
+  int lentghArtistsId = (int)strlen(artists_id);
   char *key = NULL;
   gpointer orig_key;
   gpointer value;
 
-  // Processa os IDs dos artistas
   while (lentghArtistsId > 0) {
     if (lentghArtistsId == (int)strlen(artists_id)) {
       artists_id = artists_id + 1;
@@ -195,25 +169,24 @@ bool validateMusicsArtistsAndAlbuns(char *albuns_id, char *artists_id,
       free(key);
       key = NULL;
     }
-    key = strdup(strsep(&artists_id, "'")); // Separa o ID do artista
-    key[8] = '\0';                          // Limita o ID a 8 caracteres
+    key = strdup(strsep(&artists_id, "'"));
+    key[8] = '\0';
     gboolean found =
         lookUpArtistsHashTable(gestorArtists, key, &value, &orig_key);
-    if (!found) { // Se o artista não for encontrado, retorna false
+    if (!found) {
       free(key);
       return false;
     }
-    lentghArtistsId -= 12; // Ajusta o comprimento restante da string
+    lentghArtistsId -= 12;
   }
 
   removeFstLast(albuns_id);
   gboolean found =
       lookUpAlbunsHashTable(gestorAlbuns, albuns_id, &value, &orig_key);
-  if (!found) { // Se o artista não for encontrado, retorna false
+  if (!found) {
     free(key);
     return false;
   }
-
   if (key != NULL) {
     free(key);
     key = NULL;
@@ -222,10 +195,8 @@ bool validateMusicsArtistsAndAlbuns(char *albuns_id, char *artists_id,
   return true;
 }
 
-// Função para validar uma linha de música
 bool validateMusicsLine(char *line, gestorArtists *gestorArtists,
                         gestorAlbuns *gestorAlbuns) {
-  // Divide a linha em diferentes partes usando o delimitador ";"
   char *id = strdup(strsep(&line, ";"));
   char *title = strdup(strsep(&line, ";"));
   char *artists_id = strdup(strsep(&line, ";"));
@@ -236,14 +207,13 @@ bool validateMusicsLine(char *line, gestorArtists *gestorArtists,
   char *artist_id_copia = strdup(artists_id);
   char *albuns_id_copia = strdup(albuns_id);
 
-  // Valida a duração, o ano, o formato da lista CSV e os artistas da música
   bool isValid =
       validateDuration(durationSeconds) && atoi(year) <= 2024 &&
       validateCSVList(artists_id) &&
       validateMusicsArtistsAndAlbuns(albuns_id_copia, artist_id_copia,
                                      gestorArtists, gestorAlbuns);
 
-  free(id); // Liberta a memória
+  free(id);
   free(title);
   free(artists_id);
   free(albuns_id);
@@ -256,14 +226,10 @@ bool validateMusicsLine(char *line, gestorArtists *gestorArtists,
   return isValid;
 }
 
-// Função para validar uma linha de users
 bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
-  // Divide a linha em diferentes partes usando o delimitador ";"
   char *username = strdup(strsep(&line, ";"));
   char *email = strdup(strsep(&line, ";"));
-  remove_quotes(email); // Remove as aspas do email
-
-  // Valida o formato do email
+  remove_quotes(email);
   if (!validateEmail(email)) {
     free(username);
     free(email);

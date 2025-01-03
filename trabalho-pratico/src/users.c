@@ -9,86 +9,77 @@
 #include <string.h>
 
 struct artistaAudicoes {
-  char *artista;    // artista
-  guint tempo;      // tempo de reprodução em segundos
-  guint numMusicas; // número de músicas diferentes ouvidas desta artista
+  char *artista;
+  guint tempo;
+  guint numMusicas;
 };
 
 struct categoriaTempo {
-  char *categoria; // album ou género
-  guint tempo;     // tempo de reprodução em segundos
+  char *categoria;
+  guint tempo;
 };
 
 struct resumo {
   GArray *idsMusics;
-  GList *artists; // ordenar
-  GList *albuns;  // ordenar
-  GList *generos; // ordenar
+  GList *artists;
+  GList *albuns;
+  GList *generos;
   int dias[366];
   int horas[24];
   int listening_time;
   int num_musicas_diferentes;
 };
 
-// Definição da estrutura de dados que representa um user
 struct users {
-  char *username;          // Nome de user (identificador único)
-  char *email;             // Email de registro
-  char *first_name;        // Primeiro nome
-  char *last_name;         // Sobrenome
-  char *birth_date;        // Data de nascimento
-  char *country;           // País onde a conta foi registrada
-  char *subscription_type; // Tipo de assinatura (normal ou premium)
-  char *liked_musics_id;   // IDs das músicas curtidas
+  char *username;
+  char *email;
+  char *first_name;
+  char *last_name;
+  char *birth_date;
+  char *country;
+  char *subscription_type;
+  char *liked_musics_id;
   GHashTable *musicsListening;
   GArray *resumos;
 };
 
-// Função para definir o username de um user
 void setUserUsername(Users *u, char *username) {
-  remove_quotes(username); // Remove aspas, se houver
+  remove_quotes(username);
   u->username = username;
 }
 
-// Função para definir o email de um user
 void setUserEmail(Users *u, char *email) {
-  remove_quotes(email); // Remove aspas, se houver
+  remove_quotes(email);
   u->email = email;
 }
 
-// Função para definir o primeiro nome de um user
 void setUserFirstName(Users *u, char *first_name) {
-  remove_quotes(first_name); // Remove aspas, se houver
+  remove_quotes(first_name);
   u->first_name = first_name;
 }
 
-// Função para definir o sobrenome de um user
 void setUserLastName(Users *u, char *last_name) {
-  remove_quotes(last_name); // Remove aspas, se houver
+  remove_quotes(last_name);
   u->last_name = last_name;
 }
 
-// Função para definir a data de nascimento de um user
 void setUserBirthDate(Users *u, char *birth_date) {
-  remove_quotes(birth_date); // Remove aspas, se houver
+  remove_quotes(birth_date);
   u->birth_date = birth_date;
 }
 
-// Função para definir o país de um user
 void setUserCountry(Users *u, char *country) {
-  remove_quotes(country); // Remove aspas, se houver
+  remove_quotes(country);
   u->country = country;
 }
 
-// Função para definir o tipo de assinatura de um user
 void setUserSubscriptionType(Users *u, char *subscription_type) {
-  remove_quotes(subscription_type); // Remove aspas, se houver
+  remove_quotes(subscription_type);
   u->subscription_type = subscription_type;
 }
 
-// Função para definir o ID das músicas com like de um user
 void setUserLikedMusicsId(Users *u, char *liked_musics_id) {
-  remove_quotes(liked_musics_id); // Remove aspas, se houver
+  remove_quotes(liked_musics_id);
   u->liked_musics_id = liked_musics_id;
 }
 
@@ -96,8 +87,7 @@ GArray *initIdsMusics() {
   GArray *idsMusics = g_array_new(FALSE, FALSE, sizeof(char *));
   g_array_set_size(idsMusics, 10);
   for (int i = 0; i < (int)idsMusics->len; i++) {
-    g_array_index(idsMusics, char *, i) =
-        NULL; // Inicializa cada posição com NULL
+    g_array_index(idsMusics, char *, i) = NULL;
   }
 
   return idsMusics;
@@ -133,19 +123,7 @@ int elemUserResumeIdsMusics(Resumo *res, char *musicId) {
   }
   return 0;
 }
-/*
-// FAZER ESTA
-void insertUserResumeIdsMusics(Resumo *res, char *musicId){
-  GArray *idsMusics = res->idsMusics;
-  int tamanho = idsMusics->len;
-  int tamanhoMax = idsMusics->alloc;
-  if (tamanho >= tamanhoMax){
-    g_array_set_size(idsMusics, (guint)(tamanhoMax + 1));
-  }
-    g_array_index(idsMusics, char *, tamanho) = musicId;
-  res->idsMusics = idsMusics;
-}
-*/
+
 int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
                             char *musicId) {
 
@@ -159,16 +137,13 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
     } else {
       artistId = artistId + 3;
     }
-    currentArtist = strdup(strsep(&artistId, "'")); // Separa o ID do artista
-    currentArtist[8] = '\0'; // Limita o ID a 8 caracteres
-    // printf("UpResArt: %s\n", currentArtist);
+    currentArtist = strdup(strsep(&artistId, "'"));
+    currentArtist[8] = '\0';
     GList *a = res->artists;
     while (a != NULL && continua) {
       ArtistaTempo *artist = (ArtistaTempo *)a->data;
       if (strcmp(artist->artista, currentArtist) == 0) {
         artist->tempo += duracao;
-        /* if (add)
-          artist->numMusicas++; */
         if (!elemUserResumeIdsMusics(res, musicId)) {
           g_array_append_val(res->idsMusics, musicId);
           artist->numMusicas++;
@@ -183,8 +158,6 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
       newArtist->artista = currentArtist;
       newArtist->tempo = duracao;
       newArtist->numMusicas = 0;
-      /* if (add)
-        newArtist->numMusicas++; */
       if (!elemUserResumeIdsMusics(res, musicId)) {
         g_array_append_val(res->idsMusics, musicId);
         newArtist->numMusicas++;
@@ -192,10 +165,7 @@ int updateUserResumeArtists(Resumo *res, char *artistId, int duracao,
       }
       res->artists = g_list_prepend(res->artists, newArtist);
     }
-    // printf("%s\n", currentArtist);
     lentghArtistId -= 12;
-    // free(currentArtist); isto causa erro
-    // currentArtist = NULL;
     continua = 1;
   }
   return add;
@@ -246,18 +216,14 @@ void updateUserResume(gpointer u, int year, int duracao, char *musicId,
     return;
   GArray *resumos = user->resumos;
 
-  // Verifica o tamanho atual da duração por semana
   if (resumos == NULL)
     return;
   int tamanho = resumos->len;
   int indice = 2024 - year;
-  // printf("%d %d\n",tamanho, indice);
 
-  // Ajusta o tamanho do array se necessário
   if (indice >= tamanho) {
     g_array_set_size(resumos, (guint)(indice + 1));
 
-    // Inicializa as novas posições com NULL
     for (int i = tamanho; i <= indice; i++) {
       g_array_index(resumos, Resumo *, i) = NULL;
     }
@@ -276,23 +242,15 @@ void updateUserResume(gpointer u, int year, int duracao, char *musicId,
   res->dias[dia]++;
   res->horas[hora] += duracao;
   g_array_index(resumos, Resumo *, indice) = res;
-
-  // Retorna o novo valor da duração para a semana
-  // return g_array_index(durationPerWeek, int, semana);
 }
 
-// Função para separar os dados de um user a partir de uma linha de texto
 Users *separateUsers(char *line) {
-  // Aloca memória para um novo user
   Users *user = malloc(sizeof(struct users));
   if (!user) {
-    fprintf(
-        stderr,
-        "Malloc failed!"); // Se a alocação falhar, mostra uma mensagem de erro
+    fprintf(stderr, "Malloc failed!");
     return NULL;
   }
 
-  // Separa a linha pelos delimitadores ';' e preenche os campos do user
   setUserUsername(user, strdup(strsep(&line, ";")));
   setUserEmail(user, strdup(strsep(&line, ";")));
   setUserFirstName(user, strdup(strsep(&line, ";")));
@@ -300,9 +258,7 @@ Users *separateUsers(char *line) {
   setUserBirthDate(user, strdup(strsep(&line, ";")));
   setUserCountry(user, strdup(strsep(&line, ";")));
   setUserSubscriptionType(user, strdup(strsep(&line, ";")));
-  setUserLikedMusicsId(
-      user, strdup(strsep(
-                &line, "\n"))); // A última parte da linha é o liked_musics_id
+  setUserLikedMusicsId(user, strdup(strsep(&line, "\n")));
 
   GHashTable *musicsListening =
       g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
@@ -311,29 +267,13 @@ Users *separateUsers(char *line) {
   GArray *resumos = g_array_new(FALSE, FALSE, sizeof(Resumo *));
   g_array_set_size(resumos, 7);
   for (int i = 0; i < 7; i++) {
-    g_array_index(resumos, Resumo *, i) =
-        NULL; // Inicializa cada posição com NULL
+    g_array_index(resumos, Resumo *, i) = NULL;
   }
 
   user->resumos = resumos;
 
   return user;
 }
-
-// Funções para pegar os valores de cada campo de um user
-char *pegarUserUsername(Users *u) { return strdup(u->username); }
-char *pegarUserEmail(Users *u) { return strdup(u->email); }
-char *pegarUserFirstName(Users *u) { return strdup(u->first_name); }
-char *pegarUserLastName(Users *u) { return strdup(u->last_name); }
-char *pegarUserBirthDate(Users *u) { return strdup(u->birth_date); }
-char *pegarUserCountry(Users *u) { return strdup(u->country); }
-char *pegarUserSubscriptionType(Users *u) {
-  return strdup(u->subscription_type);
-}
-char *pegarUserLikedMusicsId(Users *u) { return strdup(u->liked_musics_id); }
-
-// Funções para pegar os valores de cada campo de um user, usando gpointer
-// (útil para GList)
 
 int existUserResume(gpointer user, int indice) {
   struct users *u = (struct users *)user;
@@ -373,11 +313,6 @@ char *getUserCountry(gpointer user) {
   return strdup(u->country);
 }
 
-char *getUserSubscriptionType(gpointer user) {
-  struct users *u = (struct users *)user;
-  return strdup(u->subscription_type);
-}
-
 char *getUserLikedMusicsId(gpointer user) {
   struct users *u = (struct users *)user;
   return strdup(u->liked_musics_id);
@@ -402,7 +337,6 @@ int getUserResumoNumMusicasDiferentes(gpointer user, int year) {
 gint comparar_likes_Q6(gconstpointer a, gconstpointer b) {
   const ArtistaTempo *g1 = a;
   const ArtistaTempo *g2 = b;
-  // Em caso de empate, ordena lexicograficamente
   if ((g1->tempo == g2->tempo)) {
     return (strcmp(g1->artista, g2->artista) > 0);
   } else {
@@ -437,9 +371,9 @@ char *getUserResumoArtists(gpointer user, int year, int N, int temS) {
     char *duracaoStr = malloc(sizeof(char) * 16);
     converterParaTempo(duracao, duracaoStr);
     char *numeroMusicasStr = intToString(numeroMusicas);
-    int total_len = strlen(art) + strlen(numeroMusicasStr) +
-                    strlen(duracaoStr) + 3; // 2 para os ';' ou '=' e o '\0'
-    char *new_str = malloc((total_len + 1) * sizeof(char)); // +1 para o '\0'
+    int total_len =
+        strlen(art) + strlen(numeroMusicasStr) + strlen(duracaoStr) + 3;
+    char *new_str = malloc((total_len + 1) * sizeof(char));
     if (temS) {
       snprintf(new_str, total_len + 1, "%s=%s=%s\n", art, numeroMusicasStr,
                duracaoStr);
@@ -457,11 +391,7 @@ char *getUserResumoArtists(gpointer user, int year, int N, int temS) {
     int indice = 2024 - year;
     Resumo *res = g_array_index(resumos, Resumo *, indice);
     GList *a = res->artists;
-
-    // Ordena a lista usando a função comparar_likes_Q6
     a = g_list_sort(a, comparar_likes_Q6);
-
-    // Itera nos primeiros N elementos
     GList *current = a;
     char *new_str = NULL;
     int total_len = 0;
@@ -473,19 +403,14 @@ char *getUserResumoArtists(gpointer user, int year, int N, int temS) {
       converterParaTempo(artist->tempo, duracaoStr);
       char *numeroMusicasStr = intToString(artist->numMusicas);
 
-      // Calcula o tamanho necessário para este artista
       int current_len = strlen(artist->artista) + strlen(numeroMusicasStr) +
-                        strlen(duracaoStr) +
-                        3; // 2 para delimitadores e 1 para '\n'
-
-      // Realoca memória para new_str
-      new_str = realloc(new_str, total_len + current_len + 1); // +1 para '\0'
+                        strlen(duracaoStr) + 3;
+      new_str = realloc(new_str, total_len + current_len + 1);
       if (new_str == NULL) {
         perror("Erro ao alocar memória");
         exit(EXIT_FAILURE);
       }
 
-      // Adiciona os dados do artista ao final de new_str
       if (temS) {
         snprintf(new_str + total_len, current_len + 1, "%s=%s=%s\n",
                  artist->artista, numeroMusicasStr, duracaoStr);
@@ -494,14 +419,11 @@ char *getUserResumoArtists(gpointer user, int year, int N, int temS) {
                  artist->artista, numeroMusicasStr, duracaoStr);
       }
 
-      // Atualiza o comprimento total
       total_len += current_len;
 
-      // Libera as strings temporárias
       free(duracaoStr);
       free(numeroMusicasStr);
 
-      // Avança para o próximo elemento da lista
       current = current->next;
     }
 
@@ -584,7 +506,6 @@ int getUserResumoHora(gpointer user, int year) {
   return maxInd;
 }
 
-// Função para libertar a memória associada a um user
 void destroyUser(Users *u) {
   if (u) {
     free(u->username);
@@ -645,7 +566,6 @@ void destroyUser(Users *u) {
         g_free(resumo);
       }
     }
-
     g_array_free(u->resumos, TRUE);
     free(u);
   }
@@ -662,7 +582,6 @@ void incrementMusicsListening(gpointer user, char *genre) {
     int *count = (int *)value;
     (*count)++;
   } else {
-    // Cria um novo contador inicializado com 1
     int *new_count = malloc(sizeof(int));
     *new_count = 1;
     g_hash_table_insert(u->musicsListening, g_strdup(genre), new_count);
@@ -690,12 +609,3 @@ void preencheLinhaMatriz(int **matrizClassificaoMusicas, int linha, Users *User,
     matrizClassificaoMusicas[linha][coluna] = *count;
   }
 }
-
-/*
-Percorrer o input.txt
-Guardar numa ht onde a key é o user_id e o value é o ano e N
-Percorer o history
-Ver se o user da linha do history pertence à ht
-Se pertencer, fazer o update para ele
-Senão, ignorar
-*/

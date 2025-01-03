@@ -18,7 +18,6 @@ struct argumentosQuery5 {
 
 argumentosQuery5 *initArgumentosQuery5() {
   argumentosQuery5 *a = malloc(sizeof(struct argumentosQuery5));
-
   return a;
 }
 
@@ -32,7 +31,6 @@ void alocaMatriz(Gestores *gestor, argumentosQuery5 *a) {
     return;
   }
 
-  // Alocar memória para as colunas de cada linha
   for (int i = 0; i < a->numUtilizadores; i++) {
     matrizClassificacaoMusicas[i] = malloc(a->numGeneros * sizeof(int));
     if (!matrizClassificacaoMusicas[i]) {
@@ -76,11 +74,9 @@ void destroiArgumentosQuery5(argumentosQuery5 *a) {
     free(a->matrizClassificacaoMusicas[i]);
     free(a->idsUtilizadores[i]);
   }
-
   for (int i = 0; i < a->numGeneros; i++) {
     free(a->nomesGeneros[i]);
   }
-
   free(a->matrizClassificacaoMusicas);
   free(a->idsUtilizadores);
   free(a->nomesGeneros);
@@ -93,7 +89,7 @@ void query5(Gestores *gestor, int numRecomendacoes, char *idUtilizadorAlvo,
 
   gpointer value;
   gpointer orig_key;
-  // Caso não esteja na HT dos users, é inválido e por isso não faz nada
+
   if (!lookUpUsersHashTable(pegarGestorUser(gestor), idUtilizadorAlvo,
                             &orig_key, &value) ||
       numRecomendacoes == 0) {

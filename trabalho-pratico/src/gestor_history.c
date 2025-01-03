@@ -11,17 +11,14 @@
 #include <stdio.h>
 
 struct gestorHistory {
-  FILE *errorsFile; // Ficheiro para registo de erros
+  FILE *errorsFile;
 };
 
-// Função para inicializar a estrutura gestorHistory
 gestorHistory *initGestorHistory(const char *errorsFilePath) {
-  // Aloca memória para a estrutura
   gestorHistory *gestorHistory = malloc(sizeof(struct gestorHistory));
   if (!gestorHistory)
     return NULL;
 
-  // Abre o ficheiro para escrita de erros
   gestorHistory->errorsFile = fopen(errorsFilePath, "w");
   if (!gestorHistory->errorsFile) {
     perror("Erro ao abrir o ficheiro de erros");
@@ -32,13 +29,11 @@ gestorHistory *initGestorHistory(const char *errorsFilePath) {
   return gestorHistory;
 }
 
-// Função para libertar a estrutura gestorHistory e os seus recursos
 void freeGestorHistory(gestorHistory *gestor) {
   if (gestor) {
     if (gestor->errorsFile)
-      fclose(
-          gestor->errorsFile); // Fecha o ficheiro de erros, se estiver aberto
-    free(gestor);              // Liberta a memória da estrutura
+      fclose(gestor->errorsFile);
+    free(gestor);
   }
 }
 
@@ -52,12 +47,11 @@ void parserHistory(History *history, char *line, char *copia,
   FILE *errorsFile = gestorHistory->errorsFile;
 
   if (validateHistoryLine(copia)) {
-    // Obtém o ID do history e remove aspas
     char *id = getHistoryId(history);
     remove_quotes(id);
 
     char *musicId = getHistoryMusicId(history);
-    incrementMusicRep(musicId, gestorMusics, gestorArtists);
+    incrementRecipeArtist(musicId, gestorMusics, gestorArtists);
 
     // ---- para query5
 
@@ -91,6 +85,7 @@ void parserHistory(History *history, char *line, char *copia,
                      getGArrayTops10(gestorArtists));
 
     // query 6
+
     char *temp = timeStampCopia;
     int year = atoi(timeStampCopia);
     timeStampCopia += 5;
@@ -129,9 +124,9 @@ void parserHistory(History *history, char *line, char *copia,
                        musicGenre, dia, hora);
     }
 
-    free(albumId); // esta linha estava a provocar erro
+    free(albumId);
     free(artistId);
-    free(musicGenre); // esta linha estava a provocar erro
+    free(musicGenre);
     free(musicId);
     free(temp);
     free(durationStr);
@@ -139,40 +134,31 @@ void parserHistory(History *history, char *line, char *copia,
     free(id);
     free(currentUserCopia);
   } else {
-    // Escreve a linha inválida no ficheiro de erros
     fprintf(errorsFile, "%s", line);
   }
   destroyHistory(history);
 }
 
-// Função para processar o ficheiro de history utilizando a estrutura
-// gestorHistory
 int GestorHistory(Gestores *gestor, char *historyPath) {
   gestorMusics *gestorMusics = pegarGestorMusic(gestor);
 
-  // Abre o arquivo de history e carrega os dados
   FILE *fp = fopen(historyPath, "r");
 
   if (fp) {
-    char *line = NULL; // Pointer para armazenar cada linha lida
-    size_t len = 0;    // Tamanho da linha
+    char *line = NULL;
+    size_t len = 0;
     History *history = NULL;
 
-    // Ignora a primeira linha do ficheiro (cabeçalho)
     assert(getline(&line, &len, fp) != -1);
 
-    // Lê o ficheiro linha por linha
     while (getline(&line, &len, fp) != -1) {
       if (line != NULL) {
-        // Duplicação segura da linha para processamento
         char *line_copy = strdup(line);
         if (!line_copy) {
           fprintf(stderr, "Erro ao duplicar a linha\n");
-          continue; // Se falhar, passa à próxima linha
+          continue;
         }
-
         history = separateHistory(line_copy);
-
         char *currentMusic = getHistoryMusicId(history);
         gpointer orig_key;
         gpointer value;
@@ -187,13 +173,11 @@ int GestorHistory(Gestores *gestor, char *historyPath) {
         line = NULL;
       }
     }
-    // Liberta a linha utilizada pelo getline
     free(line);
     fclose(fp);
   } else {
     perror("Error opening history file");
     return 0;
   }
-
   return 1;
 }

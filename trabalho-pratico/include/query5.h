@@ -10,7 +10,7 @@ void alocaMatriz(Gestores *gestor, argumentosQuery5 *a);
 void constroiQuery5(Gestores *gestor, argumentosQuery5 *a);
 void destroiArgumentosQuery5(argumentosQuery5 *a);
 
-    void query5(Gestores *gestor, int numRecomendacoes, char *idUtilizadorAlvo,
-                int i, argumentosQuery5 *a);
+void query5(Gestores *gestor, int numRecomendacoes, char *idUtilizadorAlvo,
+            int i, argumentosQuery5 *a);
 
 #endif

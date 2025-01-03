@@ -3,6 +3,7 @@
 
 #include "gestor_users.h"
 
-void query6(char *user_id, int year, int N, gestorUsers *gestorUsers, int i, int temS);
+void query6(char *user_id, int year, int N, gestorUsers *gestorUsers, int i,
+            int temS);
 
 #endif
