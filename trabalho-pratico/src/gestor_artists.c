@@ -36,15 +36,14 @@ gestorArtists *initGestorArtists(const char *errorsFilePath) {
     free(gestor);
     return NULL;
   }
-  GArray *Tops10 = g_array_new(FALSE, FALSE, sizeof(MinHeap *));
+  GArray *Tops10 = g_array_new(FALSE, FALSE, sizeof(ArrayTop10 *));
   g_array_set_size(Tops10, 329);
   for (int i = 0; i < (int)Tops10->len; i++) {
-    g_array_index(Tops10, MinHeap *, i) =
+    g_array_index(Tops10, ArrayTop10 *, i) =
         NULL; // Inicializa cada posição com NULL
   }
 
   gestor->Tops10 = Tops10;
-
   gestor->listaQuery2 = NULL;
 
   // Atribui a tabela hash fornecida
@@ -54,9 +53,9 @@ gestorArtists *initGestorArtists(const char *errorsFilePath) {
 
 void freeGArrayQuery4(GArray *Tops10) {
   for (int i = 0; i < (int)Tops10->len; i++) {
-    MinHeap *heap = g_array_index(Tops10, MinHeap *, i);
+    ArrayTop10 *heap = g_array_index(Tops10, ArrayTop10 *, i);
     if (heap != NULL) {
-      freeMinHeap(heap);
+      freeArrayTop10(heap);
     }
   }
   g_array_free(Tops10, false);
@@ -79,9 +78,9 @@ void freeGestorArtists(struct gestorArtists *gestor) {
       // Para cada elemento na GArray (supondo que seja ponteiros para algo que
       // precisa ser liberado)
       for (guint i = 0; i < gestor->Tops10->len; i++) {
-        MinHeap *elem = g_array_index(gestor->Tops10, MinHeap *, i);
+        ArrayTop10 *elem = g_array_index(gestor->Tops10, ArrayTop10 *, i);
         if (elem != NULL) {
-          freeMinHeap(elem); // Libere o elemento se necessário
+          freeArrayTop10(elem); // Libere o elemento se necessário
         }
       }
       g_array_free(gestor->Tops10, TRUE);

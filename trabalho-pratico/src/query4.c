@@ -59,28 +59,28 @@ void armazenarValores(char *musicId, int duration,
 
           // Inicializa novas posições com NULL
           for (int i = tamanhoTops10; i <= semana; i++) {
-            g_array_index(Tops10, MinHeap *, i) = NULL;
+            g_array_index(Tops10, ArrayTop10 *, i) = NULL;
           }
 
           tamanhoTops10 = Tops10->len; // Atualiza o tamanho
         }
 
-        MinHeap *heap = g_array_index(Tops10, MinHeap *, semana);
-        if (heap != NULL) {
+        ArrayTop10 *top10 = g_array_index(Tops10, ArrayTop10 *, semana);
+        if (top10 != NULL) {
           int indiceMinNode = 0;
-          HeapNode minNode = menorHeapNode(heap, &indiceMinNode);
-          int durationMinNode = getHeapNodeDuration(&minNode);
-          insertMinHeap(heap, totalDuration, durationMinNode, &minNode,
-                        currentArtist, indiceMinNode);
-          MinHeap *new = cloneMinHeap(heap);
-          g_array_index(Tops10, MinHeap *, semana) = new;
-          freeMinHeap(heap);
+          NodoArray minNode = menorNodoArray(top10, &indiceMinNode);
+          int durationMinNode = getNodoArrayDuration(&minNode);
+          insertArrayTop10(top10, totalDuration, durationMinNode, &minNode,
+                           currentArtist, indiceMinNode);
+          ArrayTop10 *new = cloneArrayTop10(top10);
+          g_array_index(Tops10, ArrayTop10 *, semana) = new;
+          freeArrayTop10(top10);
         } else {
-          heap = createMinHeap();
-          insertMinHeap(heap, totalDuration, 0, NULL, currentArtist, 0);
-          MinHeap *new = cloneMinHeap(heap);
-          g_array_index(Tops10, MinHeap *, semana) = new;
-          freeMinHeap(heap);
+          top10 = createArrayTop10();
+          insertArrayTop10(top10, totalDuration, 0, NULL, currentArtist, 0);
+          ArrayTop10 *new = cloneArrayTop10(top10);
+          g_array_index(Tops10, ArrayTop10 *, semana) = new;
+          freeArrayTop10(top10);
         }
       }
       lentghArtistId -= 12;
@@ -117,14 +117,14 @@ aumentar em 1 num contador */
   gpointer value;
   int maisVezesNoTop10 = 0;
   char *artistMaisVezesNoTop10 = NULL;
-  MinHeap *heap = NULL;
+  ArrayTop10 *top10 = NULL;
 
   for (int i = semanaInicio; i <= semanaFim; i++) {
-    heap = g_array_index(Tops10, MinHeap *, i);
-    if (heap != NULL) {
-      for (int j = 0; j < getMinHeapSize(heap); j++) {
-        HeapNode *node = getMinHeapHeapNode(heap, j);
-        char *currentArtist = getHeapNodeArtistId(node);
+    top10 = g_array_index(Tops10, ArrayTop10 *, i);
+    if (top10 != NULL) {
+      for (int j = 0; j < getArrayTop10Size(top10); j++) {
+        NodoArray *node = getArrayTop10NodoArray(top10, j);
+        char *currentArtist = getNodoArrayArtistId(node);
         gboolean found = lookUpArtistsHashTable(gestorArtists, currentArtist,
                                                 &orig_key, &value);
 

@@ -663,7 +663,7 @@ void incrementMusicsListening(gpointer user, char *genre) {
     (*count)++;
   } else {
     // Cria um novo contador inicializado com 1
-    int *new_count = g_malloc(sizeof(int));
+    int *new_count = malloc(sizeof(int));
     *new_count = 1;
     g_hash_table_insert(u->musicsListening, g_strdup(genre), new_count);
   }

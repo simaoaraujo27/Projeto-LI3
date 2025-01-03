@@ -1,55 +1,55 @@
-#ifndef MIN_HEAP_H
-#define MIN_HEAP_H
+#ifndef MIN_top10_H
+#define MIN_top10_H
 
 #include <stdlib.h>
 #include <string.h>
 
-// Estrutura para os nós da heap
-typedef struct heapNode {
+// Estrutura para os nós da top10
+typedef struct NodoArray {
   char *artist_id; // ID do artista
   int duration;    // Duração em segundos
-} HeapNode;
+} NodoArray;
 
-// Estrutura para a min-heap
-typedef struct minHeap {
-  HeapNode data[10]; // Array fixo para os 10 maiores elementos
-  int size;          // Número atual de elementos na heap
-} MinHeap;
+// Estrutura para a min-top10
+typedef struct ArrayTop10 {
+  NodoArray data[10]; // Array fixo para os 10 maiores elementos
+  int size;           // Número atual de elementos na top10
+} ArrayTop10;
 
-void removeMinHeap(MinHeap *minheap, int indice);
+void removeArrayTop10(ArrayTop10 *ArrayTop10, int indice);
 
-HeapNode menorHeapNode(MinHeap *heap, int *indice);
+NodoArray menorNodoArray(ArrayTop10 *top10, int *indice);
 
-void setHeapNode(HeapNode *heapNode, char *artistId, int duration);
+void setNodoArray(NodoArray *NodoArray, char *artistId, int duration);
 
-char *getHeapNodeArtistId(HeapNode *HeapNode);
+char *getNodoArrayArtistId(NodoArray *NodoArray);
 
-int getMinHeapSize(MinHeap *h);
+int getArrayTop10Size(ArrayTop10 *h);
 
-// Função para obter a duração de um nó da heap
-int getHeapNodeDuration(HeapNode *heapNode);
+// Função para obter a duração de um nó da top10
+int getNodoArrayDuration(NodoArray *NodoArray);
 
-HeapNode *getMinHeapFstHeapNode(MinHeap *minHeap);
+NodoArray *getArrayTop10FstNodoArray(ArrayTop10 *ArrayTop10);
 
-HeapNode *getMinHeapHeapNode(MinHeap *minHeap, int i);
+NodoArray *getArrayTop10NodoArray(ArrayTop10 *ArrayTop10, int i);
 
-// Função para criar uma nova min-heap
-MinHeap *createMinHeap();
+// Função para criar uma nova min-top10
+ArrayTop10 *createArrayTop10();
 
-// Função para trocar dois nós na heap
-void swapNodes(HeapNode *a, HeapNode *b);
+// Função para trocar dois nós na top10
+void swapNodes(NodoArray *a, NodoArray *b);
 
-// Função para inserir um elemento na min-heap
-void insertMinHeap(MinHeap *heap, int totalDuration, int durationMinNode,
-                   HeapNode *minNode, char *currentArtist, int indiceMinNode);
+// Função para inserir um elemento na min-top10
+void insertArrayTop10(ArrayTop10 *top10, int totalDuration, int durationMinNode,
+                      NodoArray *minNode, char *currentArtist,
+                      int indiceMinNode);
 
-// Função para reorganizar a heap a partir de um índice
-void heapify(MinHeap *heap, int i);
+// Função para remover o menor elemento da top10 (extração da raiz)
+NodoArray *extractMin(ArrayTop10 *top10);
 
-// Função para remover o menor elemento da heap (extração da raiz)
-HeapNode *extractMin(MinHeap *heap);
+// Função para liberar a memória da min-top10
+void freeArrayTop10(ArrayTop10 *top10);
 
-// Função para liberar a memória da min-heap
-void freeMinHeap(MinHeap *heap);
+ArrayTop10 *cloneArrayTop10(ArrayTop10 *top10);
 
-#endif // MIN_HEAP_H
+#endif // MIN_top10_H

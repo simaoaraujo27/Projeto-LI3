@@ -53,7 +53,6 @@ void freeGestorUsers(gestorUsers *gestorUser) {
     g_hash_table_destroy(gestorUser->usersTable);
     free(gestorUser->nUsers);
     g_hash_table_destroy(gestorUser->query6Table);
-
     free(gestorUser); // Liberta a memória da estrutura
   }
 }

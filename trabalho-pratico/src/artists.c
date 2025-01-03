@@ -345,7 +345,7 @@ float ReceitaArtistaIndividual(float receitaArtista,
 }
 
 Artists *cloneArtists(Artists *artist) {
-  Artists *clone = g_malloc(sizeof(Artists));
+  Artists *clone = malloc(sizeof(Artists));
   clone->id = g_strdup(artist->id);
   clone->name = g_strdup(artist->name);
   clone->id_constituent = g_strdup(artist->id_constituent);
