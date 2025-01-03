@@ -75,7 +75,6 @@ void armazenarValores(char *musicId, int duration,
           MinHeap *new = cloneMinHeap(heap);
           g_array_index(Tops10, MinHeap *, semana) = new;
           freeMinHeap(heap);
-
         } else {
           heap = createMinHeap();
           insertMinHeap(heap, totalDuration, 0, NULL, currentArtist, 0);

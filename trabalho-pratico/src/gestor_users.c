@@ -198,6 +198,7 @@ gboolean lookUpQuery6Table(gestorUsers *gestorUser, char *line, gpointer *value,
                                                 value, orig_key);
   return found;
 }
+
 void setQuery6Table(char *line, gestorUsers *gestorUsers) {
   if (line[0] == '6') {
     char *key;

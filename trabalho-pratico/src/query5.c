@@ -109,4 +109,5 @@ void query5(Gestores *gestor, int numRecomendacoes, char *idUtilizadorAlvo,
     fprintf(newFile, "%s\n", recomendacao[i]);
   }
   fclose(newFile);
+  free(recomendacao);
 }

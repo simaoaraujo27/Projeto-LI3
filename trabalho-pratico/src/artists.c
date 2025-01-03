@@ -319,10 +319,6 @@ void destroyArtist(Artists *a) {
     free(a->name);
     free(a->id_constituent);
     free(a->country);
-    /*     for (guint i = 0; i < a->durationPerWeek->len; i++) {
-          MinHeap *m = g_array_index(a->durationPerWeek, MinHeap *, i);
-          freeMinHeap(m);
-        } */
     g_array_free(a->durationPerWeek, TRUE);
     free(a);
   }

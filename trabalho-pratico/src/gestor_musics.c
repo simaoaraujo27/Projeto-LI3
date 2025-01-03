@@ -247,24 +247,6 @@ gboolean lookUpMusicsHashTable(gestorMusics *gestorMusic, char *line,
   return found;
 }
 
-void processAllMusics(gestorMusics *gestorMusics, int numeroArtistas,
-                      char *country, GList **listaResposta,
-                      gestorArtists *gestorArtists) {
-  // Inicializa o iterador para a hashtable das músicas
-  GHashTableIter iter;
-  iter = iterInitMusicsHashTable(gestorMusics);
-  gpointer key1, value1;
-
-  // Percorre todas as músicas na hashtable
-  while (g_hash_table_iter_next(&iter, &key1, &value1)) {
-    Musics *music = (Musics *)value1; // Obtém a música atual
-    char *artistsId = pegarMusicArtistId(music);
-    processMusic(music, gestorArtists, numeroArtistas, country, listaResposta,
-                 artistsId);
-    free(artistsId);
-  }
-}
-
 void incrementMusicRep(char *musicId, gestorMusics *gestorMusics,
                        gestorArtists *gestorArtists) {
   gpointer value0;

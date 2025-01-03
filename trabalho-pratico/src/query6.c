@@ -104,15 +104,15 @@ void query6(char *user_id, int year, int N, gestorUsers *gestorUsers, int i,
       writeFile(newFile, new_str);
 
       // Liberta a memória alocada para as strings
-      // free(listeningTimeStr);
-      // free(numMusicasStr);
-      // free(favouriteArtist);
+      free(listeningTimeStr);
+      free(numMusicasStr);
+      free(favouriteArtist);
       // free(dayStr);
-      // free(genre);
-      // free(album);
-      // free(hourStr);
-      // free(artists);
-      // free(new_str);
+      free(genre);
+      free(album);
+      free(hourStr);
+      free(artists);
+      free(new_str);
     } else {
       writeFile(newFile, "\n");
     }

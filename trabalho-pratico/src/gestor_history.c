@@ -114,13 +114,13 @@ void parserHistory(History *history, char *line, char *copia,
       while (v != NULL && strlen(v) > 3) {
         char *a = strndup(v, 4);
         y = atoi(a);
+        free(a);
         if (y == year) {
           val = 1;
           break;
         } else {
           v = v + 4;
         }
-        free(a);
       }
     }
 

@@ -433,6 +433,7 @@ char *getUserResumoArtists(gpointer user, int year, int N, int temS) {
 
       a = a->next;
     }
+
     char *duracaoStr = malloc(sizeof(char) * 16);
     converterParaTempo(duracao, duracaoStr);
     char *numeroMusicasStr = intToString(numeroMusicas);
@@ -446,6 +447,9 @@ char *getUserResumoArtists(gpointer user, int year, int N, int temS) {
       snprintf(new_str, total_len + 1, "%s;%s;%s\n", art, numeroMusicasStr,
                duracaoStr);
     }
+    free(art);
+    free(numeroMusicasStr);
+    free(duracaoStr);
     return new_str;
   } else {
     struct users *u = (struct users *)user;
