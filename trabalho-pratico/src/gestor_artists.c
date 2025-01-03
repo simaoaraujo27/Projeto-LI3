@@ -74,9 +74,9 @@ void freeGestorArtists(struct gestorArtists *gestor) {
 
 void parserArtist(GHashTable *ArtistsTable, Artists *artist, FILE *errorsFile,
                   char *line) {
-  char *idConstituentLine = pegarArtistIdConstituent(artist);
-  char *idConstituentCSV = pegarArtistIdConstituent(artist);
-  char *type = pegarArtistType(artist);
+  char *idConstituentLine = getArtistIdConstituent(artist);
+  char *idConstituentCSV = getArtistIdConstituent(artist);
+  char *type = getArtistTypeStr(artist);
 
   if (validateArtistLine(idConstituentLine, type) &&
       validateCSVList(idConstituentCSV)) {
@@ -170,7 +170,7 @@ void colocaZeroVezesTop10(gestorArtists *GestorArtists) {
 }
 
 void insertListaQuery2(gestorArtists *gestorArtists, Artists *artist) {
-  char *artistId = pegarArtistId(artist);
+  char *artistId = getArtistId(artist);
   remove_quotes(artistId);
   char *currentArtist = NULL;
   gpointer orig_key;
@@ -219,4 +219,3 @@ void CriaListasQuery2(gestorArtists *gestorArtists) {
 GList *getGListQuery2GestorArtist(gestorArtists *gestorArtists) {
   return gestorArtists->listaQuery2;
 }
-

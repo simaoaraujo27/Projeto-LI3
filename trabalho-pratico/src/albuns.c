@@ -4,30 +4,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Estrutura que armazena informações sobre um álbum
 struct albuns {
-  char *id;         // Identificador único do álbum
-  char *title;      // Título do álbum
-  char *artists_id; // Lista de identificadores únicos dos artistas que lançaram
-                    // o álbum;
-  char *year;      // Ano de lançamento
-  char *producers; // Lista de produtores
+  char *id;
+  char *title;
+  char *artists_id;
+  char *year;
+  char *producers;
 };
 
-// Funções get
 char *getAlbumId(Albuns *album) { return strdup(album->id); }
 
-char *getAlbumTitle(Albuns *album) { return strdup(album->title); }
-
-char *getAlbumArtistsId(Albuns *album) { return strdup(album->artists_id); }
-
-char *getAlbumYear(Albuns *album) { return strdup(album->year); }
-
-char *getAlbumProducers(Albuns *album) { return strdup(album->producers); }
-
-// Funções set
 void setAlbumId(Albuns *album, char *id) {
-  free(album->id); // Libera a memória antiga, se necessário
+  free(album->id);
   album->id = strdup(id);
 }
 
@@ -85,7 +73,6 @@ int numeroArtistas(char *album_id) {
   return nvirgulas + 1;
 }
 
-// Função que separa dados de um álbum a partir de uma linha do CSV
 Albuns *separateAlbuns(char *line, gestorArtists *gestorArtists) {
   Albuns *album = initAlbum();
   char *token = strdup(strsep(&line, ";"));
@@ -114,9 +101,8 @@ Albuns *separateAlbuns(char *line, gestorArtists *gestorArtists) {
     } else
       artists = artists + 3;
 
-    char *currentArtist =
-        strdup(strsep(&artists, "'")); // Separa o ID do artista
-    currentArtist[8] = '\0';           // Limita o ID a 8 caracteres
+    char *currentArtist = strdup(strsep(&artists, "'"));
+    currentArtist[8] = '\0';
     incrementArtistsNumAlbuns(currentArtist, gestorArtists);
 
     tamanho -= 12;

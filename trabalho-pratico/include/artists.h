@@ -39,29 +39,8 @@ float getArtistRecipePerStream(gpointer artist);
 float getArtistReceitaTotal(gpointer artist);
 int getArtistTamanhoGrupo(gpointer artist);
 
-void increment_artist_discografia(gpointer value, int duracao,
-                                  GList **listaResposta, int numeroArtistas,
-                                  char *country);
-void procuraArt(Artists *artist, GList **listaResposta);
-
-void putArtistsDiscografyZero(Artists *artist);
-
 void destroyArtist(Artists *a);
 
-char *pegarArtistId(Artists *artist);
-
-char *pegarArtistName(Artists *artist);
-
-char *pegarArtistIdConstituent(Artists *artist);
-
-char *pegarArtistCountry(Artists *artist);
-
-char *pegarArtistType(Artists *artist);
-
-int pegarArtistDiscografia(Artists *artist);
-
 void putArtistsVezesTop10Zero(Artists *artist);
-
-Artists *cloneArtists(Artists *artist);
 
 #endif

@@ -236,11 +236,10 @@ bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
     return false;
   }
 
-  // Valida o nome, sobrenome e data de nascimento
   char *first_name = strdup(strsep(&line, ";"));
   char *last_name = strdup(strsep(&line, ";"));
   char *birth_date = strdup(strsep(&line, ";"));
-  remove_quotes(birth_date); // Remove as aspas da data de nascimento
+  remove_quotes(birth_date);
 
   if (!validateDate(birth_date)) {
     free(first_name);
@@ -253,9 +252,8 @@ bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
 
   char *country = strdup(strsep(&line, ";"));
   char *subscription_type = strdup(strsep(&line, ";"));
-  remove_quotes(subscription_type); // Remove as aspas do subscription type
+  remove_quotes(subscription_type);
 
-  // Valida o subscription type
   if (!validateSubscriptionType(subscription_type)) {
     free(first_name);
     free(country);
@@ -267,9 +265,8 @@ bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
     return false;
   }
 
-  // Valida a lista de músicas com like
   char *liked_musics_id = strdup(line);
-  removeLast(liked_musics_id); // Remove o último caractere
+  removeLast(liked_musics_id);
   if (!validateCSVList(liked_musics_id)) {
     free(first_name);
     free(country);
@@ -282,7 +279,6 @@ bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
     return false;
   }
 
-  // Valida os IDs das músicas com like
   if (!validateMusicsIdUsers(liked_musics_id, gestorMusics)) {
     free(first_name);
     free(country);
@@ -295,7 +291,6 @@ bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
     return false;
   }
 
-  // Liberta a memória alocada
   free(first_name);
   free(country);
   free(subscription_type);
@@ -309,15 +304,13 @@ bool validateUsersLine(char *line, gestorMusics *gestorMusics) {
 }
 
 bool validateArtistsIdAlbums(char *artists_id, gestorArtists *gestorArtists) {
-  remove_quotes(artists_id); // Remove as aspas
-  removeFstLast(artists_id); // Remove o primeiro e último caracteres
-  int lentghArtistsId =
-      (int)strlen(artists_id); // Obtém o comprimento da string
+  remove_quotes(artists_id);
+  removeFstLast(artists_id);
+  int lentghArtistsId = (int)strlen(artists_id);
   char *key = NULL;
   gpointer orig_key;
   gpointer value;
 
-  // Processa os IDs dos artistas
   while (lentghArtistsId > 0) {
     if (lentghArtistsId == (int)strlen(artists_id)) {
       artists_id = artists_id + 1;
@@ -329,15 +322,15 @@ bool validateArtistsIdAlbums(char *artists_id, gestorArtists *gestorArtists) {
       key = NULL;
     }
 
-    key = strdup(strsep(&artists_id, "'")); // Separa o ID do artista
-    key[8] = '\0';                          // Limita o ID a 8 caracteres
+    key = strdup(strsep(&artists_id, "'"));
+    key[8] = '\0';
     gboolean found =
         lookUpArtistsHashTable(gestorArtists, key, &value, &orig_key);
-    if (!found) { // Se o artista não for encontrado, retorna false
+    if (!found) {
       free(key);
       return false;
     }
-    lentghArtistsId -= 12; // Ajusta o comprimento restante da string
+    lentghArtistsId -= 12;
   }
 
   if (key != NULL) {

@@ -38,10 +38,10 @@ void printQuery2(GList *listaResposta, FILE *newFile, int numeroArtists,
 
       Artists *currentArtist = (Artists *)node->data;
 
-      name = pegarArtistName(currentArtist);
-      type = pegarArtistType(currentArtist);
-      discografia = SegundosParaHoras(pegarArtistDiscografia(currentArtist));
-      country = pegarArtistCountry(currentArtist);
+      name = getArtistName(currentArtist);
+      type = getArtistTypeStr(currentArtist);
+      discografia = SegundosParaHoras(getArtistDiscografia(currentArtist));
+      country = getArtistCountry(currentArtist);
       int total_len = strlen(name) + strlen(type) + 4 + strlen(country) + 4;
       new_str = malloc((total_len + 1) * sizeof(char));
 
@@ -73,14 +73,14 @@ void printQuery2(GList *listaResposta, FILE *newFile, int numeroArtists,
       char *new_str;
 
       Artists *currentArtist = (Artists *)node->data;
-      country = pegarArtistCountry(currentArtist);
+      country = getArtistCountry(currentArtist);
       if (strcmp(country1, country) != 0) {
         node = node->next;
         free(country);
       } else {
-        name = pegarArtistName(currentArtist);
-        type = pegarArtistType(currentArtist);
-        discografia = SegundosParaHoras(pegarArtistDiscografia(currentArtist));
+        name = getArtistName(currentArtist);
+        type = getArtistTypeStr(currentArtist);
+        discografia = SegundosParaHoras(getArtistDiscografia(currentArtist));
 
         int total_len = strlen(name) + strlen(type) + 4 + strlen(country) + 4;
 

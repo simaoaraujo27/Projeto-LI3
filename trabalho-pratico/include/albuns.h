@@ -6,10 +6,6 @@ typedef struct albuns Albuns;
 #include "gestor_artists.h"
 
 char *getAlbumId(Albuns *album);
-char *getAlbumTitle(Albuns *album);
-char *getAlbumArtistsId(Albuns *album);
-char *getAlbumYear(Albuns *album);
-char *getAlbumProducers(Albuns *album);
 
 void setAlbumId(Albuns *album, char *id);
 void setAlbumTitle(Albuns *album, char *title);
