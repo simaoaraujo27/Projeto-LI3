@@ -145,8 +145,10 @@ void query4(gestorArtists *gestorArtists, char *DataFim, char *DataInicio,
   lookUpArtistsHashTable(gestorArtists, artistMaisVezesNoTop10, &orig_key,
                          &value);
 
-  printQuery4(newFile, TemS, artistMaisVezesNoTop10, getArtistTypeStr(orig_key),
-              maisVezesNoTop10);
+  char *type = getArtistTypeStr(orig_key);
+
+  printQuery4(newFile, TemS, artistMaisVezesNoTop10, type, maisVezesNoTop10);
+  free(type);
   free(artistMaisVezesNoTop10);
   colocaZeroVezesTop10(gestorArtists);
 }

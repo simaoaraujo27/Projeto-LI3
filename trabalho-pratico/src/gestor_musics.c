@@ -252,6 +252,7 @@ void incrementRecipeArtist(char *musicId, gestorMusics *gestorMusics,
           }
           free(idComponentesOriginal);
         }
+        free(type);
       }
       lentghArtistId -= 12;
       free(currentArtist);
@@ -261,4 +262,3 @@ void incrementRecipeArtist(char *musicId, gestorMusics *gestorMusics,
     free(artistIdOriginal);
   }
 }
-

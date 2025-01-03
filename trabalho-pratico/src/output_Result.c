@@ -205,7 +205,7 @@ void MakeQuery1Artist(gpointer orig_key, FILE *newFile, int temS) {
              num_albuns_individual_str, receitaTotalStr);
   }
   writeFile(newFile, new_str);
-
+  free(type);
   free(name);
   free(country);
   free(num_albuns_individual_str);
