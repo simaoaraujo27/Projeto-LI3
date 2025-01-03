@@ -1,5 +1,4 @@
 #include "compare_files.h"
-#include "gestorParsers.h"
 #include "gestor_artists.h"
 #include "gestor_musics.h"
 #include "gestor_queries.h"
@@ -7,6 +6,7 @@
 #include "gestores.h"
 #include "minHeap.h"
 #include "nodo_musica.h"
+#include "parser.h"
 #include "query1.h"
 #include "query2.h"
 #include "query3.h"

@@ -1,8 +1,8 @@
 #include "query4.h"
 #include "gestor_musics.h"
-#include "gestor_prints.h"
 #include "inputResult.h"
 #include "minHeap.h"
+#include "outputResult.h"
 #include "utils.h"
 #include <assert.h>
 #include <ctype.h>

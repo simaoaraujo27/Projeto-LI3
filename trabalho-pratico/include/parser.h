@@ -1,5 +1,5 @@
-#ifndef _GESTORPARSERS_H_
-#define _GESTORPARSERS_H_
+#ifndef _PARSER_H_
+#define _PARSER_H_
 
 #include "gestores.h"
 #include <stdio.h>
