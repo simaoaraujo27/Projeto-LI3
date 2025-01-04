@@ -70,29 +70,31 @@ void WriteErrorsFile(FicheiroErrosCSV *ficheiroErrosCSV, char *typeFile,
 }
 
 void destroyFicheiroErrosCSV(FicheiroErrosCSV *ficheiroErrosCSV) {
-  if (!ficheiroErrosCSV->errorsFileArtists) {
-    perror("Erro ao abrir o ficheiro de erros");
-    free(ficheiroErrosCSV);
+  if (!ficheiroErrosCSV) {
+    return; // Evita acessar um ponteiro nulo.
   }
 
-  if (!ficheiroErrosCSV->errorsFileMusics) {
-    perror("Erro ao abrir o ficheiro de erros");
-    free(ficheiroErrosCSV);
+  // Fecha os arquivos, se estiverem abertos.
+  if (ficheiroErrosCSV->errorsFileArtists) {
+    fclose(ficheiroErrosCSV->errorsFileArtists);
   }
 
-  if (!ficheiroErrosCSV->errorsFileUsers) {
-    perror("Erro ao abrir o ficheiro de erros");
-    free(ficheiroErrosCSV);
+  if (ficheiroErrosCSV->errorsFileMusics) {
+    fclose(ficheiroErrosCSV->errorsFileMusics);
   }
 
-  if (!ficheiroErrosCSV->errorsFileAlbuns) {
-    perror("Erro ao abrir o ficheiro de erros");
-    free(ficheiroErrosCSV);
+  if (ficheiroErrosCSV->errorsFileUsers) {
+    fclose(ficheiroErrosCSV->errorsFileUsers);
   }
 
-  if (!ficheiroErrosCSV->errorsFileHistory) {
-    perror("Erro ao abrir o ficheiro de erros");
-    free(ficheiroErrosCSV);
+  if (ficheiroErrosCSV->errorsFileAlbuns) {
+    fclose(ficheiroErrosCSV->errorsFileAlbuns);
   }
+
+  if (ficheiroErrosCSV->errorsFileHistory) {
+    fclose(ficheiroErrosCSV->errorsFileHistory);
+  }
+
+  // Libera a memória alocada para a estrutura.
   free(ficheiroErrosCSV);
 }
