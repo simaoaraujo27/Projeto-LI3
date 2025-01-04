@@ -68,3 +68,31 @@ void WriteErrorsFile(FicheiroErrosCSV *ficheiroErrosCSV, char *typeFile,
     printf("Tipo de file errado!!!");
   }
 }
+
+void destroyFicheiroErrosCSV(FicheiroErrosCSV *ficheiroErrosCSV) {
+  if (!ficheiroErrosCSV->errorsFileArtists) {
+    perror("Erro ao abrir o ficheiro de erros");
+    free(ficheiroErrosCSV);
+  }
+
+  if (!ficheiroErrosCSV->errorsFileMusics) {
+    perror("Erro ao abrir o ficheiro de erros");
+    free(ficheiroErrosCSV);
+  }
+
+  if (!ficheiroErrosCSV->errorsFileUsers) {
+    perror("Erro ao abrir o ficheiro de erros");
+    free(ficheiroErrosCSV);
+  }
+
+  if (!ficheiroErrosCSV->errorsFileAlbuns) {
+    perror("Erro ao abrir o ficheiro de erros");
+    free(ficheiroErrosCSV);
+  }
+
+  if (!ficheiroErrosCSV->errorsFileHistory) {
+    perror("Erro ao abrir o ficheiro de erros");
+    free(ficheiroErrosCSV);
+  }
+  free(ficheiroErrosCSV);
+}

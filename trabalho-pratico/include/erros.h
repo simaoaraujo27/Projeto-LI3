@@ -8,4 +8,6 @@ FicheiroErrosCSV *initFicheiroErrosCSV();
 void WriteErrorsFile(FicheiroErrosCSV *ficheiroErrosCSV, char *typeFile,
                      char *line);
 
+void destroyFicheiroErrosCSV(FicheiroErrosCSV *ficheiroErrosCSV);
+
 #endif

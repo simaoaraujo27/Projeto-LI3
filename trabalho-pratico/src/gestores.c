@@ -91,5 +91,6 @@ void destroyGestor(Gestores *gestor) {
   freeGestorMusics(gestor->gestorMusics);
   freeGestorUsers(gestor->gestorUsers);
   freeGestorAlbuns(gestor->gestorAlbuns);
+  destroyFicheiroErrosCSV(gestor->ficheiroErrosCSV);
   free(gestor);
 }
