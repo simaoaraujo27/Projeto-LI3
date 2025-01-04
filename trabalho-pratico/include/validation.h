@@ -19,5 +19,9 @@ bool validateMusicsLine(char *line, gestorArtists *gestorArtists,
                         gestorAlbuns *gestorAlbuns);
 bool validateAlbumsLine(char *line, gestorArtists *gestorArtists);
 bool validateHistoryLine(char *line);
+bool validateAge(char *age);
+bool validateId(char *id);
+bool isAfter(const char *end, const char *begin);
+bool allDigit(char *num);
 
 #endif

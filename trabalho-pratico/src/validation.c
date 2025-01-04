@@ -375,3 +375,68 @@ bool validateHistoryLine(char *line) {
 
   return validate;
 }
+
+bool validateAge(char *age) {
+  if (age == NULL) {
+    return false;
+  }
+
+  for (int i = 0; age[i] != '\0'; i++) {
+    if (!isdigit(age[i])) {
+      return false;
+    }
+  }
+
+  int idade = atoi(age);
+
+  if (idade >= 0 && idade <= 150) {
+    return true;
+  }
+  return false;
+}
+
+// Verifica se o id de um User ou Artist é válido (sintaticamente)
+bool validateId(char *id) {
+  if (strlen(id) != 8)
+    return false;
+  if (id[0] != 'A' && id[0] != 'U')
+    return false;
+  for (int i = 1; i <= 7; i++) {
+    if (!isdigit(id[i]))
+      return false;
+  }
+
+  return true;
+}
+
+// Função para verificar se a data 'end' é posterior ou igual a 'begin'
+bool isAfter(const char *end, const char *begin) {
+  int endYear, endMonth, endDay;
+  int beginYear, beginMonth, beginDay;
+
+  sscanf(end, "%d/%d/%d", &endYear, &endMonth, &endDay);
+  sscanf(begin, "%d/%d/%d", &beginYear, &beginMonth, &beginDay);
+
+  if (endYear > beginYear)
+    return true;
+  else if (endYear == beginYear) {
+    if (endMonth > beginMonth)
+      return true;
+    else if (endMonth == beginMonth) {
+      if (endDay >= beginDay)
+        return true;
+    }
+  }
+
+  return false;
+}
+
+bool allDigit(char *num) {
+  for (int i = 0; num[i] != '\0'; i++) {
+    if (!isdigit(num[i]))
+      return false;
+  }
+
+  return true;
+}
+
