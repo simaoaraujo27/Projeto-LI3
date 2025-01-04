@@ -2,6 +2,7 @@
 #include "glib.h"
 #include "inputResult.h"
 #include "output_Result.h"
+#include "resumo_users.h"
 #include "utils.h"
 #include <string.h>
 

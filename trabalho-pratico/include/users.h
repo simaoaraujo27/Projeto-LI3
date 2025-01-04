@@ -3,11 +3,6 @@
 
 #include <glib.h>
 
-typedef struct artistaAudicoes ArtistaTempo;
-typedef struct categoriaTempo AlbumTempo;
-typedef struct categoriaTempo GeneroTempo;
-typedef struct resumo Resumo;
-
 typedef struct users Users;
 
 void setUserUsername(Users *u, char *username);
@@ -28,14 +23,12 @@ Users *separateUsers(char *line);
 void incrementMusicsListening(gpointer user, char *genre);
 
 int existUserResume(gpointer user, int indice);
-char *getUserAge(gpointer user);
 char *getUserUsername(gpointer user);
 char *getUserEmail(gpointer user);
 char *getUserFirstName(gpointer user);
 char *getUserLastName(gpointer user);
 char *getUserBirthDate(gpointer user);
 char *getUserCountry(gpointer user);
-char *getUserSubscriptionType(gpointer user);
 char *getUserLikedMusicsId(gpointer user);
 char *getUserLikedMusicsId(gpointer user);
 
@@ -46,6 +39,7 @@ char *getUserResumoGenero(gpointer user, int year);
 char *getUserResumoAlbum(gpointer user, int year);
 int getUserResumoDay(gpointer user, int year);
 int getUserResumoHora(gpointer user, int year);
+GArray *getUserResumo(gpointer user);
 
 void destroyUser(Users *u);
 
