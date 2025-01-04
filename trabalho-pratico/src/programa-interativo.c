@@ -259,6 +259,9 @@ int main() {
       assert(scanf("%99s", country) != -1);
       limparBufferEntrada();
       while (1) {
+        if (!strcmp(country, "0") || !strcmp(country, "\"0\"")) {
+          break;
+        }
         if (country[0] != '"' && country[strlen(country) - 1] != '"') {
           printf("ERRO: O country é inválido!\n");
           printf("Por favor, insira o country entre aspas (\"\") : ");
@@ -273,7 +276,7 @@ int main() {
       escolheSeparador(&separador);
 
       char input[MAX_INPUT_SIZE];
-      if (strcmp(country, "0") == 0) {
+      if (!strcmp(country, "0") || !strcmp(country, "\"0\"")) {
         snprintf(input, sizeof(input), "2 %s\n", n);
       } else {
         snprintf(input, sizeof(input), "2 %s %s\n", n, country);
@@ -403,7 +406,7 @@ int main() {
         if (!allDigit(numUtilizadores)) {
           printf("ERRO: O número de utilizadores é inválido!\n");
           printf("Por favor, insira um número de utilizadores válido: ");
-          assert(scanf("%11s", username) != -1);
+          assert(scanf("%8s", numUtilizadores) != -1);
           limparBufferEntrada();
         } else {
           break;
