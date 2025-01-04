@@ -1,5 +1,7 @@
 #include "gestor_artists.h"
 #include "artists.h"
+#include "erros.h"
+#include "gestores.h"
 #include "top10Query4.h"
 #include "utils.h"
 #include "validation.h"
@@ -9,25 +11,18 @@
 #include <string.h>
 
 struct gestorArtists {
-  FILE *errorsFile;
   GHashTable *artistsTable;
   GArray *Tops10;
   GList *listaQuery2;
 };
 
-gestorArtists *initGestorArtists(const char *errorsFilePath) {
+gestorArtists *initGestorArtists() {
   GHashTable *artistsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyArtist);
   gestorArtists *gestor = malloc(sizeof(gestorArtists));
   if (!gestor)
     return NULL;
 
-  gestor->errorsFile = fopen(errorsFilePath, "w");
-  if (!gestor->errorsFile) {
-    perror("Erro ao abrir o ficheiro de erros");
-    free(gestor);
-    return NULL;
-  }
   GArray *Tops10 = g_array_new(FALSE, FALSE, sizeof(ArrayTop10 *));
   g_array_set_size(Tops10, 329);
   for (int i = 0; i < (int)Tops10->len; i++) {
@@ -52,9 +47,6 @@ void freeGArrayQuery4(GArray *Tops10) {
 }
 void freeGestorArtists(struct gestorArtists *gestor) {
   if (gestor != NULL) {
-    if (gestor->errorsFile != NULL) {
-      fclose(gestor->errorsFile);
-    }
     if (gestor->artistsTable != NULL) {
       g_hash_table_destroy(gestor->artistsTable);
     }
@@ -72,7 +64,7 @@ void freeGestorArtists(struct gestorArtists *gestor) {
   }
 }
 
-void parserArtist(GHashTable *ArtistsTable, Artists *artist, FILE *errorsFile,
+void parserArtist(GHashTable *ArtistsTable, Artists *artist, Gestores *gestor,
                   char *line) {
   char *idConstituentLine = getArtistIdConstituent(artist);
   char *idConstituentCSV = getArtistIdConstituent(artist);
@@ -91,7 +83,7 @@ void parserArtist(GHashTable *ArtistsTable, Artists *artist, FILE *errorsFile,
 
     g_hash_table_insert(ArtistsTable, id, artist);
   } else {
-    fprintf(errorsFile, "%s", line);
+    WriteErrorsFile(getGestorFicheiroErrosCSV(gestor), "artists", line);
     destroyArtist(artist);
   }
   free(idConstituentLine);
@@ -99,8 +91,9 @@ void parserArtist(GHashTable *ArtistsTable, Artists *artist, FILE *errorsFile,
   free(type);
 }
 
-int GestorArtists(gestorArtists *gestor, char *artistsPath) {
+int GestorArtists(Gestores *gestor, char *artistsPath) {
   FILE *fp = fopen(artistsPath, "r");
+  gestorArtists *gestorArtists = getGestorArtist(gestor);
 
   if (fp) {
 
@@ -118,7 +111,7 @@ int GestorArtists(gestorArtists *gestor, char *artistsPath) {
           continue;
         }
         artist = separateArtists(line_copy);
-        parserArtist(gestor->artistsTable, artist, gestor->errorsFile, line);
+        parserArtist(gestorArtists->artistsTable, artist, gestor, line);
         free(line_copy);
       }
     }

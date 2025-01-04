@@ -10,41 +10,12 @@
 #include <glib.h>
 #include <stdio.h>
 
-struct gestorHistory {
-  FILE *errorsFile;
-};
-
-gestorHistory *initGestorHistory(const char *errorsFilePath) {
-  gestorHistory *gestorHistory = malloc(sizeof(struct gestorHistory));
-  if (!gestorHistory)
-    return NULL;
-
-  gestorHistory->errorsFile = fopen(errorsFilePath, "w");
-  if (!gestorHistory->errorsFile) {
-    perror("Erro ao abrir o ficheiro de erros");
-    free(gestorHistory);
-    return NULL;
-  }
-
-  return gestorHistory;
-}
-
-void freeGestorHistory(gestorHistory *gestor) {
-  if (gestor) {
-    if (gestor->errorsFile)
-      fclose(gestor->errorsFile);
-    free(gestor);
-  }
-}
-
 void parserHistory(History *history, char *line, char *copia,
                    Gestores *gestor) {
 
-  gestorArtists *gestorArtists = pegarGestorArtist(gestor);
-  gestorHistory *gestorHistory = pegarGestorHistory(gestor);
-  gestorMusics *gestorMusics = pegarGestorMusic(gestor);
-  gestorUsers *gestorUsers = pegarGestorUser(gestor);
-  FILE *errorsFile = gestorHistory->errorsFile;
+  gestorArtists *gestorArtists = getGestorArtist(gestor);
+  gestorMusics *gestorMusics = getGestorMusic(gestor);
+  gestorUsers *gestorUsers = getGestorUser(gestor);
 
   if (validateHistoryLine(copia)) {
     char *id = getHistoryId(history);
@@ -134,13 +105,13 @@ void parserHistory(History *history, char *line, char *copia,
     free(id);
     free(currentUserCopia);
   } else {
-    fprintf(errorsFile, "%s", line);
+    WriteErrorsFile(getGestorFicheiroErrosCSV(gestor), "history", line);
   }
   destroyHistory(history);
 }
 
 int GestorHistory(Gestores *gestor, char *historyPath) {
-  gestorMusics *gestorMusics = pegarGestorMusic(gestor);
+  gestorMusics *gestorMusics = getGestorMusic(gestor);
 
   FILE *fp = fopen(historyPath, "r");
 

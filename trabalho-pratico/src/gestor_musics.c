@@ -11,25 +11,19 @@
 #include <string.h>
 
 struct gestorMusics {
-  FILE *errorsFile;
   GHashTable *musicsTable;
   GHashTable *genresTable;
   int *nGeneros;
 };
 
-gestorMusics *initGestorMusics(const char *errorsFilePath) {
+gestorMusics *initGestorMusics() {
   GHashTable *musicsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyMusic);
   GHashTable *genresTable = g_hash_table_new(g_str_hash, g_str_equal);
   gestorMusics *gestorMusic = malloc(sizeof(gestorMusics));
   if (!gestorMusic)
     return NULL;
-  gestorMusic->errorsFile = fopen(errorsFilePath, "w");
-  if (!gestorMusic->errorsFile) {
-    perror("Erro ao abrir o ficheiro de erros");
-    free(gestorMusic);
-    return NULL;
-  }
+
   gestorMusic->musicsTable = musicsTable;
   gestorMusic->genresTable = genresTable;
   gestorMusic->nGeneros = malloc(sizeof(int *));
@@ -39,8 +33,6 @@ gestorMusics *initGestorMusics(const char *errorsFilePath) {
 
 void freeGestorMusics(gestorMusics *gestor) {
   if (gestor) {
-    if (gestor->errorsFile)
-      fclose(gestor->errorsFile);
     g_hash_table_destroy(gestor->musicsTable);
     g_hash_table_destroy(gestor->genresTable);
     free(gestor->nGeneros);
@@ -84,10 +76,11 @@ char **insertGenreToArray(gestorMusics *gestorMusics, int numGeneros) {
   return valuesArray;
 }
 
-void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
-                 Musics *music, GHashTable *musicsTable, FILE *errorsFile,
-                 gestorAlbuns *gestorAlbuns, GHashTable *genresTable,
+void parserMusic(char *copia, Gestores *gestor, char *line, Musics *music,
+                 GHashTable *musicsTable, GHashTable *genresTable,
                  int *nGeneros) {
+  gestorArtists *gestorArtist = getGestorArtist(gestor);
+  gestorAlbuns *gestorAlbuns = getGestorAlbum(gestor);
   char *id;
   char *genre;
   if (validateMusicsLine(copia, gestorArtist, gestorAlbuns)) {
@@ -97,10 +90,6 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
     g_hash_table_insert(musicsTable, id, music);
 
     char *artistId = getMusicArtistId(music);
-    if (artistId == NULL) {
-      fprintf(errorsFile, "Erro: artistId é NULL para a música: %s\n", line);
-      return;
-    }
 
     remove_quotes(artistId);
     removeFstLast(artistId);
@@ -145,12 +134,12 @@ void parserMusic(char *copia, gestorArtists *gestorArtist, char *line,
     free(genre);
     genre = NULL;
   } else {
-    fprintf(errorsFile, "%s", line);
+    WriteErrorsFile(getGestorFicheiroErrosCSV(gestor), "musics", line);
   }
 }
 
-int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
-                 gestorAlbuns *gestorAlbuns, char *musicsPath) {
+int GestorMusics(Gestores *gestor, char *musicsPath) {
+  gestorMusics *gestorMusic = getGestorMusic(gestor);
   FILE *fp = fopen(musicsPath, "r");
   if (fp) {
     char *line = NULL;
@@ -161,8 +150,7 @@ int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
 
     while (getline(&line, &len, fp) != -1) {
       char *copia = strdup(line);
-      parserMusic(copia, gestorArtist, line, music, gestorMusic->musicsTable,
-                  gestorMusic->errorsFile, gestorAlbuns,
+      parserMusic(copia, gestor, line, music, gestorMusic->musicsTable,
                   gestorMusic->genresTable, gestorMusic->nGeneros);
       free(copia);
     }

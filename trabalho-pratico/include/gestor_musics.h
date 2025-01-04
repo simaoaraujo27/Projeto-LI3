@@ -1,18 +1,17 @@
 #ifndef _GESTOR_MUSICS_H_
 #define _GESTOR_MUSICS_H_
 
+typedef struct gestorMusics gestorMusics;
+
 #include "gestor_albuns.h"
 #include "gestor_artists.h"
 #include "musics.h"
 #include <glib.h>
 #include <stdio.h>
 
-typedef struct gestorMusics gestorMusics;
+int GestorMusics(Gestores *gestor, char *musicsPath);
 
-int GestorMusics(gestorMusics *gestorMusic, gestorArtists *gestorArtist,
-                 gestorAlbuns *gestorAlbuns, char *musicsPath);
-
-gestorMusics *initGestorMusics(const char *errorsFilePath);
+gestorMusics *initGestorMusics();
 
 void freeGestorMusics(gestorMusics *gestor);
 

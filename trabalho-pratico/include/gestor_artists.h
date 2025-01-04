@@ -1,17 +1,18 @@
 #ifndef _GESTORARTISTS_H_
 #define _GESTORARTISTS_H_
 
-#include "artists.h"
-
 typedef struct gestorArtists gestorArtists;
 
-gestorArtists *initGestorArtists(const char *errorsFilePath);
+#include "artists.h"
+#include "gestores.h"
+
+gestorArtists *initGestorArtists();
 
 GArray *getGArrayTops10(gestorArtists *gestorArtists);
 
 void freeGestorArtists(gestorArtists *gestor);
 
-int GestorArtists(gestorArtists *gestor, char *artistsPath);
+int GestorArtists(Gestores *gestor, char *artistsPath);
 
 gboolean lookUpArtistsHashTable(gestorArtists *gestorArtist, char *line,
                                 gpointer *value, gpointer *orig_key);

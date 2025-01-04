@@ -10,9 +10,6 @@ typedef struct gestorHistory gestorHistory;
 #include <glib.h>
 #include <stdio.h>
 
-gestorHistory *initGestorHistory(const char *errorsFilePath);
-void freeGestorHistory(gestorHistory *gestor);
-
 void parserHistory(History *history, char *line, char *copia, Gestores *gestor);
 
 int GestorHistory(Gestores *gestor, char *historyPath);

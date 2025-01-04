@@ -22,8 +22,8 @@ argumentosQuery5 *initArgumentosQuery5() {
 }
 
 void alocaMatriz(Gestores *gestor, argumentosQuery5 *a) {
-  a->numGeneros = getMusicsNGenres(pegarGestorMusic(gestor));
-  a->numUtilizadores = getNUsers(pegarGestorUser(gestor));
+  a->numGeneros = getMusicsNGenres(getGestorMusic(gestor));
+  a->numUtilizadores = getNUsers(getGestorUser(gestor));
   int **matrizClassificacaoMusicas;
   matrizClassificacaoMusicas = malloc(a->numUtilizadores * sizeof(int *));
   if (!matrizClassificacaoMusicas) {
@@ -51,7 +51,7 @@ void alocaMatriz(Gestores *gestor, argumentosQuery5 *a) {
 
   a->matrizClassificacaoMusicas = matrizClassificacaoMusicas;
 
-  gestorMusics *gestorMusics = pegarGestorMusic(gestor);
+  gestorMusics *gestorMusics = getGestorMusic(gestor);
   char **nomesGeneros = insertGenreToArray(gestorMusics, a->numGeneros);
   char **idsUtilizadores = malloc(sizeof(char *) * a->numUtilizadores);
   a->nomesGeneros = nomesGeneros;
@@ -59,7 +59,7 @@ void alocaMatriz(Gestores *gestor, argumentosQuery5 *a) {
 }
 
 void constroiQuery5(Gestores *gestor, argumentosQuery5 *a) {
-  gestorUsers *gestorUsers = pegarGestorUser(gestor);
+  gestorUsers *gestorUsers = getGestorUser(gestor);
 
   preencheMatriz(a->matrizClassificacaoMusicas, a->numGeneros, a->nomesGeneros,
                  gestorUsers, a->idsUtilizadores);
@@ -90,7 +90,7 @@ void query5(Gestores *gestor, int numRecomendacoes, char *idUtilizadorAlvo,
   gpointer value;
   gpointer orig_key;
 
-  if (!lookUpUsersHashTable(pegarGestorUser(gestor), idUtilizadorAlvo,
+  if (!lookUpUsersHashTable(getGestorUser(gestor), idUtilizadorAlvo,
                             &orig_key, &value) ||
       numRecomendacoes == 0) {
     fprintf(newFile, "\n");

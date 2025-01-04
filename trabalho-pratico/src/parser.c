@@ -37,10 +37,8 @@ int GestorParsers(Gestores *gestor, char *path, FILE *fp) {
   snprintf(albunsPath, MAX_PATH_SIZE, "%s/%s", path, "albums.csv");
   snprintf(historyPath, MAX_PATH_SIZE, "%s/%s", path, "history.csv");
 
-  gestorArtists *gestorArtists = pegarGestorArtist(gestor);
-  gestorMusics *gestorMusics = pegarGestorMusic(gestor);
-  gestorUsers *gestorUsers = pegarGestorUser(gestor);
-  gestorAlbuns *gestorAlbuns = pegarGestorAlbum(gestor);
+  gestorArtists *gestorArtists = getGestorArtist(gestor);
+  gestorUsers *gestorUsers = getGestorUser(gestor);
 
   char *line = NULL;
   size_t len = 0;
@@ -49,24 +47,24 @@ int GestorParsers(Gestores *gestor, char *path, FILE *fp) {
   }
   free(line);
 
-  if (!GestorArtists(gestorArtists, artistsPath)) {
+  if (!GestorArtists(gestor, artistsPath)) {
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
     return 0;
   }
 
-  if (!GestorAlbuns(gestorAlbuns, albunsPath, gestorArtists)) {
+  if (!GestorAlbuns(gestor, albunsPath)) {
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
     return 0;
   }
 
-  if (!GestorMusics(gestorMusics, gestorArtists, gestorAlbuns, musicsPath)) {
+  if (!GestorMusics(gestor, musicsPath)) {
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
     return 0;
   }
 
   CriaListasQuery2(gestorArtists);
 
-  if (!GestorUsers(gestorUsers, gestorMusics, usersPath)) {
+  if (!GestorUsers(gestor, usersPath)) {
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
     return 0;
   }

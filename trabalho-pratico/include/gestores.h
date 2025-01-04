@@ -3,6 +3,7 @@
 
 typedef struct gestores Gestores;
 
+#include "erros.h"
 #include "gestor_albuns.h"
 #include "gestor_artists.h"
 #include "gestor_history.h"
@@ -16,11 +17,12 @@ typedef struct gestores Gestores;
 
 Gestores *initgestor(int *flag);
 
-gestorArtists *pegarGestorArtist(Gestores *gestor);
-gestorMusics *pegarGestorMusic(Gestores *gestor);
-gestorUsers *pegarGestorUser(Gestores *gestor);
-gestorAlbuns *pegarGestorAlbum(Gestores *gestor);
-gestorHistory *pegarGestorHistory(Gestores *gestor);
+gestorArtists *getGestorArtist(Gestores *gestor);
+gestorMusics *getGestorMusic(Gestores *gestor);
+gestorUsers *getGestorUser(Gestores *gestor);
+gestorAlbuns *getGestorAlbum(Gestores *gestor);
+gestorHistory *getGestorHistory(Gestores *gestor);
+FicheiroErrosCSV *getGestorFicheiroErrosCSV(Gestores *gestor);
 
 void destroyGestor(Gestores *gestor);
 

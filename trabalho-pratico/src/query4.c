@@ -98,7 +98,8 @@ void query4(gestorArtists *gestorArtists, char *DataFim, char *DataInicio,
     semanaFim = (calcularDiasAte_9_9_2024(DataFim) + 5) / 7;
     if (semanaInicio >= (int)Tops10->len)
       semanaInicio = (int)Tops10->len;
-    if (semanaFim >= (int)Tops10->len && semanaInicio >= (int)Tops10->len) {
+    if ((semanaFim >= (int)Tops10->len && semanaInicio >= (int)Tops10->len) ||
+        (semanaFim < semanaInicio)) {
       fprintf(newFile, "\n");
       fclose(newFile);
       return;

@@ -1,10 +1,10 @@
 #include "artists.h"
 #include "gestor_artists.h"
 #include "gestor_musics.h"
-#include "output_Result.h"
 #include "gestores.h"
 #include "inputResult.h"
 #include "musics.h"
+#include "output_Result.h"
 #include "utils.h"
 #include <ctype.h>
 #include <glib.h>
@@ -17,7 +17,7 @@
 void query2(int numeroArtistas, char *country, Gestores *gestor, int i,
             int temS) {
   FILE *newFile = createFile(i);
-  gestorArtists *gestorArtists = pegarGestorArtist(gestor);
+  gestorArtists *gestorArtists = getGestorArtist(gestor);
 
   if (numeroArtistas == 0) {
     fprintf(newFile, "\n");

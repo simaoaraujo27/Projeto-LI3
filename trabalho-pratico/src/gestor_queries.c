@@ -26,9 +26,9 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
   if (line[0] == '1') {
     start = clock();
     if ((temS && (line[3] == 'U')) || (!temS && (line[2] == 'U'))) {
-      query1User(pegarGestorUser(gestor), line, i, temS);
+      query1User(getGestorUser(gestor), line, i, temS);
     } else
-      query1Artist(pegarGestorArtist(gestor), line, i, temS);
+      query1Artist(getGestorArtist(gestor), line, i, temS);
     end = clock();
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;
     setTemposTestes(t, 1, time_spent); // Acumula o tempo para Query 1
@@ -75,13 +75,13 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
       fim[10] = '\0';
       line[10] = '\0';
       start = clock();
-      query4(pegarGestorArtist(gestor), line, fim, i, temS);
+      query4(getGestorArtist(gestor), line, fim, i, temS);
       end = clock();
       time_spent = (double)(end - start) / CLOCKS_PER_SEC;
       setTemposTestes(t, 4, time_spent); // Acumula o tempo para Query 4
     } else {
       start = clock();
-      query4(pegarGestorArtist(gestor), NULL, NULL, i, temS);
+      query4(getGestorArtist(gestor), NULL, NULL, i, temS);
       end = clock();
       time_spent = (double)(end - start) / CLOCKS_PER_SEC;
       setTemposTestes(t, 4, time_spent); // Acumula o tempo para Query 4
@@ -124,7 +124,7 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
     line += 5;
     int N = atoi(line);
     start = clock();
-    query6(userId, year, N, pegarGestorUser(gestor), i, temS);
+    query6(userId, year, N, getGestorUser(gestor), i, temS);
     end = clock();
     time_spent = (double)(end - start) / CLOCKS_PER_SEC;
     setTemposTestes(t, 6, time_spent); // Acumula o tempo para Query 6*/

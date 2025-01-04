@@ -1,5 +1,7 @@
 #include "gestor_albuns.h"
 #include "albuns.h"
+#include "erros.h"
+#include "gestores.h"
 #include "utils.h"
 #include "validation.h"
 #include <assert.h>
@@ -7,11 +9,10 @@
 #include <stdio.h>
 
 struct gestorAlbuns {
-  FILE *errorsFile;
   GHashTable *albunsTable;
 };
 
-gestorAlbuns *initGestorAlbuns(char *errorsFilePath) {
+gestorAlbuns *initGestorAlbuns() {
   GHashTable *albunsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyAlbum);
 
@@ -19,40 +20,32 @@ gestorAlbuns *initGestorAlbuns(char *errorsFilePath) {
   if (!gestorAlbuns)
     return NULL;
 
-  gestorAlbuns->errorsFile = fopen(errorsFilePath, "w");
-  if (!gestorAlbuns->errorsFile) {
-    perror("Erro ao abrir o ficheiro de erros");
-    free(gestorAlbuns);
-    return NULL;
-  }
-
   gestorAlbuns->albunsTable = albunsTable;
   return gestorAlbuns;
 }
 
 void freeGestorAlbuns(gestorAlbuns *gestor) {
   if (gestor) {
-    if (gestor->errorsFile)
-      fclose(gestor->errorsFile);
     g_hash_table_destroy(gestor->albunsTable);
     free(gestor);
   }
 }
 
-void parserAlbum(GHashTable *albunsTable, Albuns *album, FILE *errorsFile,
+void parserAlbum(GHashTable *albunsTable, Albuns *album, Gestores *gestor,
                  char *line, char *copia, gestorArtists *gestorArtists) {
   if (validateAlbumsLine(copia, gestorArtists)) {
     char *id = getAlbumId(album);
     remove_quotes(id);
     g_hash_table_insert(albunsTable, id, album);
   } else {
-    fprintf(errorsFile, "%s", line);
+    WriteErrorsFile(getGestorFicheiroErrosCSV(gestor), "albuns", line);
   }
 }
 
-int GestorAlbuns(gestorAlbuns *gestor, char *albunsPath,
-                 gestorArtists *gestorArtists) {
+int GestorAlbuns(Gestores *gestor, char *albunsPath) {
   FILE *fp = fopen(albunsPath, "r");
+  gestorAlbuns *gestorAlbuns = getGestorAlbum(gestor);
+  gestorArtists *gestorArtists = getGestorArtist(gestor);
 
   if (fp) {
     char *line = NULL;
@@ -70,14 +63,13 @@ int GestorAlbuns(gestorAlbuns *gestor, char *albunsPath,
         }
         album = separateAlbuns(line_copy, gestorArtists);
         char *copia = strdup(line);
-        parserAlbum(gestor->albunsTable, album, gestor->errorsFile, line, copia,
+        parserAlbum(gestorAlbuns->albunsTable, album, gestor, line, copia,
                     gestorArtists);
         free(copia);
         free(line_copy);
       }
     }
     free(line);
-
     fclose(fp);
   } else {
     perror("Error opening albuns file");

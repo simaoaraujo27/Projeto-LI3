@@ -11,16 +11,14 @@ typedef struct gestorUsers gestorUsers;
 #include <glib.h>
 #include <stdio.h>
 
-int GestorUsers(gestorUsers *gestorUser, gestorMusics *gestorMusic,
-                char *usersPath);
+int GestorUsers(Gestores *gestor, char *usersPath);
 
-gestorUsers *initGestorUsers(const char *errorsFilePath);
+gestorUsers *initGestorUsers();
 
 void freeGestorUsers(gestorUsers *gestorUser);
 
 gboolean lookUpUsersHashTable(gestorUsers *gestorUser, char *line,
                               gpointer *value, gpointer *orig_key);
-
 
 void processAllUsers(Gestores *gestor, NodoMusica **lista);
 
