@@ -14,8 +14,8 @@
 #include <string.h>
 #include <time.h>
 
-void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
-                   argumentosQuery5 *a, int i, temposTestes *t) {
+void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
+                   temposTestes *t) {
   clock_t start, end;
   double time_spent;
   int firstOcorr = 0, maxAge = 0, minAge = 0;
@@ -97,7 +97,8 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
       numRecomendacoes = line + 12;
       int numRecomendacoesInt = atoi(numRecomendacoes);
       start = clock();
-      query5(gestor, numRecomendacoesInt, Username, i, a);
+      query5(gestor, numRecomendacoesInt, Username, i,
+             getGestorArgumentosQuery5(gestor));
       end = clock();
       time_spent = (double)(end - start) / CLOCKS_PER_SEC;
       setTemposTestes(t, 5, time_spent); // Acumula o tempo para Query 5
@@ -108,7 +109,8 @@ void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
       numRecomendacoes = line + 11;
       int numRecomendacoesInt = atoi(numRecomendacoes);
       start = clock();
-      query5(gestor, numRecomendacoesInt, Username, i, a);
+      query5(gestor, numRecomendacoesInt, Username, i,
+             getGestorArgumentosQuery5(gestor));
       end = clock();
       time_spent = (double)(end - start) / CLOCKS_PER_SEC;
       setTemposTestes(t, 5, time_spent); // Acumula o tempo para Query 5

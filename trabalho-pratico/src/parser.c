@@ -1,3 +1,4 @@
+#include "argumentos_query5.h"
 #include "gestor_albuns.h"
 #include "gestor_artists.h"
 #include "gestor_history.h"
@@ -73,6 +74,10 @@ int GestorParsers(Gestores *gestor, char *path, FILE *fp) {
     libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
     return 0;
   }
+
+  argumentosQuery5 *a = getGestorArgumentosQuery5(gestor);
+  alocaMatriz(gestor, a);
+  constroiQuery5(gestor, a);
 
   libertaPaths(artistsPath, musicsPath, usersPath, albunsPath, historyPath);
   return 1;

@@ -1,4 +1,5 @@
 #include "gestores.h"
+#include "compare_files.h"
 #include "erros.h"
 #include "gestor_queries.h"
 #include "query1.h"
@@ -17,6 +18,8 @@ struct gestores {
   gestorUsers *gestorUsers;
   gestorAlbuns *gestorAlbuns;
   FicheiroErrosCSV *ficheiroErrosCSV;
+  argumentosQuery5 *argumentosQuery5;
+  temposTestes *temposTestes;
 };
 
 Gestores *initgestor(int *flag) {
@@ -63,12 +66,18 @@ Gestores *initgestor(int *flag) {
 
   FicheiroErrosCSV *ficheiroErrosCSV = initFicheiroErrosCSV();
 
+  argumentosQuery5 *a = initArgumentosQuery5();
+
+  temposTestes *t = initTemposTestes();
+
   // Atribui os Gestores fornecidos
   gestor->gestorMusics = gestorMusics;
   gestor->gestorArtists = gestorArtists;
   gestor->gestorUsers = gestorUsers;
   gestor->gestorAlbuns = gestorAlbuns;
   gestor->ficheiroErrosCSV = ficheiroErrosCSV;
+  gestor->argumentosQuery5 = a;
+  gestor->temposTestes = t;
   return gestor;
 }
 
@@ -86,11 +95,21 @@ FicheiroErrosCSV *getGestorFicheiroErrosCSV(Gestores *gestor) {
   return gestor->ficheiroErrosCSV;
 }
 
+argumentosQuery5 *getGestorArgumentosQuery5(Gestores *gestor) {
+  return gestor->argumentosQuery5;
+}
+
+temposTestes *getGestorTemposTestes(Gestores *gestor) {
+  return gestor->temposTestes;
+}
+
 void destroyGestor(Gestores *gestor) {
   freeGestorArtists(gestor->gestorArtists);
   freeGestorMusics(gestor->gestorMusics);
   freeGestorUsers(gestor->gestorUsers);
   freeGestorAlbuns(gestor->gestorAlbuns);
   destroyFicheiroErrosCSV(gestor->ficheiroErrosCSV);
+  destroiArgumentosQuery5(gestor->argumentosQuery5);
+  destroyTemposTestes(gestor->temposTestes);
   free(gestor);
 }

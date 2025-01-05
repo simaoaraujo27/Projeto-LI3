@@ -10,6 +10,6 @@
 #include "query3.h"
 #include "query5.h"
 
-void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista,
-                   argumentosQuery5 *a, int i, temposTestes *t);
+void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
+                   temposTestes *t);
 #endif

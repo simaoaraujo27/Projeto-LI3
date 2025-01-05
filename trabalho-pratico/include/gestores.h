@@ -3,6 +3,8 @@
 
 typedef struct gestores Gestores;
 
+#include "argumentos_query5.h"
+#include "compare_files.h"
 #include "erros.h"
 #include "gestor_albuns.h"
 #include "gestor_artists.h"
@@ -21,8 +23,9 @@ gestorArtists *getGestorArtist(Gestores *gestor);
 gestorMusics *getGestorMusic(Gestores *gestor);
 gestorUsers *getGestorUser(Gestores *gestor);
 gestorAlbuns *getGestorAlbum(Gestores *gestor);
-gestorHistory *getGestorHistory(Gestores *gestor);
 FicheiroErrosCSV *getGestorFicheiroErrosCSV(Gestores *gestor);
+argumentosQuery5 *getGestorArgumentosQuery5(Gestores *gestor);
+temposTestes *getGestorTemposTestes(Gestores *gestor);
 
 void destroyGestor(Gestores *gestor);
 

@@ -25,8 +25,6 @@
 #define MAX_PATH_SIZE 1024
 
 int main(int argc, char **argv) {
-  temposTestes *t = initTemposTestes();
-  argumentosQuery5 *a = initArgumentosQuery5();
   FILE *fp = NULL;
 
   if (argc < 3) {
@@ -59,8 +57,6 @@ int main(int argc, char **argv) {
   NodoMusica *lista = NULL;
 
   lista = CriaListaRespostaQuery3(lista, gestor);
-  alocaMatriz(gestor, a);
-  constroiQuery5(gestor, a);
 
   fp = fopen(txt, "r");
   if (!fp) {
@@ -69,7 +65,7 @@ int main(int argc, char **argv) {
   }
 
   while (getline(&line, &len, fp) != -1) {
-    gestorQueries(line, gestor, lista, a, i, t);
+    gestorQueries(line, gestor, lista, i, getGestorTemposTestes(gestor));
     i++;
   }
   fclose(fp);
@@ -81,17 +77,15 @@ int main(int argc, char **argv) {
     printf("Memória utilizada: %ld KB\n", r_usage.ru_maxrss);
 
     printf("Tempos de execução: \n");
-    printf("Q1: %fs\n", getTemposTestes(t, 1));
-    printf("Q2: %fs\n", getTemposTestes(t, 2));
-    printf("Q3: %fs\n", getTemposTestes(t, 3));
-    printf("Q4: %fs\n", getTemposTestes(t, 4));
-    printf("Q5: %fs\n", getTemposTestes(t, 5));
-    printf("Q6: %fs\n", getTemposTestes(t, 6));
+    printf("Q1: %fs\n", getTemposTestes(getGestorTemposTestes(gestor), 1));
+    printf("Q2: %fs\n", getTemposTestes(getGestorTemposTestes(gestor), 2));
+    printf("Q3: %fs\n", getTemposTestes(getGestorTemposTestes(gestor), 3));
+    printf("Q4: %fs\n", getTemposTestes(getGestorTemposTestes(gestor), 4));
+    printf("Q5: %fs\n", getTemposTestes(getGestorTemposTestes(gestor), 5));
+    printf("Q6: %fs\n", getTemposTestes(getGestorTemposTestes(gestor), 6));
   }
 
   liberar_lista(lista);
-  destroiArgumentosQuery5(a);
   destroyGestor(gestor);
-  destroyTemposTestes(t);
   return 0;
 }
