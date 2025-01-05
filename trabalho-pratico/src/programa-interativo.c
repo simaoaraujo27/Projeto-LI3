@@ -346,12 +346,12 @@ int main() {
 
     case 4: {
       nQueries++;
-      char usar[2], beginDate[12], endDate[12];
+      char usar[3], beginDate[12], endDate[12];
       printf("Deseja inserir datas? (S/N) (default: N): ");
-      assert(scanf("%1s", usar) != -1);
+      assert(scanf("%2s", usar) != -1);
       limparBufferEntrada();
 
-      if (strcmp(usar, "S") == 0) {
+      if (strcmp(usar, "S") == 0 || strcmp(usar, "s") == 0) {
         printf("Begin Date: ");
         assert(scanf("%11s", beginDate) != -1);
         limparBufferEntrada();
