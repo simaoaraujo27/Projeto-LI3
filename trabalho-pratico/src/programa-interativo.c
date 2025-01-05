@@ -92,7 +92,7 @@ void escolheSeparador(char *separador) {
 
   while (1) {
     if (*separador != ';' && *separador != '=') {
-      printf("\033[31;31mERRO: O separador inserido (%c) é inválido!\033[0m\n",
+      printf("\033[1;31mERRO: O separador inserido (%c) é inválido!\033[0m\n",
              *separador);
 
       printf("Por favor, insira um separador válido: ");
@@ -388,6 +388,7 @@ int main() {
 
         escreverQuery(newFile, input);
       } else {
+        escolheSeparador(&separador);
         char input[MAX_INPUT_SIZE];
         snprintf(input, sizeof(input), "4\n");
         if (separador == '=') {
@@ -465,7 +466,7 @@ int main() {
       while (1) {
         if (!validateYear(year)) {
           printRed("Erro: O ano inserido é inválido!\n");
-          printf("Por favor, insira um ano válido. ");
+          printf("Por favor, insira um ano válido: ");
           assert(scanf("%4s", year) != -1);
           limparBufferEntrada();
         } else {
@@ -476,6 +477,16 @@ int main() {
       printf("Insira o número de artistas (se não quiser, insira 0): ");
       assert(scanf("%4s", num) != -1);
       limparBufferEntrada();
+      while (1) {
+        if (!allDigit(num)) {
+          printRed("ERRO: O número de artistas inserido é inválido!\n");
+          printf("Por favor, insira um número de artistas válido: ");
+          assert(scanf("%4s", num) != -1);
+          limparBufferEntrada();
+        } else {
+          break;
+        }
+      }
 
       escolheSeparador(&separador);
       char input[MAX_INPUT_SIZE];

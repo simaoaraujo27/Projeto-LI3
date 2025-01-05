@@ -441,6 +441,8 @@ bool allDigit(char *num) {
 }
 
 bool validateYear(char *year) {
+  if (!allDigit(year))
+    return false;
   int num = atoi(year);
   return (num > 0);
 }
