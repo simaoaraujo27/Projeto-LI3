@@ -1,3 +1,10 @@
+/**
+ * @file artists.h
+ * @author Francisco, Pedro, Simão (Grupo 5)
+ * @date 5 Jan 2025
+ * @brief Header file do artists
+ */
+
 #ifndef _ARTISTS_H_
 #define _ARTISTS_H_
 

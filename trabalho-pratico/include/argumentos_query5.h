@@ -1,3 +1,10 @@
+/**
+ * @file argumentos_query5.h
+ * @author Francisco, Pedro, Simão (Grupo 5)
+ * @date 5 Jan 2025
+ * @brief Header file do argumentos_query5
+ */
+
 #ifndef _ARGUMENTOS_QUERY5_H_
 #define _ARGUMENTOS_QUERY5_H_
 
