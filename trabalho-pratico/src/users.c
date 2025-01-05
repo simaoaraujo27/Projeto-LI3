@@ -21,6 +21,8 @@ struct users {
   GArray *resumos;
 };
 
+// setters
+
 void setUserUsername(Users *u, char *username) {
   remove_quotes(username);
   u->username = username;
@@ -61,6 +63,7 @@ void setUserLikedMusicsId(Users *u, char *liked_musics_id) {
   u->liked_musics_id = liked_musics_id;
 }
 
+// preenche todos os campos do user
 Users *separateUsers(char *line) {
   Users *user = malloc(sizeof(struct users));
   if (!user) {
@@ -100,6 +103,7 @@ int existUserResume(gpointer user, int indice) {
     return 1;
 }
 
+// getters
 char *getUserUsername(gpointer user) {
   struct users *u = (struct users *)user;
   return strdup(u->username);

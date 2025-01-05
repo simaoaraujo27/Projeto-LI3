@@ -21,8 +21,6 @@ void removeLast(char *str);
 
 char *calculate_age_str(char *birth_date);
 
-int comparaStrings(char *str1, char *str2);
-
 char *intToString(int number);
 
 char *intToHour(int number);

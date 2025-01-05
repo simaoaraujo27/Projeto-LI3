@@ -142,19 +142,6 @@ char *calculate_age_str(char *birth_date) {
   return age_str;
 }
 
-int comparaStrings(char *str1, char *str2) {
-  if (strlen(str1) == strlen(str2) - 1) {
-    int len = strlen(str1);
-    for (int i = 0; i < len; i++) {
-      if (str1[i] != str2[i]) {
-        return 1;
-      }
-    }
-  } else
-    return 1;
-  return 0;
-}
-
 char *intToString(int number) {
   char *result = (char *)malloc(12 * sizeof(char));
   if (result == NULL) {
