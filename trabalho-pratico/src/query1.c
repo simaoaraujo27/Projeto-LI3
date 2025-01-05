@@ -22,7 +22,7 @@ void query1User(gestorUsers *gestorUser, char *line, int i, int temS) {
   gpointer orig_key;
   gboolean found = lookUpUsersHashTable(gestorUser, line, &value, &orig_key);
   if (found) {
-    MakeQuery1User(orig_key, newFile, temS);
+    printQuery1User(orig_key, newFile, temS);
   } else {
     writeFile(newFile, "\n");
   }
@@ -40,7 +40,7 @@ void query1Artist(gestorArtists *gestorArtist, char *line, int i, int temS) {
       lookUpArtistsHashTable(gestorArtist, line, &orig_key, &value);
 
   if (found) {
-    MakeQuery1Artist(orig_key, newFile, temS);
+    printQuery1Artist(orig_key, newFile, temS);
   } else {
     writeFile(newFile, "\n");
   }

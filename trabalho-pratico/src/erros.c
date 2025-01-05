@@ -11,6 +11,7 @@ struct ficheiroErrosCSV {
   FILE *errorsFileHistory;
 };
 
+// inicializa todos os ficheiros de erros
 FicheiroErrosCSV *initFicheiroErrosCSV() {
   FicheiroErrosCSV *ficheiroErrosCSV = malloc(sizeof(FicheiroErrosCSV));
   const char *errorsFilePathArtists = "./resultados/artists_errors.csv";
@@ -52,6 +53,7 @@ FicheiroErrosCSV *initFicheiroErrosCSV() {
   return ficheiroErrosCSV;
 }
 
+// escreve a linha no devido ficheiro de erros
 void WriteErrorsFile(FicheiroErrosCSV *ficheiroErrosCSV, char *typeFile,
                      char *line) {
   if (strcmp(typeFile, "artists") == 0) {
@@ -71,7 +73,7 @@ void WriteErrorsFile(FicheiroErrosCSV *ficheiroErrosCSV, char *typeFile,
 
 void destroyFicheiroErrosCSV(FicheiroErrosCSV *ficheiroErrosCSV) {
   if (!ficheiroErrosCSV) {
-    return; // Evita acessar um ponteiro nulo.
+    return; // Evita acessar um pointer nulo.
   }
 
   // Fecha os arquivos, se estiverem abertos.
@@ -95,6 +97,6 @@ void destroyFicheiroErrosCSV(FicheiroErrosCSV *ficheiroErrosCSV) {
     fclose(ficheiroErrosCSV->errorsFileHistory);
   }
 
-  // Libera a memória alocada para a estrutura.
+  // Liberta a memória alocada para a estrutura.
   free(ficheiroErrosCSV);
 }

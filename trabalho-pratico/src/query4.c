@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// para cada musica que esta no historico incrementa a duracao por semana de todos os seus artistas
 void armazenarValores(char *musicId, int duration, int timeStamp,
                       gestorMusics *gestorMusics, gestorArtists *gestorArtists,
                       GArray *Tops10) {
@@ -57,7 +58,7 @@ void armazenarValores(char *musicId, int duration, int timeStamp,
 
           tamanhoTops10 = Tops10->len;
         }
-
+        // ve se este artist entra/pode entrar no top10 desta semana
         ArrayTop10 *top10 = g_array_index(Tops10, ArrayTop10 *, semana);
         if (top10 != NULL) {
           int indiceMinNode = 0;
@@ -89,6 +90,7 @@ void query4(gestorArtists *gestorArtists, char *DataFim, char *DataInicio,
   GArray *Tops10 = getGArrayTops10(gestorArtists);
   FILE *newFile = createFile(contadorOutputs);
 
+  // calcula a semana inicial e a semana final
   int semanaInicio = 0, semanaFim = 0;
   if (DataInicio == NULL && DataFim == NULL) {
     semanaInicio = 0;
@@ -106,6 +108,7 @@ void query4(gestorArtists *gestorArtists, char *DataFim, char *DataInicio,
     }
   }
 
+  // vê qual é o artist que esteve mais vezes no top 10 durante as semanas em questão
   gpointer orig_key;
   gpointer value;
   int maisVezesNoTop10 = 0;

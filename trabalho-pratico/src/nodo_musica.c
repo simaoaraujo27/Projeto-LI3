@@ -4,7 +4,7 @@ struct nodoMusica {
   char *genero;
   GArray *likes;
   struct nodoMusica *prox;
-};
+}; // struct necessária para a query 3
 
 char *getGeneroNodoMusic(NodoMusica *l) { return l->genero; }
 
@@ -12,6 +12,7 @@ GArray *getLikesNodoMusic(NodoMusica *l) { return l->likes; }
 
 NodoMusica *getProxNodoMusic(NodoMusica *l) { return l->prox; }
 
+// cria um novo nodo para um genero novo
 NodoMusica *criar_nodo(char *genero, guint idade_max) {
   NodoMusica *nodo = (NodoMusica *)malloc(sizeof(struct nodoMusica));
   if (nodo == NULL) {
@@ -28,6 +29,7 @@ NodoMusica *criar_nodo(char *genero, guint idade_max) {
   return nodo;
 }
 
+// caso a idade máxima aumente expande os arrays de likes
 void expandir_arrays(NodoMusica *lista, guint nova_idade_max) {
   NodoMusica *atual = lista;
   while (atual != NULL) {
@@ -40,6 +42,7 @@ void expandir_arrays(NodoMusica *lista, guint nova_idade_max) {
   }
 }
 
+// adiciona um like no genero e idade corretos
 NodoMusica *adicionar_like(NodoMusica *lista, char *genero, guint idade,
                            guint *idade_max) {
   if (idade > *idade_max) {
@@ -71,7 +74,7 @@ NodoMusica *adicionar_like(NodoMusica *lista, char *genero, guint idade,
   return lista;
 }
 
-void liberar_lista(NodoMusica *lista) {
+void libertar_lista(NodoMusica *lista) {
   NodoMusica *atual = lista;
   while (atual != NULL) {
     NodoMusica *prox = atual->prox;

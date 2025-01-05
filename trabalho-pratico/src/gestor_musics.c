@@ -16,6 +16,7 @@ struct gestorMusics {
   int *nGeneros;
 };
 
+// função que inicializa o gestor musics e os seus campos
 gestorMusics *initGestorMusics() {
   GHashTable *musicsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyMusic);
@@ -40,6 +41,7 @@ void freeGestorMusics(gestorMusics *gestor) {
   }
 }
 
+//adiciona um género à hashtable caso ele ainda não esteja la
 void addGenre(GHashTable *genresTable, int *nGeneros, char *genre) {
   if (!g_hash_table_contains(genresTable, genre)) {
     g_hash_table_insert(genresTable, (gpointer)genre, NULL);
@@ -47,6 +49,7 @@ void addGenre(GHashTable *genresTable, int *nGeneros, char *genre) {
   }
 }
 
+// insere os géneros no array em posições vazias
 char **insertGenreToArray(gestorMusics *gestorMusics, int numGeneros) {
   char **valuesArray = (char **)malloc(numGeneros * sizeof(char *));
   if (valuesArray == NULL) {
@@ -76,6 +79,7 @@ char **insertGenreToArray(gestorMusics *gestorMusics, int numGeneros) {
   return valuesArray;
 }
 
+// função que separa as musicas uma a uma e as insere na sua hashtable caso sejam válidas
 void parserMusic(char *copia, Gestores *gestor, char *line, Musics *music,
                  GHashTable *musicsTable, GHashTable *genresTable,
                  int *nGeneros) {
@@ -138,6 +142,7 @@ void parserMusic(char *copia, Gestores *gestor, char *line, Musics *music,
   }
 }
 
+// função que faz o parse para todas as musicas
 int GestorMusics(Gestores *gestor, char *musicsPath) {
   gestorMusics *gestorMusic = getGestorMusic(gestor);
   FILE *fp = fopen(musicsPath, "r");
@@ -168,6 +173,7 @@ int getMusicsNGenres(gestorMusics *gestorMusic) {
   return *i;
 }
 
+// função que vê se uma música esta na hashtable
 gboolean lookUpMusicsHashTable(gestorMusics *gestorMusic, char *line,
                                gpointer *value, gpointer *orig_key) {
   gboolean found = g_hash_table_lookup_extended(gestorMusic->musicsTable, line,
@@ -175,6 +181,7 @@ gboolean lookUpMusicsHashTable(gestorMusics *gestorMusic, char *line,
   return found;
 }
 
+// função que incrementa corretamente a receita de um artista dado uma música sua
 void incrementRecipeArtist(char *musicId, gestorMusics *gestorMusics,
                            gestorArtists *gestorArtists) {
   gpointer value0;
@@ -199,6 +206,7 @@ void incrementRecipeArtist(char *musicId, gestorMusics *gestorMusics,
     gpointer orig_key1;
     gpointer value1;
 
+    // faz para todos os artistas da música
     while (lentghArtistId > 0) {
       if (lentghArtistId == (int)strlen(artistId)) {
         artistId = artistId + 1;
@@ -213,9 +221,11 @@ void incrementRecipeArtist(char *musicId, gestorMusics *gestorMusics,
         float recipe_Per_Stream = getArtistRecipePerStream(orig_key);
         float receitaTotal = recipe_Per_Stream;
         float receitaAntiga = getArtistReceitaTotal(orig_key);
+        // incrementa a receita do artista da musica
         float receitaAtualizada = receitaAntiga + receitaTotal;
         setArtistReceitaTotal(orig_key, receitaAtualizada);
-        if (strcmp(type, "group") == 0) {
+        if (strcmp(type, "group") == 0) { 
+          // se for um grupo é preciso calcular a receita de participação de cada um dos elementos
           int NumComponentesBanda = getArtistTamanhoGrupo(orig_key);
           char *idComponentes = getArtistIdConstituent(orig_key);
           char *idComponentesOriginal = idComponentes;

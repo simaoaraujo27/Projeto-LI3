@@ -22,6 +22,8 @@ struct artists {
   int vezesNoTop10;
 };
 
+// setters
+
 void setArtistId(Artists *a, char *id) { a->id = id; }
 
 void setArtistName(Artists *a, char *name) { a->name = name; }
@@ -63,16 +65,16 @@ int incrementArtistDurationPerWeek(gpointer a, int duration, int semana) {
   GArray *durationPerWeek = artist->durationPerWeek;
 
   int tamanho = durationPerWeek->len;
-
-  if (semana >= tamanho) {
+  
+  if (semana >= tamanho) { // caso o indice seja maior do que o máximo expande-se o garray
     g_array_set_size(durationPerWeek, (guint)(semana + 1));
 
     for (int i = tamanho; i <= semana; i++) {
-      g_array_index(durationPerWeek, int, i) = 0;
+      g_array_index(durationPerWeek, int, i) = 0; // inicializa-se os novos valores a 0
     }
   }
 
-  g_array_index(durationPerWeek, int, semana) += duration;
+  g_array_index(durationPerWeek, int, semana) += duration; // incrementa a duração na devida posição
 
   return g_array_index(durationPerWeek, int, semana);
 }
@@ -82,6 +84,7 @@ int incrementArtistVezesNoTop10(gpointer a) {
   return ((struct artists *)a)->vezesNoTop10;
 }
 
+// função que cria e preenche todos os campos de um artist
 Artists *separateArtists(char *line) {
 
   Artists *artist = malloc(sizeof(struct artists));
@@ -149,6 +152,8 @@ bool validateArtist(Artists *artist) {
 }
 
 void putArtistsVezesTop10Zero(Artists *artist) { artist->vezesNoTop10 = 0; }
+
+// getters
 
 char *getArtistId(gpointer artist) {
   return strdup(((struct artists *)artist)->id);

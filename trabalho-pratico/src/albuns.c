@@ -65,14 +65,7 @@ void destroyAlbum(Albuns *album) {
   }
 }
 
-int numeroArtistas(char *album_id) {
-  int nvirgulas = 0;
-  for (int i = 0; album_id[i] != '\0'; i++) {
-    nvirgulas += (album_id[i] == ',');
-  }
-  return nvirgulas + 1;
-}
-
+// função que preenche todos os campos do album
 Albuns *separateAlbuns(char *line, gestorArtists *gestorArtists) {
   Albuns *album = initAlbum();
   char *token = strdup(strsep(&line, ";"));

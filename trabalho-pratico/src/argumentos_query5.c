@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// struct que vai ser passada à query 5
 struct argumentosQuery5 {
   int numUtilizadores;
   int numGeneros;

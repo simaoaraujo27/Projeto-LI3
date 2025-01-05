@@ -14,6 +14,7 @@
 #include <string.h>
 #include <time.h>
 
+// chama a devida query com os argumentos corretos
 void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
                    temposTestes *t) {
   clock_t start, end;

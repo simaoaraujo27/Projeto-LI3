@@ -13,7 +13,7 @@ struct history {
   char *user_id; // Identificador único do utilizador a que o registo se refere
   char *music_id;  // Identificador único da música a que o registo se refere
   char *timestamp; // Data e hora em que a música foi ouvida pelo utilizador
-  char *duration; // Tempo de duração da audição da música. E.g., um utilizador
+  char *duration; // Tempo de duração da audição da música. Por exemplo, um utilizador
                   // pode ter ouvido apenas 30 segundos de uma música
   char *platform; // Plataforma em que a música foi reproduzida. I.e.,
                   // computador ou dispositivo móvel

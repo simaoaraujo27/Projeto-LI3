@@ -10,6 +10,10 @@
 #include <glib.h>
 #include <stdio.h>
 
+/*
+nesta função ja são determinados valores para as queries 4, 5 e 6 o que as tornará mais rápidas,
+pois os cálculos só serão feitos uma vez
+*/
 void parserHistory(History *history, char *line, char *copia,
                    Gestores *gestor) {
 
@@ -71,10 +75,13 @@ void parserHistory(History *history, char *line, char *copia,
     removeFstLast(art);
     gpointer value = NULL;
     gpointer orig_key = NULL;
+    // vê se o user faz parte do input, pois caso não faça não é preciso guardar a sua informação
     gboolean found =
         lookUpQuery6Table(gestorUsers, currentUser, &value, &orig_key);
     int y = 0;
     int val = 0;
+    // a variável val vê se o ano está no input para este user, 
+    // pois caso não esteja é desnecessário guadar esta informação
     if (found) {
       char *v = (char *)orig_key;
       while (v != NULL && strlen(v) > 3) {
@@ -89,7 +96,7 @@ void parserHistory(History *history, char *line, char *copia,
         }
       }
     }
-
+    // caso seja para fazer o resumo deste user a função responsável por isto é chamada
     if (found && year <= 2024 && val) {
       updateUserResume(valueUser, year, durationSeg, musicId, art, albumId,
                        musicGenre, dia, hora);
@@ -110,6 +117,7 @@ void parserHistory(History *history, char *line, char *copia,
   destroyHistory(history);
 }
 
+// função que separa todos os history um por um e chama o parseHistory para eles caso sejam válidos
 int GestorHistory(Gestores *gestor, char *historyPath) {
   gestorMusics *gestorMusics = getGestorMusic(gestor);
 

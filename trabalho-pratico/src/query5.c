@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// função principal query 5
 void query5(Gestores *gestor, int numRecomendacoes, char *idUtilizadorAlvo,
             int i, argumentosQuery5 *a) {
   FILE *newFile = createFile(i);

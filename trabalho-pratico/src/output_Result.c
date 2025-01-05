@@ -15,6 +15,7 @@ void writeFile(FILE *newFile, char *text) {
   fclose(newFile);
 }
 
+//passa para um formato HH:MM:SS
 char *SegundosParaHoras(int segundos) {
   int horas = segundos / 3600;
   int minutos = (segundos % 3600) / 60;
@@ -139,7 +140,7 @@ void printQuery5(FILE *newFile, char **recomendacao, int numRecomendacoes) {
   fclose(newFile);
 }
 
-void MakeQuery1User(gpointer orig_key, FILE *newFile, int temS) {
+void printQuery1User(gpointer orig_key, FILE *newFile, int temS) {
   char *email = getUserEmail(orig_key);
   char *firstName = getUserFirstName(orig_key);
   char *lastName = getUserLastName(orig_key);
@@ -178,7 +179,7 @@ void floatParaString(float numero, char **buffer) {
   snprintf(*buffer, 20, "%.2f", numero);
 }
 
-void MakeQuery1Artist(gpointer orig_key, FILE *newFile, int temS) {
+void printQuery1Artist(gpointer orig_key, FILE *newFile, int temS) {
   char *name = getArtistName(orig_key);
   remove_quotes(name);
   char *type = getArtistTypeStr(orig_key);

@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
   struct timespec start, end;
   double elapsed;
 
-  clock_gettime(CLOCK_REALTIME, &start); // Registra o tempo de início
+  clock_gettime(CLOCK_REALTIME, &start); // Regista o tempo de início
 
   FILE *fp1 = NULL;
   FILE *fp2 = NULL;

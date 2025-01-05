@@ -12,6 +12,7 @@ struct gestorAlbuns {
   GHashTable *albunsTable;
 };
 
+// inicializa o gestor albuns e a sua hashtable
 gestorAlbuns *initGestorAlbuns() {
   GHashTable *albunsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyAlbum);
@@ -31,6 +32,7 @@ void freeGestorAlbuns(gestorAlbuns *gestor) {
   }
 }
 
+// insere o album na hashtable
 void parserAlbum(GHashTable *albunsTable, Albuns *album, Gestores *gestor,
                  char *line, char *copia, gestorArtists *gestorArtists) {
   if (validateAlbumsLine(copia, gestorArtists)) {
@@ -42,6 +44,7 @@ void parserAlbum(GHashTable *albunsTable, Albuns *album, Gestores *gestor,
   }
 }
 
+// função que insere todos os albuns na hashtable
 int GestorAlbuns(Gestores *gestor, char *albunsPath) {
   FILE *fp = fopen(albunsPath, "r");
   gestorAlbuns *gestorAlbuns = getGestorAlbum(gestor);
@@ -78,6 +81,7 @@ int GestorAlbuns(Gestores *gestor, char *albunsPath) {
   return 1;
 }
 
+// função que vê se um album esta na hashtable
 gboolean lookUpAlbunsHashTable(gestorAlbuns *gestorAlbuns, char *key,
                                gpointer *value, gpointer *orig_key) {
   gboolean found = g_hash_table_lookup_extended(gestorAlbuns->albunsTable, key,

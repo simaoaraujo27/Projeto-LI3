@@ -16,6 +16,7 @@ struct gestorArtists {
   GList *listaQuery2;
 };
 
+// inicializa o gestor artists e todos os seus campos
 gestorArtists *initGestorArtists() {
   GHashTable *artistsTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyArtist);
@@ -45,6 +46,7 @@ void freeGArrayQuery4(GArray *Tops10) {
   }
   g_array_free(Tops10, false);
 }
+
 void freeGestorArtists(struct gestorArtists *gestor) {
   if (gestor != NULL) {
     if (gestor->artistsTable != NULL) {
@@ -64,6 +66,7 @@ void freeGestorArtists(struct gestorArtists *gestor) {
   }
 }
 
+// insere o artist na hashtable
 void parserArtist(GHashTable *ArtistsTable, Artists *artist, Gestores *gestor,
                   char *line) {
   char *idConstituentLine = getArtistIdConstituent(artist);
@@ -91,6 +94,7 @@ void parserArtist(GHashTable *ArtistsTable, Artists *artist, Gestores *gestor,
   free(type);
 }
 
+// função que insere todos os artists na hashtable
 int GestorArtists(Gestores *gestor, char *artistsPath) {
   FILE *fp = fopen(artistsPath, "r");
   gestorArtists *gestorArtists = getGestorArtist(gestor);
@@ -129,6 +133,7 @@ GArray *getGArrayTops10(gestorArtists *gestorArtists) {
   return gestorArtists->Tops10;
 }
 
+// função que vê se um artist esta na hashtable
 gboolean lookUpArtistsHashTable(gestorArtists *gestorArtist, char *key,
                                 gpointer *value, gpointer *orig_key) {
   gboolean found = g_hash_table_lookup_extended(gestorArtist->artistsTable, key,
@@ -149,6 +154,7 @@ void incrementArtistsNumAlbuns(char *artistId, gestorArtists *gestorArtist) {
   }
 }
 
+// coloca 0 no campo vezestop10 em todos os artists
 void colocaZeroVezesTop10(gestorArtists *GestorArtists) {
   GHashTableIter iter;
   g_hash_table_iter_init(&iter, GestorArtists->artistsTable);
@@ -162,6 +168,7 @@ void colocaZeroVezesTop10(gestorArtists *GestorArtists) {
   }
 }
 
+// função que insere um artist na lista resposta da query 2 de forma ordenada pela sua discografia
 void insertListaQuery2(gestorArtists *gestorArtists, Artists *artist) {
   char *artistId = getArtistId(artist);
   remove_quotes(artistId);

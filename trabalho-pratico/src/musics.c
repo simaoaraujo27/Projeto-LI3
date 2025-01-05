@@ -18,6 +18,8 @@ struct musics {
   int reproducoes;
 };
 
+// setters
+
 void setMusicId(Musics *m, char *id) {
   remove_quotes(id);
   m->id = id;
@@ -37,6 +39,7 @@ void setMusicGenre(Musics *m, char *genre) { m->genre = genre; }
 
 void setMusicYear(Musics *m, int year) { m->year = year; }
 
+// preenche todos os campos de uma música
 Musics *separateMusics(char *line) {
   Musics *music = malloc(sizeof(struct musics));
   if (!music) {
@@ -71,6 +74,8 @@ Musics *separateMusics(char *line) {
 bool validateMusic(Musics *music) {
   return (music->durationSeconds != -1 && music->year <= 2024);
 }
+
+// getters
 
 char *getMusicId(gpointer music) {
   struct musics *m = (struct musics *)music;

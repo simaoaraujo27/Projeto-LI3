@@ -14,6 +14,7 @@ struct gestorUsers {
   GHashTable *query6Table;
 };
 
+// inicializa o gestor users e os seus campos
 gestorUsers *initGestorUsers() {
   GHashTable *usersTable = g_hash_table_new_full(
       g_str_hash, g_str_equal, g_free, (GDestroyNotify)destroyUser);
@@ -41,6 +42,7 @@ void freeGestorUsers(gestorUsers *gestorUser) {
   }
 }
 
+// insere o user na hashtable
 void parserUser(char *line, Gestores *gestor, GHashTable *usersTable,
                 int *nUsers) {
   gestorMusics *gestorMusic = getGestorMusic(gestor);
@@ -60,6 +62,7 @@ void parserUser(char *line, Gestores *gestor, GHashTable *usersTable,
     free(username);
 }
 
+// faz o parsing de todos os users
 int GestorUsers(Gestores *gestor, char *usersPath) {
   gestorUsers *gestorUser = getGestorUser(gestor);
   FILE *fp = fopen(usersPath, "r");
@@ -80,6 +83,7 @@ int GestorUsers(Gestores *gestor, char *usersPath) {
   return 1;
 }
 
+// ve se o user esta na hashtable
 gboolean lookUpUsersHashTable(gestorUsers *gestorUser, char *line,
                               gpointer *value, gpointer *orig_key) {
   gboolean found = g_hash_table_lookup_extended(gestorUser->usersTable, line,
@@ -87,6 +91,9 @@ gboolean lookUpUsersHashTable(gestorUsers *gestorUser, char *line,
   return found;
 }
 
+
+// ve a idade de todos os users
+// ve os generos das liked musics e adiciona um like
 void processAllUsers(Gestores *gestor, NodoMusica **lista) {
   int IDADE_INICIAL = 150;
   guint idade_max = IDADE_INICIAL;
@@ -145,6 +152,7 @@ void preencheMatriz(int **matrizClassificaoMusicas, int numGeneros,
   }
 }
 
+// ve se o user esta na hashtable
 gboolean lookUpQuery6Table(gestorUsers *gestorUser, char *line, gpointer *value,
                            gpointer *orig_key) {
   gboolean found = g_hash_table_lookup_extended(gestorUser->query6Table, line,
@@ -152,6 +160,7 @@ gboolean lookUpQuery6Table(gestorUsers *gestorUser, char *line, gpointer *value,
   return found;
 }
 
+// faz a hashtable dos inputs da query 6
 void setQuery6Table(char *line, gestorUsers *gestorUsers) {
   if (line[0] == '6') {
     char *key;
@@ -166,7 +175,7 @@ void setQuery6Table(char *line, gestorUsers *gestorUsers) {
     gpointer orig_key1 = NULL;
     gboolean found = lookUpQuery6Table(gestorUsers, key, &value1, &orig_key1);
 
-    if (found) {
+    if (found) { // se o user ja estiver acrescenta o ano novo
       char *anoAntigo = (char *)value1;
       char *anoNovo = malloc(strlen(anoAntigo) + strlen(value) + 1);
 
@@ -174,7 +183,7 @@ void setQuery6Table(char *line, gestorUsers *gestorUsers) {
       strcat(anoNovo, value);
       g_hash_table_replace(gestorUsers->query6Table, key, anoNovo);
       free(value);
-    } else {
+    } else { // insere o user na hashtable
       g_hash_table_insert(gestorUsers->query6Table, key, value);
     }
   }

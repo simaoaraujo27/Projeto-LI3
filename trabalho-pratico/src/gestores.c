@@ -22,6 +22,7 @@ struct gestores {
   temposTestes *temposTestes;
 };
 
+// inicializa o gestor e manda inicializar todos os seus campos
 Gestores *initgestor(int *flag) {
 
   // Aloca memória para a estrutura
@@ -80,6 +81,8 @@ Gestores *initgestor(int *flag) {
   gestor->temposTestes = t;
   return gestor;
 }
+
+// getters
 
 gestorArtists *getGestorArtist(Gestores *gestor) {
   return gestor->gestorArtists;

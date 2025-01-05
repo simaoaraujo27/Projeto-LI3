@@ -11,10 +11,11 @@ struct generoLikes {
   guint count;
 };
 
+// função que compara um género com o outro para ver qual tem mais likes
 gint comparar_likes(gconstpointer a, gconstpointer b) {
   const GeneroLikes *g1 = a;
   const GeneroLikes *g2 = b;
-  if ((g1->count == g2->count)) {
+  if ((g1->count == g2->count)) { // se tiverem os mesmo likes compara-se lexicograficamente
     return (strcmp(g1->genero, g2->genero) > 0);
   } else {
     return ((g1->count < g2->count) - (g1->count > g2->count));
@@ -36,6 +37,7 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i, int temS) {
     for (guint j = (guint)minAge; j <= (guint)maxAge; j++) {
       count += g_array_index(getLikesNodoMusic(l), guint, j);
     }
+    // cria uma lista com os likes de cada genero numa dada faixa etária passado nos argumentos
     GeneroLikes *genero_likes = malloc(sizeof(GeneroLikes));
     genero_likes->genero = strdup(getGeneroNodoMusic(l));
     genero_likes->count = count;
@@ -43,9 +45,11 @@ void query3(int minAge, int maxAge, NodoMusica *lista, int i, int temS) {
     generos_lista = g_list_prepend(generos_lista, genero_likes);
     l = getProxNodoMusic(l);
   }
+  // ordena a lista utilizando a função definifa acima
   generos_lista = g_list_sort(generos_lista, comparar_likes);
 
   int tudoAZero = 1;
+  // percorre a lista ja ordenada e escreve no ficheiro
   for (GList *iter = generos_lista; iter != NULL; iter = iter->next) {
     GeneroLikes *genero_likes = iter->data;
     if (genero_likes->count != 0) {

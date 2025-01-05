@@ -12,11 +12,13 @@ void query6(char *user_id, int year, int N, gestorUsers *gestorUsers, int i,
   gpointer value;
   gpointer orig_key;
 
+  // vê se o user esta na hashtable
   gboolean found =
       lookUpUsersHashTable(gestorUsers, user_id, &value, &orig_key);
   if (found && year <= 2024) {
+    // calcula o indice do resumo deste user para o ano em questão
     int indice = 2024 - year;
-    if (existUserResume(orig_key, indice)) {
+    if (existUserResume(orig_key, indice)) { // se tiver algum registo de atividade neste ano
       int listeningTime = getUserResumoListeningTime(orig_key, year);
       char *listeningTimeStr = malloc(sizeof(char) * 16);
       converterParaTempo(listeningTime, listeningTimeStr);
@@ -66,7 +68,7 @@ void query6(char *user_id, int year, int N, gestorUsers *gestorUsers, int i,
       free(hourStr);
       free(artists);
       free(new_str);
-    } else {
+    } else { // caso o user não tenha nenhum registo de atividade neste ano
       writeFile(newFile, "\n");
     }
   } else {

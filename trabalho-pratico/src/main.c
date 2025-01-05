@@ -64,6 +64,7 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
+  // chama o gestorQueries para cada linha de input
   while (getline(&line, &len, fp) != -1) {
     gestorQueries(line, gestor, lista, i, getGestorTemposTestes(gestor));
     i++;
@@ -71,6 +72,7 @@ int main(int argc, char **argv) {
   fclose(fp);
   free(line);
 
+  // diz a memória utilizada e o tempo total e de cada query
   if (getenv("RAM_MONITOR") != NULL) {
     struct rusage r_usage;
     getrusage(RUSAGE_SELF, &r_usage);
@@ -85,7 +87,7 @@ int main(int argc, char **argv) {
     printf("Q6: %fs\n", getTemposTestes(getGestorTemposTestes(gestor), 6));
   }
 
-  liberar_lista(lista);
+  libertar_lista(lista);
   destroyGestor(gestor);
   return 0;
 }
