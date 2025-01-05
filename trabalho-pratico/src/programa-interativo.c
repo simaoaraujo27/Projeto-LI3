@@ -260,6 +260,16 @@ int main() {
       printf("N: ");
       assert(scanf("%4s", n) != -1);
       limparBufferEntrada();
+      while (1) {
+        if (!allDigit(n)) {
+          printRed("ERRO: O valor para N inserido é inválido!\n");
+          printf("Por favor, insira um valor válido: ");
+          assert(scanf("%4s", n) != -1);
+          limparBufferEntrada();
+        } else {
+          break;
+        }
+      }
 
       printf("Country, entre aspas duplas (\"\") (insira 0 se não quiser "
              "especificar): ");
@@ -434,7 +444,7 @@ int main() {
     case 6: {
       nQueries++;
       char id[12], year[5], num[5];
-      printf("ID: ");
+      printf("User ID: ");
       assert(scanf("%11s", id) != -1);
       limparBufferEntrada();
       while (1) {

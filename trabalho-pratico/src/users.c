@@ -97,6 +97,8 @@ Users *separateUsers(char *line) {
 
 int existUserResume(gpointer user, int indice) {
   struct users *u = (struct users *)user;
+  if (indice >= (int)u->resumos->len)
+    return 0;
   if (g_array_index(u->resumos, Resumo *, indice) == NULL)
     return 0;
   else
