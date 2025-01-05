@@ -129,6 +129,13 @@ void printResults(int nQueries) {
   }
 }
 
+// Função para printar uma string em vermelho
+void printRed(const char *text) {
+  const char *redColorCode = "\033[1;31m";
+  const char *resetColorCode = "\033[0m";
+  printf("%s%s%s\n", redColorCode, text, resetColorCode);
+}
+
 int lerNumeroValido() {
   int num;
   while (1) {
@@ -139,8 +146,8 @@ int lerNumeroValido() {
       if (num >= 0 && num <= 6) {
         return num;
       }
-      printf("\033[31mERRO: Query inválida! Por favor, insira um número "
-             "válido.\033[0m\n");
+      printRed("ERRO: Query inválida! Por favor, insira um número "
+               "válido\n");
 
     } else {
       // Se não foi um número, descartamos o que foi inserido e pedimos
@@ -173,7 +180,7 @@ int main() {
   removerNovaLinha(path);
 
   while (!validaPath(path)) {
-    printf("\033[31mERRO: O caminho introduzido (%s) é inválido!\033[0m\n",
+    printf("\033[1;31mERRO: O caminho introduzido (%s) é inválido!\033[0m\n",
            path);
     printf("Por favor introduza um caminho válido: ");
     assert(fgets(path, sizeof(path), stdin) != NULL);
@@ -225,7 +232,7 @@ int main() {
       limparBufferEntrada();
       while (1) {
         if (!validateId(userId)) {
-          printf("ERRO: O ID inserido é inválido!\n");
+          printRed("ERRO: O ID inserido é inválido!\n");
           printf("Por favor, insira um ID válido: ");
           assert(scanf("%9s", userId) != -1);
           limparBufferEntrada();
@@ -263,7 +270,7 @@ int main() {
           break;
         }
         if (country[0] != '"' && country[strlen(country) - 1] != '"') {
-          printf("ERRO: O country é inválido!\n");
+          printRed("ERRO: O country é inválido!\n");
           printf("Por favor, insira o country entre aspas (\"\") : ");
 
           assert(scanf("%99s", country) != -1);
@@ -294,7 +301,7 @@ int main() {
       limparBufferEntrada();
       while (1) {
         if (!validateAge(minAge)) {
-          printf("ERRO: A idade inserida é inválida!\n");
+          printRed("ERRO: A idade inserida é inválida!\n");
           printf("Por favor, insira uma idade válida: ");
           assert(scanf("%3s", minAge) != -1);
           limparBufferEntrada();
@@ -307,7 +314,7 @@ int main() {
       limparBufferEntrada();
       while (1) {
         if (!validateAge(maxAge) || atoi(maxAge) < atoi(minAge)) {
-          printf("ERRO: A idade inserida é inválida!\n");
+          printRed("ERRO: A idade inserida é inválida!\n");
           printf("Por favor, insira uma idade válida: ");
           assert(scanf("%3s", maxAge) != -1);
           limparBufferEntrada();
@@ -340,7 +347,7 @@ int main() {
         limparBufferEntrada();
         while (1) {
           if (!validateDate(beginDate)) {
-            printf("ERRO: A data inserida é inválida!\n");
+            printRed("ERRO: A data inserida é inválida!\n");
             printf("Por favor, insira uma data válida: ");
             assert(scanf("%11s", beginDate) != -1);
             limparBufferEntrada();
@@ -354,7 +361,7 @@ int main() {
         limparBufferEntrada();
         while (1) {
           if (!validateDate(endDate) || !isAfter(endDate, beginDate)) {
-            printf("ERRO: A data inserida é inválida!\n");
+            printRed("ERRO: A data inserida é inválida!\n");
             printf("Por favor, insira uma data válida: ");
             assert(scanf("%11s", endDate) != -1);
             limparBufferEntrada();
@@ -390,7 +397,7 @@ int main() {
       limparBufferEntrada();
       while (1) {
         if (!validateId(username)) {
-          printf("ERRO: O username inserido é inválido!\n");
+          printRed("ERRO: O username inserido é inválido!\n");
           printf("Por favor, insira um username válido: ");
           assert(scanf("%11s", username) != -1);
           limparBufferEntrada();
@@ -404,7 +411,7 @@ int main() {
       limparBufferEntrada();
       while (1) {
         if (!allDigit(numUtilizadores)) {
-          printf("ERRO: O número de utilizadores é inválido!\n");
+          printRed("ERRO: O número de utilizadores é inválido!\n");
           printf("Por favor, insira um número de utilizadores válido: ");
           assert(scanf("%8s", numUtilizadores) != -1);
           limparBufferEntrada();
@@ -432,7 +439,7 @@ int main() {
       limparBufferEntrada();
       while (1) {
         if (!validateId(id)) {
-          printf("ERRO: O ID inserido é inválido!\n");
+          printRed("ERRO: O ID inserido é inválido!\n");
           printf("Por favor, insira um ID válido: ");
           assert(scanf("%9s", id) != -1);
           limparBufferEntrada();
@@ -445,8 +452,16 @@ int main() {
       assert(scanf("%4s", year) != -1);
       limparBufferEntrada();
 
-      // TODO: Fazer validateYear e chamar em cima deste comment
-      // Ajeitar a função scanf para funcionar para um enter
+      while (1) {
+        if (!validateYear(year)) {
+          printRed("Erro: O ano inserido é inválido!\n");
+          printf("Por favor, insira um ano válido. ");
+          assert(scanf("%4s", year) != -1);
+          limparBufferEntrada();
+        } else {
+          break;
+        }
+      }
 
       printf("Insira o número de artistas (se não quiser, insira 0): ");
       assert(scanf("%4s", num) != -1);
@@ -469,7 +484,7 @@ int main() {
     }
 
     default:
-      printf("Query inválida!\n");
+      printRed("Query inválida!\n");
       fclose(newFile);
       return 1;
     }
@@ -489,10 +504,8 @@ int main() {
     return 1;
   }
 
-  // Exibe os resultados
   printResults(nQueries);
 
-  // Apaga o arquivo de input
   if (remove("input.txt") != 0) {
     printf("Ocorreu um erro ao apagar o ficheiro de input!\n");
     return 1;

@@ -23,5 +23,6 @@ bool validateAge(char *age);
 bool validateId(char *id);
 bool isAfter(const char *end, const char *begin);
 bool allDigit(char *num);
+bool validateYear(char *year);
 
 #endif
