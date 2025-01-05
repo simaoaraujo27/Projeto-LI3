@@ -18,7 +18,7 @@ void expandir_arrays(NodoMusica *lista, guint nova_idade_max);
 NodoMusica *adicionar_like(NodoMusica *lista, char *genero, guint idade,
                            guint *idade_max);
 
-void liberar_lista(NodoMusica *lista);
+void libertar_lista(NodoMusica *lista);
 
 char *getGeneroNodoMusic(NodoMusica *l);
 GArray *getLikesNodoMusic(NodoMusica *l);

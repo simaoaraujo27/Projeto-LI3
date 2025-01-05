@@ -12,8 +12,8 @@ void printQuery4(FILE *newFile, int temS, char *name, char *type,
 
 void writeFile(FILE *newFile, char *text);
 
-void MakeQuery1User(gpointer orig_key, FILE *newFile, int temS);
+void printQuery1User(gpointer orig_key, FILE *newFile, int temS);
 
-void MakeQuery1Artist(gpointer orig_key, FILE *newFile, int temS);
+void printQuery1Artist(gpointer orig_key, FILE *newFile, int temS);
 
 #endif
