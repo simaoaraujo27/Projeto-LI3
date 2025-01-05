@@ -1,4 +1,5 @@
 #include "output_Result.h"
+#include "utils.h"
 #include "validation.h"
 #include <assert.h>
 #include <limits.h>
@@ -13,152 +14,6 @@
 
 #define MAX_PATH_SIZE 1024
 #define MAX_INPUT_SIZE 512
-
-// Função para limpar o buffer de entrada
-void limparBufferEntrada() {
-  int c;
-  while ((c = getchar()) != '\n' && c != EOF)
-    ;
-}
-
-// Valida o caminho inserido pelo utilizador
-bool validaPath(const char *path) {
-  struct stat info;
-  return stat(path, &info) == 0;
-}
-
-// Remove o caracter '\n' no fim de uma string
-void removerNovaLinha(char *str) {
-  char *pos = strchr(str, '\n');
-  if (pos != NULL) {
-    *pos = '\0';
-  }
-}
-
-// Função para imprimir uma linha ajustada à largura do terminal
-void printFullLine(char ch, const char *color) {
-  struct winsize w;
-  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-  int largura_terminal = w.ws_col;
-
-  printf("%s", color);
-  for (int i = 0; i < largura_terminal; i++) {
-    putchar(ch);
-  }
-  printf("\033[0m\n");
-}
-
-// Função para imprimir texto centralizado
-void printCentered(const char *text, const char *color) {
-  struct winsize w;
-  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-  int largura_terminal = w.ws_col;
-
-  int len_text = strlen(text);
-  int padding_esquerda = (largura_terminal - len_text) / 2;
-
-  printf("%s%*s%s\033[0m\n", color, padding_esquerda + len_text, text, "");
-}
-
-void printRGB(const char *text) {
-  int r, g, b;
-  size_t len = strlen(text);
-
-  for (size_t i = 0; i < len; i++) {
-    // Calcular cores vibrantes usando senos para suavidade
-    r = (int)(sin(0.1 * i + 0) * 127 + 128); // Variando entre 0-255
-    g = (int)(sin(0.1 * i + 2) * 127 + 128); // Fase deslocada
-    b = (int)(sin(0.1 * i + 4) * 127 + 128); // Fase deslocada
-
-    // Imprimir o caractere com a cor RGB
-    printf("\033[38;2;%d;%d;%dm%c", r, g, b, text[i]);
-    fflush(stdout); // Forçar saída no terminal
-    usleep(50000);  // Pequeno atraso para efeito visual
-  }
-
-  printf("\033[0m\n"); // Resetar cor
-}
-
-// Função para gerar e armazenar query no arquivo de input
-void escreverQuery(FILE *newFile, const char *query) {
-  fprintf(newFile, "%s", query);
-}
-
-void escolheSeparador(char *separador) {
-  *separador = ' ';
-  printf("Escolha o separador (; ou =): ");
-  assert(scanf("%c", separador) != -1);
-  limparBufferEntrada();
-
-  while (1) {
-    if (*separador != ';' && *separador != '=') {
-      printf("\033[1;31mERRO: O separador inserido (%c) é inválido!\033[0m\n",
-             *separador);
-
-      printf("Por favor, insira um separador válido: ");
-      assert(scanf("%c", separador) != -1);
-      limparBufferEntrada();
-    } else {
-      break;
-    }
-  }
-}
-
-// Função para printar resultados das queries
-void printResults(int nQueries) {
-  for (int i = 1; i <= nQueries; i++) {
-    char title[64];
-    snprintf(title, 64, "Resultado do input %d:", i);
-    printRGB(title);
-    char path[MAX_PATH_SIZE];
-    snprintf(path, MAX_PATH_SIZE, "./resultados/command%d_output.txt", i);
-
-    FILE *file = fopen(path, "r");
-    if (file == NULL) {
-      fprintf(stderr, "Erro ao abrir o arquivo: %s\n", path);
-      continue;
-    }
-
-    char line[MAX_INPUT_SIZE];
-    while (fgets(line, sizeof(line), file) != NULL) {
-      printf("%s", line);
-    }
-    printf("\n");
-
-    fclose(file);
-  }
-}
-
-// Função para printar uma string em vermelho
-void printRed(const char *text) {
-  const char *redColorCode = "\033[1;31m";
-  const char *resetColorCode = "\033[0m";
-  printf("%s%s%s\n", redColorCode, text, resetColorCode);
-}
-
-int lerNumeroValido() {
-  int num;
-  while (1) {
-    printf("Que query deseja executar (Opções de 1 a 6) | 0 para parar o "
-           "programa: ");
-    if (scanf("%d", &num) == 1) {
-      // Se a leitura foi bem-sucedida, retornamos o número
-      if (num >= 0 && num <= 6) {
-        return num;
-      }
-      printRed("ERRO: Query inválida! Por favor, insira um número "
-               "válido\n");
-
-    } else {
-      // Se não foi um número, descartamos o que foi inserido e pedimos
-      // novamente
-      printf("\033[31mERRO: Entrada inválida. Por favor, insira um número "
-             "válido.\033[0m\n");
-      limparBufferEntrada();
-    }
-    printf("\n");
-  }
-}
 
 int main() {
   const char *red = "\033[1;31m";   // Vermelho brilhante
@@ -250,7 +105,7 @@ int main() {
         snprintf(input, sizeof(input), "1 %s\n", userId);
       }
 
-      escreverQuery(newFile, input);
+      fprintf(newFile, "%s", input);
       break;
     }
 
@@ -299,7 +154,7 @@ int main() {
         snprintf(input, sizeof(input), "2 %s %s\n", n, country);
       }
 
-      escreverQuery(newFile, input);
+      fprintf(newFile, "%s", input);
       break;
     }
 
@@ -340,7 +195,7 @@ int main() {
         snprintf(input, sizeof(input), "3S %s %s\n", minAge, maxAge);
       }
 
-      escreverQuery(newFile, input);
+      fprintf(newFile, "%s", input);
       break;
     }
 
@@ -352,7 +207,7 @@ int main() {
       limparBufferEntrada();
 
       if (strcmp(usar, "S") == 0 || strcmp(usar, "s") == 0) {
-        printf("Begin Date: ");
+        printf("Begin Date (formato: YYYY/MM/DD): ");
         assert(scanf("%11s", beginDate) != -1);
         limparBufferEntrada();
         while (1) {
@@ -366,7 +221,7 @@ int main() {
           }
         }
 
-        printf("End Date: ");
+        printf("End Date (formato: YYYY/MM/DD): ");
         assert(scanf("%11s", endDate) != -1);
         limparBufferEntrada();
         while (1) {
@@ -386,7 +241,7 @@ int main() {
           snprintf(input, sizeof(input), "4S %s %s\n", beginDate, endDate);
         }
 
-        escreverQuery(newFile, input);
+        fprintf(newFile, "%s", input);
       } else {
         escolheSeparador(&separador);
         char input[MAX_INPUT_SIZE];
@@ -395,7 +250,7 @@ int main() {
           snprintf(input, sizeof(input), "4S\n");
         }
 
-        escreverQuery(newFile, input);
+        fprintf(newFile, "%s", input);
       }
       break;
     }
@@ -438,7 +293,7 @@ int main() {
         snprintf(input, sizeof(input), "5S %s %s\n", username, numUtilizadores);
       }
 
-      escreverQuery(newFile, input);
+      fprintf(newFile, "%s", input);
       break;
     }
 
@@ -500,7 +355,7 @@ int main() {
         snprintf(input, sizeof(input), "6S %s %s %s\n", id, year, num);
       }
 
-      escreverQuery(newFile, input);
+      fprintf(newFile, "%s", input);
       break;
     }
 

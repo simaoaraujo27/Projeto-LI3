@@ -2,6 +2,7 @@
 #define _UTILS_H_
 
 #include <glib.h>
+#include <stdbool.h>
 
 int converterParaSegundos(char *tempo);
 
@@ -32,5 +33,16 @@ int calculateDiaAno(char *diaStr);
 int isLeapYear(int year);
 
 char *calculateData(int diaAno, int year);
+
+void limparBufferEntrada();
+bool validaPath(const char *path);
+void removerNovaLinha(char *str);
+void printFullLine(char ch, const char *color);
+void printCentered(const char *text, const char *color);
+void printRGB(const char *text);
+void escolheSeparador(char *separador);
+void printResults(int nQueries);
+void printRed(const char *text);
+int lerNumeroValido();
 
 #endif
