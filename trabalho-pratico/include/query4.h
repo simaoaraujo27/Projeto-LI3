@@ -11,19 +11,18 @@
 #include "gestor_musics.h"
 
 /**
- * @brief Armazena valores de uma música em estruturas de gestão.
+ * @brief Armazena valores de uma música em Structs de gestão.
  *
  * Esta função armazena informações sobre uma música, incluindo sua duração e
- * timestamp, em estruturas de gestão de músicas e artistas, além de atualizar
+ * timestamp, em Structs de gestão de músicas e artistas, além de atualizar
  * um array com os dados do Top 10.
  *
- * @param musicId Ponteiro para o ID da música (string).
+ * @param musicId Pointer para o ID da música (string).
  * @param duration Duração da música em segundos.
  * @param timeStamp Tempo em dias desde o dia 9/9/2024.
- * @param gestorMusics Ponteiro para a estrutura de gestão de músicas.
- * @param gestorArtists Ponteiro para a estrutura de gestão de artistas.
- * @param Tops10 Ponteiro para um array que contém os dados do Top 10.
- * @return Não há valor de retorno.
+ * @param gestorMusics Pointer para a Struct de gestão de músicas.
+ * @param gestorArtists Pointer para a Struct de gestão de artistas.
+ * @param Tops10 Pointer para um array que contém os dados do Top 10.
  */
 void armazenarValores(char *musicId, int duration, int timeStamp,
                       gestorMusics *gestorMusics, gestorArtists *gestorArtists,
@@ -34,15 +33,14 @@ void armazenarValores(char *musicId, int duration, int timeStamp,
  *
  * Esta função realiza o processamento de dados de artistas dentro de um
  * intervalo de datas especificado. O processamento considera as informações
- * armazenadas na estrutura de gestão de artistas e retorna os resultados de
+ * armazenadas na Struct de gestão de artistas e retorna os resultados de
  * acordo com o formato de resposta indicado.
  *
- * @param gestorArtists Ponteiro para a estrutura de gestão de artistas.
- * @param DataFim Ponteiro para a data final do intervalo (string).
- * @param DataInicio Ponteiro para a data inicial do intervalo (string).
+ * @param gestorArtists Pointer para a Struct de gestão de artistas.
+ * @param DataFim Pointer para a data final do intervalo (string).
+ * @param DataInicio Pointer para a data inicial do intervalo (string).
  * @param contadorOutputs Contador para os outputs gerados.
  * @param temS Indicador do tipo de resposta (1 para '=' e 0 para ';').
- * @return Não há valor de retorno.
  */
 void query4(gestorArtists *gestorArtists, char *DataFim, char *DataInicio,
             int contadorOutputs, int temS);
