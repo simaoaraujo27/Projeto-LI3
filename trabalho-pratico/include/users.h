@@ -130,18 +130,80 @@ char *getUserEmail(gpointer user);
  */
 void destroyUser(Users *u);
 
+/**
+ * @brief Obtém a lista de resumos de audições de um usuário.
+ *
+ * Esta função retorna um array contendo os resumos de audições de um usuário.
+ *
+ * @param user Ponteiro para o usuário.
+ * @return Ponteiro para o array de resumos de audições.
+ */
 GArray *getUserResumo(gpointer user);
 
+/**
+ * @brief Obtém o primeiro nome do usuário.
+ *
+ * Esta função retorna o primeiro nome do usuário armazenado na estrutura.
+ *
+ * @param user Ponteiro para o usuário.
+ * @return Ponteiro para a string contendo o primeiro nome.
+ */
 char *getUserFirstName(gpointer user);
 
+/**
+ * @brief Obtém o último nome do usuário.
+ *
+ * Esta função retorna o último nome do usuário armazenado na estrutura.
+ *
+ * @param user Ponteiro para o usuário.
+ * @return Ponteiro para a string contendo o último nome.
+ */
 char *getUserLastName(gpointer user);
 
+/**
+ * @brief Obtém a data de nascimento do usuário.
+ *
+ * Esta função retorna a data de nascimento do usuário no formato de string.
+ *
+ * @param user Ponteiro para o usuário.
+ * @return Ponteiro para a string contendo a data de nascimento.
+ */
 char *getUserBirthDate(gpointer user);
 
+/**
+ * @brief Obtém o país do usuário.
+ *
+ * Esta função retorna o país associado ao usuário armazenado na estrutura.
+ *
+ * @param user Ponteiro para o usuário.
+ * @return Ponteiro para a string contendo o país do usuário.
+ */
 char *getUserCountry(gpointer user);
 
+/**
+ * @brief Obtém os IDs das músicas curtidas pelo usuário.
+ *
+ * Esta função retorna uma string contendo os IDs das músicas curtidas pelo
+ * usuário.
+ *
+ * @param user Ponteiro para o usuário.
+ * @return Ponteiro para a string com os IDs das músicas curtidas.
+ */
 char *getUserLikedMusicsId(gpointer user);
 
+/**
+ * @brief Preenche uma linha da matriz de classificação de músicas.
+ *
+ * Esta função atualiza uma linha específica da matriz de classificação de
+ * músicas baseada nos dados de audições do usuário.
+ *
+ * @param matrizClassificaoMusicas Ponteiro para a matriz de classificação de
+ * músicas.
+ * @param linha Índice da linha a ser preenchida.
+ * @param User Ponteiro para o usuário.
+ * @param numGeneros Número total de gêneros na matriz.
+ * @param nomesGeneros Array de strings contendo os nomes dos gêneros.
+ */
 void preencheLinhaMatriz(int **matrizClassificaoMusicas, int linha, Users *User,
                          int numGeneros, char **nomesGeneros);
 
