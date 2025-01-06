@@ -1,38 +1,135 @@
-#ifndef _GESTOR_QUERIES_H_
-#define _GESTOR_QUERIES_H_
-
+#include "gestor_queries.h"
 #include "compare_files.h"
-#include "gestor_albuns.h"
-#include "gestor_artists.h"
-#include "gestor_history.h"
-#include "gestor_musics.h"
-#include "gestor_users.h"
-#include "query3.h"
+#include "query1.h"
+#include "query2.h"
+#include "query4.h"
 #include "query5.h"
+#include "query6.h"
+#include "utils.h"
+#include "validation.h"
+#include <glib.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
-/**
- * @file gestor_queries.h
- * @author
- * Francisco, Pedro, Simão (Grupo 5)
- * @date 5 Jan 2025
- * @brief Header file do módulo `Gestor Queries`.
- */
-
-/**
- * @brief Executa as queries com base na linha de entrada.
- *
- * Esta função analisa o comando fornecido em `line` e chama a função
- * correspondente à query indicada. Ela também calcula o tempo de execução
- * e armazena os resultados no objeto `temposTestes`.
- *
- * @param line Linha de comando que contém a identificação da query e seus
- * parâmetros.
- * @param gestor Pointer para a estrutura de gestores.
- * @param lista Lista de músicas (usada por algumas queries).
- * @param i Índice do gestor (usado em algumas queries).
- * @param t Pointer para a estrutura de tempos de execução.
- */
+// chama a devida query com os argumentos corretos
 void gestorQueries(char *line, Gestores *gestor, NodoMusica *lista, int i,
-                   temposTestes *t);
+                   temposTestes *t) {
+  clock_t start, end;
+  double time_spent;
+  int firstOcorr = 0, maxAge = 0, minAge = 0;
+  int temS = 0;
+  if (line[1] == 'S')
+    temS = 1;
 
-#endif // _GESTOR_QUERIES_H_
+  if (line[0] == '1') {
+    start = clock();
+    if ((temS && (line[3] == 'U')) || (!temS && (line[2] == 'U'))) {
+      query1User(getGestorUser(gestor), line, i, temS);
+    } else
+      query1Artist(getGestorArtist(gestor), line, i, temS);
+    end = clock();
+    time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+    setTemposTestes(t, 1, time_spent); // Acumula o tempo para Query 1
+  } else if (line[0] == '2') {
+    start = clock();
+    if (!temAspas(line)) {
+      if (!temS) {
+        query2(atoi(line + 2), NULL, gestor, i, temS);
+      } else {
+        query2(atoi(line + 3), NULL, gestor, i, temS);
+      }
+    } else {
+      firstOcorr = primeiraOcorr(line, '"');
+      if (!temS) {
+        query2(atoi(line + 2), line + firstOcorr, gestor, i, temS);
+      } else {
+        query2(atoi(line + 3), line + firstOcorr, gestor, i, temS);
+      }
+    }
+    end = clock();
+    time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+    setTemposTestes(t, 2, time_spent); // Acumula o tempo para Query 2
+  } else if (line[0] == '3') {
+    start = clock();
+    if (!temS) {
+      minAge = atoi(line + 2);
+      firstOcorr = primeiraOcorr(line + 2, ' ');
+      maxAge = atoi(line + 2 + firstOcorr);
+    } else {
+      minAge = atoi(line + 3);
+      firstOcorr = primeiraOcorr(line + 3, ' ');
+      maxAge = atoi(line + 3 + firstOcorr);
+    }
+    query3(minAge, maxAge, lista, i, temS);
+    end = clock();
+    time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+    setTemposTestes(t, 3, time_spent); // Acumula o tempo para Query 3
+  } else if (line[0] == '4') {
+    if ((temS && line[2] == ' ') || (!temS && line[1] == ' ')) {
+      line += 2;
+      if (temS)
+        line++;
+      char *fim = line + 11;
+      fim[10] = '\0';
+      line[10] = '\0';
+      start = clock();
+      query4(getGestorArtist(gestor), line, fim, i, temS);
+      end = clock();
+      time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+      setTemposTestes(t, 4, time_spent); // Acumula o tempo para Query 4
+    } else {
+      start = clock();
+      query4(getGestorArtist(gestor), NULL, NULL, i, temS);
+      end = clock();
+      time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+      setTemposTestes(t, 4, time_spent); // Acumula o tempo para Query 4
+    }
+
+  } else if (line[0] == '5') {
+    char *Username = NULL;
+    char *numRecomendacoes;
+    if (temS) {
+      Username = line + 3;
+      Username[8] = '\0';
+      remove_quotes(Username);
+      numRecomendacoes = line + 12;
+      int numRecomendacoesInt = atoi(numRecomendacoes);
+      start = clock();
+      query5(gestor, numRecomendacoesInt, Username, i,
+             getGestorArgumentosQuery5(gestor));
+      end = clock();
+      time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+      setTemposTestes(t, 5, time_spent); // Acumula o tempo para Query 5
+    } else {
+      Username = line + 2;
+      Username[8] = '\0';
+      remove_quotes(Username);
+      numRecomendacoes = line + 11;
+      int numRecomendacoesInt = atoi(numRecomendacoes);
+      start = clock();
+      query5(gestor, numRecomendacoesInt, Username, i,
+             getGestorArgumentosQuery5(gestor));
+      end = clock();
+      time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+      setTemposTestes(t, 5, time_spent); // Acumula o tempo para Query 5
+    }
+  } else if (line[0] == '6') {
+    line += 2;
+    if (temS)
+      line++;
+    line[8] = '\0';
+    char *userId = line;
+    line += 9;
+    int year = atoi(line);
+    line += 5;
+    int N = atoi(line);
+    start = clock();
+    query6(userId, year, N, getGestorUser(gestor), i, temS);
+    end = clock();
+    time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+    setTemposTestes(t, 6, time_spent); // Acumula o tempo para Query 6*/
+  }
+}

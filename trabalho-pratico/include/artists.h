@@ -13,10 +13,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-/**
- * Enum que representa o tipo de artista (Individual ou Grupo).
- */
-enum tipoArtista { Individual, Grupo };
+enum tipoArtista;
 
 /**
  * Struct que representa um artista.
