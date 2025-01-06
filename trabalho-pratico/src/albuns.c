@@ -88,6 +88,8 @@ Albuns *separateAlbuns(char *line, gestorArtists *gestorArtists) {
   remove_quotes(artists);
   removeFstLast(artists);
   int tamanho = strlen(artists);
+  // Itera por todos os artists do álbum e incrementa o número de álbuns de cada
+  // artista
   while (tamanho > 0) {
     if (tamanho == (int)strlen(artists)) {
       artists = artists + 1;
