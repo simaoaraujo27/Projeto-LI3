@@ -16,14 +16,20 @@
  *
  * Esta Struct armazena o ID do artista e a duração em segundos.
  */
-typedef struct NodoArray NodoArray;
+typedef struct NodoArray {
+  char *artist_id;
+  int duration;
+} NodoArray;
 
 /**
  * @brief Struct para o Top 10.
  *
  * Esta Struct armazena os 10 maiores elementos em um array fixo.
  */
-typedef struct ArrayTop10 ArrayTop10;
+typedef struct ArrayTop10 {
+  NodoArray data[10];
+  int size;
+} ArrayTop10;
 
 /**
  * @brief Obtém o nó com menor duração no Top 10.
