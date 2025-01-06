@@ -1,4 +1,3 @@
-#include "programa-testes.h"
 #include "compare_files.h"
 #define MAX_PATH_SIZE 1024
 
