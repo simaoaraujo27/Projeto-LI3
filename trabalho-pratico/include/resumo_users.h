@@ -15,6 +15,7 @@ typedef struct resumo Resumo;
 
 #include <glib.h>
 
+
 /**
  * @brief Inicializa a estrutura de resumo.
  *
@@ -84,5 +85,21 @@ void updateUserResumeGeneros(Resumo *res, char *gen, int duracao);
  * @param resumos Array contendo os resumos a serem destruídos.
  */
 void destroyUserResumo(GArray *resumos);
+
+int getUserResumoListeningTime(gpointer user, int year);
+
+int getUserResumoNumMusicasDiferentes(gpointer user, int year);
+
+
+char *getUserResumoArtists(gpointer user, int year, int N, int temS);
+
+
+char *getUserResumoGenero(gpointer user, int year);
+
+char *getUserResumoAlbum(gpointer user, int year);
+
+int getUserResumoDay(gpointer user, int year);
+
+int getUserResumoHora(gpointer user, int year);
 
 #endif

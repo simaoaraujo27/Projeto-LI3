@@ -130,4 +130,19 @@ char *getUserEmail(gpointer user);
  */
 void destroyUser(Users *u);
 
+GArray *getUserResumo(gpointer user);
+
+char *getUserFirstName(gpointer user);
+
+char *getUserLastName(gpointer user);
+
+char *getUserBirthDate(gpointer user);
+
+char *getUserCountry(gpointer user);
+
+char *getUserLikedMusicsId(gpointer user);
+
+void preencheLinhaMatriz(int **matrizClassificaoMusicas, int linha, Users *User,
+                         int numGeneros, char **nomesGeneros);
+
 #endif
